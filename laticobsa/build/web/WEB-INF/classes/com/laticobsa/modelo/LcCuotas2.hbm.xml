@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 27-jun-2017 21:14:45 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.laticobsa.modelo.LcCuotas2" table="lc_cuotas2" schema="public" optimistic-lock="version">
+        <composite-id name="id" class="com.laticobsa.modelo.LcCuotas2Id">
+            <key-property name="idCuota" type="java.lang.Integer">
+                <column name="id_cuota" />
+            </key-property>
+            <key-property name="idArticulo" type="java.lang.Integer">
+                <column name="id_articulo" />
+            </key-property>
+            <key-property name="idCliente" type="java.lang.Integer">
+                <column name="id_cliente" />
+            </key-property>
+            <key-property name="numCuotas" type="java.lang.Integer">
+                <column name="num_cuotas" />
+            </key-property>
+            <key-property name="valorCuota" type="big_decimal">
+                <column name="valor_cuota" precision="10" />
+            </key-property>
+            <key-property name="interesCuota" type="big_decimal">
+                <column name="interes_cuota" precision="10" />
+            </key-property>
+            <key-property name="valorMora" type="big_decimal">
+                <column name="valor_mora" precision="10" />
+            </key-property>
+            <key-property name="gastosCobranzas" type="big_decimal">
+                <column name="gastos_cobranzas" precision="10" />
+            </key-property>
+            <key-property name="gastosAdicional" type="big_decimal">
+                <column name="gastos_adicional" precision="10" />
+            </key-property>
+            <key-property name="otrosValores" type="big_decimal">
+                <column name="otros_valores" precision="10" />
+            </key-property>
+            <key-property name="totalCuotas" type="big_decimal">
+                <column name="total_cuotas" precision="10" />
+            </key-property>
+            <key-property name="fechaPago" type="timestamp">
+                <column name="fecha_pago" length="29" />
+            </key-property>
+            <key-property name="fechaMaxPago" type="timestamp">
+                <column name="fecha_max_pago" length="29" />
+            </key-property>
+            <key-property name="fechaRegistro" type="timestamp">
+                <column name="fecha_registro" length="29" />
+            </key-property>
+            <key-property name="estado" type="string">
+                <column name="estado" length="1" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

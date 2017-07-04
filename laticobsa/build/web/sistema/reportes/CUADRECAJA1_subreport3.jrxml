@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CUADRECAJA1_subreport1" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="84c63536-e442-40fd-91e6-0c145c862fa9">
+	<property name="ireport.zoom" value="1.4641000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="pn_empresa" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pn_agencia" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pn_empleado" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select r.id_recaudacion, d.nombres_completo,(select razon_social from lc_clientes where id_cliente=r.id_cliente) cliente, f.total_recaudado, f.tipo_forma_pago,
+CASE WHEN f.tipo_forma_pago=1 THEN 'EFECTIVO'
+WHEN f.tipo_forma_pago=2 THEN 'BANCO'
+WHEN f.tipo_forma_pago=3 THEN 'TAR/CRED'
+END forma_pago,to_char(r.fecha_registro,'yyyy-mm-dd hh24:mi:ss') fecha_registro
+from lc_recaudaciones r, lc_datos_deudores d, lc_formapago_recaudacion f
+where r.id_empresa=d.id_empresa
+and r.id_agencia=d.id_agencia
+and r.id_deudor=d.id_datos_deudor
+and r.id_empresa=$P{pn_empresa}
+and r.id_agencia=$P{pn_agencia}
+and r.id_empleado=$P{pn_empleado}
+and r.id_recaudacion=f.id_recaudacion
+and f.tipo_forma_pago=3
+and r.estado='A'
+order by r.id_recaudacion;]]>
+	</queryString>
+	<field name="id_recaudacion" class="java.lang.Integer"/>
+	<field name="nombres_completo" class="java.lang.String"/>
+	<field name="cliente" class="java.lang.String"/>
+	<field name="total_recaudado" class="java.math.BigDecimal"/>
+	<field name="tipo_forma_pago" class="java.lang.Integer"/>
+	<field name="forma_pago" class="java.lang.String"/>
+	<field name="fecha_registro" class="java.lang.String"/>
+	<variable name="SUM" class="java.lang.String" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_recaudado}]]></variableExpression>
+	</variable>
+	<group name="tipo_forma_pago">
+		<groupExpression><![CDATA[$F{tipo_forma_pago}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="16" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="25">
+			<rectangle>
+				<reportElement x="10" y="3" width="539" height="20" forecolor="#CCCCCC" backcolor="#CCCCCC" uuid="4d2d3f28-88e8-4207-9851-efc5f38f4d83"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="476" y="3" width="73" height="20" uuid="2668f1e2-1343-4605-a1fe-1194e870f085"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[VALOR TOTAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="61" y="3" width="141" height="20" uuid="be2407fc-a5de-4d70-b8a5-b404979f9321"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CLIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="17" y="3" width="34" height="20" uuid="b8fff66e-f67b-4361-9a63-03f0b3aebc4f"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nº ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="206" y="3" width="94" height="20" uuid="036a15c8-2b68-4ef9-8e36-53c959a502b4"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[INSTITUCIÓN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="3" width="70" height="20" uuid="57a9be9a-9ee6-4b38-8d55-8b017a0a0065"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[F. Pago]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="370" y="3" width="88" height="20" uuid="b1b29fc4-1af6-4dd7-89e3-c681ee875980"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA PAGO]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<textField>
+				<reportElement x="310" y="-1" width="60" height="12" uuid="7835564a-53fd-4ead-b124-380c7cc46e15"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{forma_pago}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="61" y="-1" width="141" height="12" uuid="20c7ec97-667e-4e1f-b614-98d73bd9eb0e"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombres_completo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="-1" width="95" height="12" uuid="b4788eed-f769-43a6-94c8-00367a9ff749"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_registro}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="482" y="-1" width="67" height="12" uuid="bd53b31e-749e-4030-9e58-0e987712d418"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_recaudado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="17" y="-1" width="34" height="12" uuid="e39f9dd0-bee4-4359-b425-7e66d7883fd3"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id_recaudacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="206" y="-1" width="94" height="12" uuid="7973f012-7941-45f9-8af0-47c5f1446333"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cliente}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="14" splitType="Stretch">
+			<line>
+				<reportElement x="10" y="0" width="539" height="1" uuid="6447894e-acb0-46c9-9fb4-cc75f7a9f957"/>
+			</line>
+			<textField pattern="###0.000">
+				<reportElement x="482" y="1" width="67" height="12" uuid="6213b2d7-043e-40cb-a371-57deebd54d52"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{SUM}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

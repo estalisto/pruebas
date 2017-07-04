@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 27-jun-2017 21:14:45 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.laticobsa.modelo.LcClientes" table="lc_clientes" schema="public" optimistic-lock="version">
+        <id name="idCliente" type="int">
+            <column name="id_cliente" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="lcCiudad" class="com.laticobsa.modelo.LcCiudad" fetch="select">
+            <column name="ciudad" />
+        </many-to-one>
+        <many-to-one name="lcEmpresa" class="com.laticobsa.modelo.LcEmpresa" fetch="select">
+            <column name="id_empresa" />
+        </many-to-one>
+        <many-to-one name="lcPais" class="com.laticobsa.modelo.LcPais" fetch="select">
+            <column name="pais" />
+        </many-to-one>
+        <many-to-one name="lcProvincia" class="com.laticobsa.modelo.LcProvincia" fetch="select">
+            <column name="provincia" />
+        </many-to-one>
+        <many-to-one name="lcTiposIdentificacion" class="com.laticobsa.modelo.LcTiposIdentificacion" fetch="select">
+            <column name="tipo_identificacion" />
+        </many-to-one>
+        <property name="identificacion" type="string">
+            <column name="identificacion" length="100" />
+        </property>
+        <property name="razonSocial" type="string">
+            <column name="razon_social" length="100" />
+        </property>
+        <property name="direccion" type="string">
+            <column name="direccion" length="100" />
+        </property>
+        <property name="contacto" type="string">
+            <column name="contacto" length="100" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="100" />
+        </property>
+        <property name="telefono" type="string">
+            <column name="telefono" length="100" />
+        </property>
+        <property name="extensioon" type="string">
+            <column name="extensioon" length="10" />
+        </property>
+        <property name="celular" type="string">
+            <column name="celular" length="50" />
+        </property>
+        <property name="fechaCreacion" type="timestamp">
+            <column name="fecha_creacion" length="29" />
+        </property>
+        <property name="estado" type="string">
+            <column name="estado" length="1" />
+        </property>
+        <set name="lcTransaccioneses" table="lc_transacciones" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="id_cliente" />
+            </key>
+            <one-to-many class="com.laticobsa.modelo.LcTransacciones" />
+        </set>
+        <set name="lcRecordatorioses" table="lc_recordatorios" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="id_cliente" />
+            </key>
+            <one-to-many class="com.laticobsa.modelo.LcRecordatorios" />
+        </set>
+        <set name="lcDeudors" table="lc_deudor" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="id_cliente" />
+            </key>
+            <one-to-many class="com.laticobsa.modelo.LcDeudor" />
+        </set>
+        <set name="lcGestioneses" table="lc_gestiones" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="id_cliente" />
+            </key>
+            <one-to-many class="com.laticobsa.modelo.LcGestiones" />
+        </set>
+        <set name="lcDatosDeudoreses" table="lc_datos_deudores" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="id_cliente" />
+            </key>
+            <one-to-many class="com.laticobsa.modelo.LcDatosDeudores" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2e9002bc-f00c-4e07-a24f-62d7bb6e3a26">
+	<property name="ireport.zoom" value="1.4641000000000008"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1" uuid="cd096878-311c-464d-b45c-1218eb6068ea"/>
+	<subDataset name="dataset1" uuid="8e21d43a-784b-4fbd-b13a-752a7c4bceb7"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\Proyecto\\laticobsa\\web\\sistema\\reportes\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pn_empresa1" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pn_agencia1" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pn_empleado" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from lc_tipo_forma_pago;]]>
+	</queryString>
+	<field name="id_tipo_fp" class="java.lang.Integer"/>
+	<field name="tipo_pago" class="java.lang.String"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="fecha_registro" class="java.sql.Timestamp"/>
+	<field name="estado" class="java.lang.String"/>
+	<variable name="tipo_pago" class="java.lang.Integer">
+		<variableExpression><![CDATA[$F{id_tipo_fp}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="56" splitType="Stretch">
+			<staticText>
+				<reportElement x="6" y="18" width="166" height="20" uuid="c22c7c65-f855-447b-a705-286351181eec"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[RUC:0921243064001]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="4" width="166" height="20" forecolor="#990000" uuid="fdfa03d6-82e9-4f85-a674-e39e816868ef"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LATICOBSA S.A.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="156" y="29" width="266" height="20" uuid="edb54ab0-d613-4b62-b3c5-caeb833207b7"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUADRE DE CAJA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="29" width="199" height="20" uuid="8afee6ee-7bf9-4352-9ee4-13b0f9961ec7"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[AGENCIA CENTRO - PANAMA Y ROCA]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="422" y="0" width="100" height="20" uuid="05811278-95d8-4f70-b5f9-6095a9621e81"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="322" y="0" width="100" height="20" uuid="8ea82ab6-bacb-4f60-9320-e7c5ac3803cf"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Guayaquil, ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="435" y="36" width="80" height="20" uuid="86234e33-9801-43df-9514-4d09b505873a"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="515" y="36" width="40" height="20" uuid="8ca86df8-c848-4232-863b-aab71644b533"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="39" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="554" height="39" uuid="fadfb42c-791b-4aac-ab6b-5127839a6c82"/>
+				<subreportParameter name="pn_empresa">
+					<subreportParameterExpression><![CDATA[$P{pn_empresa1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pn_agencia">
+					<subreportParameterExpression><![CDATA[$P{pn_agencia1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pn_empleado">
+					<subreportParameterExpression><![CDATA[$P{pn_empleado}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "CUADRECAJA1_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="55" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="55" uuid="7cc0976a-1632-4a69-b828-8e4f4a6188cb"/>
+				<subreportParameter name="pn_empresa">
+					<subreportParameterExpression><![CDATA[$P{pn_empresa1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pn_agencia">
+					<subreportParameterExpression><![CDATA[$P{pn_agencia1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pn_empleado">
+					<subreportParameterExpression><![CDATA[$P{pn_empleado}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "CUADRECAJA1_subreport2.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</columnHeader>
+	<summary>
+		<band height="210" splitType="Stretch">
+			<rectangle>
+				<reportElement x="319" y="96" width="58" height="17" uuid="38b57f82-9b06-4896-89d4-b527900db31d"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="167" y="96" width="58" height="17" uuid="21ded23c-5e3f-464a-8d45-9098ec639ea6"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="447" y="96" width="58" height="17" uuid="d55781b0-fe8f-49cf-91cc-b402242e58f2"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="54" y="96" width="58" height="17" uuid="d018b6eb-4ca0-4416-ab8d-effa3d0b671e"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="258" y="101" width="61" height="12" uuid="f03af40c-fb50-4260-8262-b464e59ac041"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[TAR/CREDITO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="129" y="101" width="43" height="12" uuid="cf4836f6-51d6-43b3-9ecc-f2efb8487f81"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[BANCO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="101" width="43" height="12" uuid="d03a1d8f-778c-4437-87d4-cdb1d2d4b274"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[EFECTIVO:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="3" y="90" width="551" height="1" uuid="a1fdcf3d-3cec-4bc6-9fd8-3f3c6ba39a1e"/>
+			</line>
+			<staticText>
+				<reportElement x="410" y="101" width="43" height="12" uuid="202c047a-f1d7-43d9-83f3-81ab4951ef55"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[OTROS:]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="0" y="0" width="554" height="54" uuid="8f1a441c-9bda-4825-a51d-127bfc105aa4"/>
+				<subreportParameter name="pn_empresa">
+					<subreportParameterExpression><![CDATA[$P{pn_empresa1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pn_agencia">
+					<subreportParameterExpression><![CDATA[$P{pn_agencia1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pn_empleado">
+					<subreportParameterExpression><![CDATA[$P{pn_empleado}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "CUADRECAJA1_subreport3.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement x="5" y="71" width="100" height="20" uuid="7397600d-77dc-4e11-bd7f-833a0c6d56bc"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTALES]]></text>
+			</staticText>
+			<line>
+				<reportElement x="4" y="119" width="551" height="1" uuid="32952fed-a3a1-44a4-b4ff-569440c1c484"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>
