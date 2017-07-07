@@ -92,9 +92,9 @@ border: 2px solid #CB8B07;
                                     <label class="col-sm-2 control-label">Total Vencido: </label> 
                                     <label class="col-sm-1 control-label" style="color: #FF3A2D"><u>$ <c:out value='${transa.getTotalVencidos()}'/></u></label>
                                     <label class="col-sm-1 control-label">Pagos: </label> 
-                                    <label class="col-sm-1 control-label" style="color: #FF3A2D"><u>$ 00.00</u></label>
+                                    <label class="col-sm-1 control-label" style="color: #FF3A2D"><u>$ <%= request.getAttribute("valorPagado2") %></u></label>
                                     <label class="col-sm-1 control-label">Saldo: </label>    
-                                    <label class="col-sm-1 control-label" style="color: #FF3A2D"><u>$ <c:out value='${transa.getTotalVencidos()}'/></u>
+                                    <label class="col-sm-1 control-label" style="color: #FF3A2D"><u>$ <%= request.getAttribute("ValorSaldo2") %></u>
                                     </label><label class="col-sm-1 control-label">Días Mora: </label>  
                                     <label class="col-sm-1 control-label" style="color: #FF3A2D"><u><c:out value='${transa.getDiasMora()} '/> Dias</u></label>
                                     
@@ -196,7 +196,7 @@ border: 2px solid #CB8B07;
                                                                 <h3 class="box-title">Actualizacón de Datos</h3>
                                                                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                                             </div>  <br>
-                                                                <form class="form-horizontal" role="form">  
+                                                                <form class="form-horizontal" role="form" name="miFormulario">  
                                                                      <label>Ingrese Nombre de la Referencia: </label>
                                                                     <div class="form-group">
                                                                         <div class="col-lg-3">
@@ -256,27 +256,9 @@ border: 2px solid #CB8B07;
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                 <c:set var="actualSum" value="${0}"/> 
-                                                                <c:forEach items="${detArticulos}" var="detArticulo">
-                                                                    <tr>  
-                                                                        <td><c:out value="${detArticulo.getReferencia()}"/></td>
-                                                                        <td><c:out value="${detArticulo.getNombreArticulo()}"/></td>
-                                                                        <td><c:out value="${detArticulo.getValorArticulo()}"/></td>
-                                                                        <td><c:out value="${detArticulo.getFechaCompra()} "/></td>
-                                                                       <c:set var="actualSum" value="${actualSum + detArticulo.getValorArticulo()}"/> 
-                                                               
-                                                                    </tr>                                      
-                                                                </c:forEach>
-                                                                  
-
+                                                                 <%= request.getAttribute("detArticulos") %> 
                                                             </tbody>
-                                                            <tfoot>
-                                                                    <tr>
-                                                                       
-                                                                        <th> Total Deuda: </th>  <th><strong><c:out value="${actualSum} "/></strong></th> 
-
-                                                                    </tr>
-                                                                </tfoot>
+                                                              
                                                             
                                                         </table>
                                                     </div>
@@ -314,21 +296,8 @@ border: 2px solid #CB8B07;
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <c:set var="actualSum" value="${0}"/> 
-                                                                <c:forEach items="${detCuotas}" var="detCuota">
-                                                                    <tr> 
-                                                                        <td><c:out value="${detCuota.getLcArticulo().getReferencia()}"/></td>
-                                                                        <td><c:out value="${detCuota.getNumCuotas()}"/></td>
-                                                                        <td><c:out value="${detCuota.getInteresCuota()}"/></td>
-                                                                        <td><c:out value="${detCuota.getValorMora()}"/></td>
-                                                                        <td><c:out value="${detCuota.getGastosCobranzas()}"/></td>
-                                                                        <td><c:out value="${detCuota.getGastosAdicional()}"/></td>
-                                                                        <td><c:out value="${detCuota.getOtrosValores()}"/></td>
-                                                                        <td><c:out value="${detCuota.getValorCuota()}"/></td>
-                                                                        <td><c:out value="${detCuota.getTotalCuotas()}"/></td>
-                                                                        <td><c:out value="${detCuota.getFechaMaxPago()} "/></td>  
-                                                                    </tr>                                      
-                                                                </c:forEach>
+                                                                <%= request.getAttribute("detCuotas") %>
+                                                               
                                                                 
                                                             </tbody>
 
@@ -355,7 +324,7 @@ border: 2px solid #CB8B07;
                             <div class="col-lg-4">
                                 <div id="table_direccion" class="form-group">                                
                                     <dt>Dirección: </dt>
-                                    <div  class="box table-responsive">
+                                    <div  class="box table-responsive" >
                                         <table id="idAllDireccions" class="table-striped table-hover">
                                             <thead>
                                                 <tr  bgcolor="#FBF5EF">
@@ -494,8 +463,8 @@ border: 2px solid #CB8B07;
                                 <div class="col-lg-4" >
                                     <dt> Fecha Compromiso de Pago y Monto:</dt> 
                                         <div class="form-inline ">
-                                                <input size="15" type="text" class="input-sm datepicker" onkeyup="verificaFecha2();" data-date-format="yyyy-mm-dd" id="datepicker" name="compromiso_pago" placeholder="YYYY-MM-DD">                                                        
-                                                <input size="15" type="text" class="input-sm" id="monto_compromiso" name="monto_compro" onkeypress="ValidaSoloNumeros()" placeholder="$ 0.00" >
+                                                <input size="15" type="text" class="input-sm datepicker" onkeyup="verificaFecha2();" data-date-format="yyyy-mm-dd" id="datepicker" name="compromiso_pago" placeholder="YYYY-MM-DD" disabled="true">                                                        
+                                                <input size="15" type="text" class="input-sm" id="monto_compromiso" name="monto_compro" onkeypress="ValidaSoloNumeros()" placeholder="$ 0.00" disabled="true">
                                                 <span id="fechaCompro" ></span>  
                                         </div>
                                 </div>

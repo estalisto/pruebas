@@ -54,25 +54,18 @@
                         <tbody>
                             
                         <tr>
-                          <th class="col-sm-1">N°</th>
-                          <th class="col-sm-2">Fecha de llamada</th>
+                          <th class="col-sm-1 text-center" >N°</th>
+                          <th class="col-sm-2  text-center">Fecha de llamada</th>
                           <th class="col-sm-3">Deudor</th>
-                          <th class="col-sm-2">Fecha de Compromiso</th>
-                          <th class="col-sm-1">Monto de Compromiso</th>
+                          <th class="col-sm-2 text-center">Fecha de Compromiso</th>
+                          <th class="col-sm-2">Monto de Compromiso</th>
                           <th class="col-sm-3">Observación</th>
                         </tr>
-                                <c:forEach items="${compromisospg}" var="compromisopg">
-                                <tr>
-                                  <td><c:out value="${compromisopg.getIdCompromiso()}" /> </td>
-                                  <td><c:out value="${compromisopg.getFechaCompromiso()}" /> </td>
-                                  <td><a onclick="cobranzas2(${compromisopg.getIdCliente()},${compromisopg.getLcDatosDeudores().getIdDatosDeudor()})"><c:out value="${compromisopg.getLcDatosDeudores().getNombres()} ${compromisopg.getLcDatosDeudores().getApellidos()} " /></a> </td>
-                                  <td><c:out value="${compromisopg.getFechaCompromiso()}" /> </td>
-                                  <td>$ <c:out value="${compromisopg.getValorCompromiso()}" /> </td>
-                                  <td>Llamar a la Hora especificada </td>                                      
-                                </tr>     
-                            </c:forEach>  
-                        
-                      </tbody></table>
+                                
+                                
+                                    <%= request.getAttribute("Tablacompromiso") %>
+                      </tbody>
+		      </table>
                     </div>
                 </div>                
             </div>

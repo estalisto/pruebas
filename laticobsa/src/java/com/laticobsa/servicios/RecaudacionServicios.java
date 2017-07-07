@@ -12,7 +12,12 @@ import com.laticobsa.modelo.LcDetRecaudaciones;
 import com.laticobsa.modelo.LcFormapagoRecaudacion;
 import com.laticobsa.modelo.LcInstitucion;
 import com.laticobsa.modelo.LcRecaudaciones;
+import com.laticobsa.utils.Conexion;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -223,4 +228,65 @@ public class RecaudacionServicios {
         session.close();
          return lista;
     }
+     /*  public List<LcRecaudaciones> getLcRecaudaciones(int empresa,int idCliente, int idDeudor){
+        
+       
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        // hacemos la transaccion
+        Query q = session.createQuery("from LcRecaudaciones  E WHERE  E.idEmpresa= :idEmpresa and E.idCliente= :idCliente and E.idCliente= :idCliente and E.estado= :estado");
+        q.setParameter("idEmpresa",empresa);
+        q.setParameter("idCliente",idCliente);
+        q.setParameter("idDeudor",idDeudor);
+        q.setParameter("estado","A");
+        List<LcRecaudaciones> lista=q.list();
+         for(LcRecaudaciones mrol:lista )
+        {
+             System.out.println("ok: "+mrol.getValorRecaudado());
+        }
+        tx.commit();
+        session.close();
+         return LcRecaudaciones;
+    } */
+       
+  
+     public BigDecimal getValorRecaudado(int IdEmpleado,int IdCliente,  int idDeudor)throws SQLException{
+    
+            Conexion conexion=new Conexion();
+            PreparedStatement pst;
+            ResultSet rs;
+          //  BigDecimal valor;   
+            String SQL="";               
+            SQL="select r.valor_recaudado from lc_recaudaciones r where r.id_deudor="+idDeudor+" and r.id_cliente="+IdCliente+" and r.id_empresa="+IdEmpleado;     
+            BigDecimal valorRecaudado=BigDecimal.ZERO;
+
+            try
+            {
+           
+            pst = conexion.getconexion().prepareStatement(SQL);
+                rs = pst.executeQuery();
+            
+            while( rs.next() )    //Mientras haya una sig. tupla
+            { 
+                valorRecaudado= new BigDecimal(rs.getString("valor_recaudado")) ;     
+ 
+            }
+            
+                rs.close();
+                pst.close();
+                conexion.cierraConexion();
+                // valor=valorRecaudado;
+                return valorRecaudado;
+            }catch(Exception ex){
+            }finally{
+                    if(conexion!=null)
+                    conexion.cierraConexion();
+                 }
+        return valorRecaudado;
+            
+    }
+        
+        
 }

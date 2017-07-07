@@ -253,13 +253,13 @@ function validaDatos( resultado, gestion, descripcion,accion,id,cliente) {
                     return true;
                 
             } else {
-                alert("Debe ingresar una descripcion");
+                MsgSalidaModalM("Debe ingresar una descripcion");
             }
         } else {
-            alert("Debe elegir un Resultado");
+            MsgSalidaModalM("Debe elegir un Resultado");
         }
     } else {
-        alert("Debe elegir una Gestion");
+        MsgSalidaModalM("Debe elegir una Gestion");
     }
     return false;
 }
@@ -280,18 +280,26 @@ function GuardarTransaccnormal() {
     var accion = "transaccion";
     var descripcion = $('#descripcion').val();
     var resultado = $('#resultado').val();
+    var tipo_resultado = $('#tiporesultado').val();
     var gestion = $('#gestion').val();
     var cliente = $('#idcliente').val();
     //JG ini
     var monto_compromiso = $('#monto_compromiso').val();
     var comp_pago = $('#datepicker').val();
     var idTransaccion = $('#idTransaccion').val();
+    var hora = $('#hora').val();
+    var Fechacompromiso_pago = $('#datepicker2').val();
+    var xdisabled = document.getElementById("datepicker2").disabled;
+    var adisabled = document.getElementById("hora").disabled;
+    var bdisabled = document.getElementById("monto_compromiso").disabled;
+    var cdisabled = document.getElementById("datepicker").disabled;
      //JG fin
    
     if (validaDatos(resultado, gestion, descripcion, accion, id, cliente)) {
       //JG ini
-        if(resultado=="1"){
+        if (resultado == tipo_resultado) {
             
+            if ((bdisabled == false) && (cdisabled == false)) {
         if (comp_pago !== "") {
             if (verificaFecha3('datepicker') !== 2) {
                     if (verificaFecha3('datepicker') === 1) {
@@ -316,7 +324,10 @@ function GuardarTransaccnormal() {
                     "cliente": cliente,
                     "idTransaccion": idTransaccion,
                     "monto_compromiso": monto_compromiso,
-                    "comp_pago": comp_pago
+                            "comp_pago": comp_pago,
+                            "hora": hora,
+                            "tipo_resultado": tipo_resultado,
+                            "Fechacompromiso_pago": Fechacompromiso_pago
                 };
                 $.ajax({
                     data: parametros,
@@ -339,24 +350,106 @@ function GuardarTransaccnormal() {
                             A.value = "";
                             var B = document.getElementById("monto_compromiso");
                             B.value = "";
-                            transacciones_pendientes(cliente, id);
-                              
-                        } else {
-                            MsgSalidaModalM("Compromiso de pago no Guardado");
+                                    var c = document.getElementById("datepicker2");
+                                    c.value = "";
+                                    var j = document.getElementById("hora");
+                                    j.value = "";
+                                    transacciones_pendientes(cliente, id);
+                                    document.getElementById("monto_compromiso").disabled = true;
+                                    document.getElementById("datepicker").disabled = true;
+                                    var tip = document.getElementById("tiporesultado");
+                                    tip.value = "";
+                                } else {
+                                    MsgSalidaModalM("Compromiso de pago no Guardado");
 
-                        }
+                                }
+                            }
+                        });
+                    } else {
+                        MsgSalidaModalM("Debe Ingresar un Monto de Compromiso De Pago");
                     }
-                });
-            }else{alert("Debe Ingresar un Monto de Compromiso De Pago");}
-        } else {
-            alert("Debe Ingresar una Fecha de Compromiso De Pago");
+                } else {
+                    MsgSalidaModalM("Debe Ingresar una Fecha de Compromiso De Pago");
+                }
+            }
+            if ((xdisabled == false) && (adisabled == false)) {
+                
+                if (Fechacompromiso_pago !== "") {
+                    if (verificaFecha3('datepicker2') !== 2) {
+                        if (verificaFecha3('datepicker2') === 1) {
+                            MsgSalidaModalA("La Fecha de Compromisos de Pago tiene que se igual o mayor a la fecha actual");
+                        } else if (verificaFecha3('datepicker2') === 3) {
+                            MsgSalidaModalA("La Fecha de Compromiso de Pago no existe.");
+                        } else if (verificaFecha3('datepicker2') === 4) {
+                            MsgSalidaModalA("El Formato de la fecha es incorrecto.");
+                        }
+                        return true;
+                    }
+                    if (hora !== "") {
+
+                        var parametros = {
+                            "accion": accion,
+                            "id": id,
+                            "descripcion": descripcion,
+                            "gestion": gestion,
+                            "resultado": resultado,
+                            "cliente": cliente,
+                            "idTransaccion": idTransaccion,
+                            "monto_compromiso": monto_compromiso,
+                            "comp_pago": comp_pago,
+                            "hora": hora,
+                            "tipo_resultado": tipo_resultado,
+                            "Fechacompromiso_pago": Fechacompromiso_pago
+                        };
+                        $.ajax({
+                            data: parametros,
+                            url: 'cobranzas',
+                            type: 'GET',
+                            beforeSend: function () {
+                            },
+                            success: function (response) {
+
+                                if (response) {
+                                    MsgSalidaModalM(response);
+                                    var x = document.getElementById("descripcion");
+                                    x.value = "";
+                                    var y = document.getElementById("resultado");
+                                    y.value = "";
+                                    var z = document.getElementById("gestion");
+                                    z.value = "";
+                                    var A = document.getElementById("datepicker");//monto_compromiso
+                                    A.value = "";
+                                    var B = document.getElementById("monto_compromiso");
+                                    B.value = "";
+                                    var c = document.getElementById("datepicker2");
+                                    c.value = "";
+                                    var j = document.getElementById("hora");
+                                    j.value = "";
+                                    
+                                    transacciones_pendientes(cliente, id);
+                                    document.getElementById("datepicker2").disabled = true;
+                                    document.getElementById("hora").disabled = true;
+                                    var tip = document.getElementById("tiporesultado");
+                                    tip.value = "";
+                
+                                } else {
+                                    MsgSalidaModalM("Compromiso de pago no Guardado");
+
+                                }
+                            }
+                        });
+                    } else {
+                        MsgSalidaModalM("Debe Ingresar Hora de Recordatorio");
+                    }
+                } else {
+                    MsgSalidaModalM("Debe Ingresar una Fecha de Recordatorio de llamada");
+                }
+            }
         }
-    }
-        if ((comp_pago === "")&&(resultado!="1")) {
-            if(monto_compromiso===""){
-	    //JG fin
-//            comp_pago = 0;
-//            monto_compromiso = 0;
+        if (tipo_resultado == "") {
+            tipo_resultado = 0;
+            //JG fin
+
           $('#img_cargando').css("display", "block"); 
             var parametros = {
                 "accion": accion,
@@ -364,6 +457,7 @@ function GuardarTransaccnormal() {
                 "descripcion": descripcion,
                 "gestion": gestion,
                 "resultado": resultado,
+                "tipo_resultado": tipo_resultado,
                 "cliente": cliente,
                 "idTransaccion": idTransaccion//,
 //                "monto_compromiso": monto_compromiso,
@@ -378,8 +472,7 @@ function GuardarTransaccnormal() {
                 success: function (response) {
                     $('#img_cargando').css("display", "none"); 
                     if (response) {
-                        
-                        alert(response);
+                        MsgSalidaModalM(response);
                         $('#transaccion_table').css("display", "none");
                       //JG ini
 		        var x = document.getElementById("descripcion");
@@ -389,22 +482,96 @@ function GuardarTransaccnormal() {
                         var z = document.getElementById("gestion");
                         z.value = "";
                         var A = document.getElementById("datepicker");//monto_compromiso
-                            A.value = "";
-                            var B = document.getElementById("monto_compromiso");
-                            B.value = "";
+                        A.value = "";
+                        var B = document.getElementById("monto_compromiso");
+                        B.value = "";
+                        var c = document.getElementById("datepicker2");
+                        c.value = "";
+                        var j = document.getElementById("hora");
+                        j.value = "";    
 			    //JG fin
-                                  
                         transacciones_pendientes(cliente, id);
+                        var tip = document.getElementById("tiporesultado");
+                        tip.value = "";
                     } else {
-                        alert("Compromiso de pago no Guardado");
+                        MsgSalidaModalM("Compromiso de pago no Guardado");
 
                     }
                 }
             });
             }
         }
-    }
 }
+    
+$('#resultado').change(function(e){
+   e.preventDefault();
+   var resultado = $('#resultado').val();
+   var accion="ResulParametro";
+   var parametros = {
+        "accion": accion,
+        "resultado": resultado
+    };
+    $.ajax({
+        data: parametros,
+        url: 'cobranzas',
+        type: 'GET',
+        beforeSend: function () {
+        },
+        success: function (response) {
+            if (response) {
+//               alert(response);
+               var separo = response.split("|"); 
+               var id_reconoce= separo[0];
+               var tipo = separo[1];
+                var z = document.getElementById("tiporesultado");
+                z.value = "";
+                z.value = id_reconoce;
+                if(resultado!==parseInt(id_reconoce)){
+                    if(parseInt(tipo)==1){
+                        document.getElementById("monto_compromiso").disabled = false;
+                        document.getElementById("datepicker").disabled = false;
+                        document.getElementById("datepicker2").disabled = true;
+                        document.getElementById("hora").disabled = true;
+                        var c = document.getElementById("datepicker2");
+                        c.value = "";
+                        var j = document.getElementById("hora");
+                        j.value = "";
+//                        var tip = document.getElementById("tiporesultado");
+//                    tip.value = "";
+                    }
+                    if(parseInt(tipo)==2){
+                    document.getElementById("datepicker2").disabled = false;
+                    document.getElementById("hora").disabled = false;
+                    document.getElementById("monto_compromiso").disabled = true;
+                    document.getElementById("datepicker").disabled = true;
+                    var A = document.getElementById("datepicker");//monto_compromiso
+                    A.value = "";
+                    var B = document.getElementById("monto_compromiso");
+                    B.value = "";
+//                    var tip = document.getElementById("tiporesultado");
+//                    tip.value = "";
+                    }
+                }
+                
+            }else{
+                    document.getElementById("monto_compromiso").disabled = true;
+                    document.getElementById("datepicker").disabled = true;
+                    document.getElementById("datepicker2").disabled = true;
+                    document.getElementById("hora").disabled = true;
+                    var A = document.getElementById("datepicker");//monto_compromiso
+                    A.value = "";
+                    var B = document.getElementById("monto_compromiso");
+                    B.value = "";
+                    var c = document.getElementById("datepicker2");
+                    c.value = "";
+                    var j = document.getElementById("hora");
+                    j.value = ""; 
+                    var tip = document.getElementById("tiporesultado");
+                    tip.value = "";
+                } 
+        }
+    });
+});
 function transacciones_pendientes(cliente,id)
 {   
     jQuery("#pagetable").html("<br/><br/><center><img alt='cargando' src='dist/img/hourglass.gif' /><center>"); 
@@ -455,7 +622,7 @@ function GuardarCompPago() {
             }
         });
     } else {
-        alert("Debe Ingresar una Fecha de Compromiso De Pago");
+        MsgSalidaModalM("Debe Ingresar una Fecha de Compromiso De Pago");
     }
 }/*
 $('#agregaDir').click(function(e){
@@ -663,7 +830,7 @@ function addHtmlTelefonoRef() {
                                 </select>\n\
                              </div>\n\
                              <div class='col-lg-3'>\n\
-                                    <input type='text' class='form-control' id='new_telefono_ref"+z+"'  value='"+$("#new_telefono_ref"+z).val()+"'>\n\
+                                    <input type='text' maxlength='10' class='form-control' onkeyup=solo_numeros('new_telefono_ref"+z+"')   value='"+$("#new_telefono_ref"+z).val()+"'>  <div id='MSMnew_telefono_ref"+cont+"'></div>\n\
                              </div>\n\
                        </div>";
           
@@ -681,7 +848,7 @@ function addHtmlTelefonoRef() {
                                                                 <option value='3' >Celular</option>\n\
                                                             </select></div>\n\
                                                             <div class='col-lg-3'>\n\
-                                                                <input maxlength='10' type='text' class='form-control'  onkeydown=solo_numeros('new_telefono_ref"+cont+"') id='new_telefono_ref"+cont+"'>\n\
+                                                                <input maxlength='10' type='text' class='form-control'  onkeyup=solo_numeros('new_telefono_ref"+cont+"') id='new_telefono_ref"+cont+"'><div id='MSMnew_telefono_ref"+cont+"'></div>    \n\
                                                             </div>\n\
                                                             ";
     a.value=cont;                                                                               
@@ -692,9 +859,21 @@ function addHtmlTelefonoRef() {
 }
 function solo_numeros(id_telefono){
     var nombre_telefono=id_telefono;
-    
-   // alert("Estas aqui "+nombre_telefono);
     $("#"+nombre_telefono).validCampoFranz('0123456789');
+    var input= $("#"+nombre_telefono).val();
+      var str =  document.getElementById(nombre_telefono).value;
+      var n = str.length;
+      document.getElementById("MSM"+nombre_telefono).innerHTML="";
+      
+      console.log("(0,1): "    + str.substr(0,1));  
+
+       if ((str.substr(0,1)!="0") && (str.substr(0,1)!="")){
+        document.getElementById("MSM"+nombre_telefono).innerHTML="Ingrese el formato correcto, debe empezar con 0";              
+       }
+
+   
+    
+    
     
 }
 function AddReferencias() {
@@ -703,7 +882,7 @@ function AddReferencias() {
  var idDeudor = $('#id').val();
  var nombre_ref=$("#nombre_ref").val();
  var TipoRef=$("#IdtReferencia").val();
- 
+
  var accion = "addReferncia";
  if(nombre_ref===""){
      alert("Debe Ingresar el nombre de la referencia.");
@@ -711,6 +890,9 @@ function AddReferencias() {
  }
  
  if(cont>0){
+     
+      document.getElementById("GuardarRef").disabled=true;
+     
      //alert("ok1"+cont+"Cliente: "+cliente+" deudor: "+idDeudor+" nombre_ref: "+nombre_ref+" TipoRef: "+TipoRef);
     //    return;
      var parametros = {
@@ -728,11 +910,11 @@ function AddReferencias() {
             beforeSend: function () {
             },
             success: function (response) {
-
+               
                 if (response) {
                     var i=0;
                     cont++;
-                    var IDReferenci=response.trim();
+                   // var IDReferenci=response.trim();
                     for (i=1;i<cont;i++){ 
                       var tipo_telef = $("#tReferenciaRef"+i).val();  
                       var NewTelefono = $("#new_telefono_ref"+i).val();
@@ -743,6 +925,8 @@ function AddReferencias() {
                        NewTelefonoReferencia(response,tipo_telef,NewTelefono);
                       }
                     }
+                 document.getElementById("GuardarRef").disabled=false;
+                 $('#listoModal').modal('hide');
                   alert("Referencia Ingresada exitosamente...")
                 }
                 
@@ -983,7 +1167,7 @@ function verificaFecha2(){
         var mensaje=null;
         // console.log("hora: "+hh+" minutos "+mm);
           var MsgValFechaHora=document.getElementById("MsgValHora");  
-          document.getElementById("MsgValHora").innerHTML="";
+          //document.getElementById("MsgValHora").innerHTML="";
       if(hh>=0 && hh<=23){
            if(mm>=0 && mm<=59){
          //  console.log("El formato de la Hora es correcto.");
@@ -1044,7 +1228,7 @@ function AddTelModal(){
                                                    "     </select>"+
                                                   "  </div>"+
                                                    " <div class='col-lg-7'>"+
-                                                   "     <input type='text' class='form-control' id='newTelefono' onkeypress='ValidaSoloNumeros()'>   "+
+                                                   "     <input maxlength='10' type='text' class='form-control' id='newTelefono' placeholder='0999999999'>   "+
                                                 "    </div>  "+
                                                  "   <div class='col-lg-1'>"+
                                                   "      <button type='button' onclick='agregarTelefonosModal()' class='btn btn-success'>Agregar</button> " +

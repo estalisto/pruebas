@@ -166,6 +166,182 @@ public class ConsultaxCartera extends HttpServlet {
                 Logger.getLogger(ConsultaxCartera.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        if(accion.equals("filtrosTotalVenc")){
+            String Tabla2="";
+           
+            
+            int opcion=Integer.parseInt(request.getParameter("orden_total"));
+            int cartera = Integer.parseInt(request.getParameter("cartera"));
+         try {
+                
+                 SSqlDatosDeudor=cd.getRetornaQuery5(cartera, EmpleadoID, opcion);                 
+                 sesion.setAttribute("SSqlDatosDeudor",SSqlDatosDeudor); 
+                 Tabla2=cd.getDatosCarteras2(SSqlDatosDeudor);
+                 response.getWriter().println(Tabla2);
+            } catch (SQLException ex) {
+                Logger.getLogger(ConsultaxCartera.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }         
+        if(accion.equals("filtrosDiasFecha")){
+            String Tabla2="";
+           
+            
+            int opcion=Integer.parseInt(request.getParameter("orden_Fecha"));
+            int cartera = Integer.parseInt(request.getParameter("cartera"));
+         try {
+                
+                 SSqlDatosDeudor=cd.getRetornaQuery10(cartera, EmpleadoID, opcion);                 
+                 sesion.setAttribute("SSqlDatosDeudor",SSqlDatosDeudor); 
+                 Tabla2=cd.getDatosCarteras2(SSqlDatosDeudor);
+                 response.getWriter().println(Tabla2);
+            } catch (SQLException ex) {
+                Logger.getLogger(ConsultaxCartera.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        if(accion.equals("filtrosIDE")){
+            String Tabla2="";
+           
+            
+            int opcion=Integer.parseInt(request.getParameter("orden_IDE"));
+            int cartera = Integer.parseInt(request.getParameter("cartera"));
+         try {
+                
+                 SSqlDatosDeudor=cd.getRetornaQuery3(cartera, EmpleadoID, opcion);                 
+                 sesion.setAttribute("SSqlDatosDeudor",SSqlDatosDeudor); 
+                 Tabla2=cd.getDatosCarteras2(SSqlDatosDeudor);
+                 response.getWriter().println(Tabla2);
+            } catch (SQLException ex) {
+                Logger.getLogger(ConsultaxCartera.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+         if(accion.equals("filtrosNombre")){
+            String Tabla2="";
+           
+            
+            int opcion=Integer.parseInt(request.getParameter("orden_Nombre"));
+            int cartera = Integer.parseInt(request.getParameter("cartera"));
+         try {
+                
+                 SSqlDatosDeudor=cd.getRetornaQuery4(cartera, EmpleadoID, opcion);                 
+                 sesion.setAttribute("SSqlDatosDeudor",SSqlDatosDeudor); 
+                 Tabla2=cd.getDatosCarteras2(SSqlDatosDeudor);
+                 response.getWriter().println(Tabla2);
+            } catch (SQLException ex) {
+                Logger.getLogger(ConsultaxCartera.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        if(accion.equals("filtrosPagos")){
+            String Tabla2="";
+           
+            
+            int opcion=Integer.parseInt(request.getParameter("orden_Pago"));
+            int cartera = Integer.parseInt(request.getParameter("cartera"));
+         try {
+                
+                 SSqlDatosDeudor=cd.getRetornaQuery6(cartera, EmpleadoID, opcion);                 
+                 sesion.setAttribute("SSqlDatosDeudor",SSqlDatosDeudor); 
+                 Tabla2=cd.getDatosCarteras2(SSqlDatosDeudor);
+                 response.getWriter().println(Tabla2);
+            } catch (SQLException ex) {
+                Logger.getLogger(ConsultaxCartera.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } 
+        if(accion.equals("filtrosSaldo")){
+            String Tabla2="";
+           
+            
+            int opcion=Integer.parseInt(request.getParameter("orden_Saldo"));
+            int cartera = Integer.parseInt(request.getParameter("cartera"));
+         try {
+                
+                 SSqlDatosDeudor=cd.getRetornaQuery7(cartera, EmpleadoID, opcion);                 
+                 sesion.setAttribute("SSqlDatosDeudor",SSqlDatosDeudor); 
+                 Tabla2=cd.getDatosCarteras2(SSqlDatosDeudor);
+                 response.getWriter().println(Tabla2);
+            } catch (SQLException ex) {
+                Logger.getLogger(ConsultaxCartera.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } 
+        if(accion.equals("filtrosValorComp")){
+            String Tabla2="";
+           
+            
+            int opcion=Integer.parseInt(request.getParameter("orden_ValorComp"));
+            int cartera = Integer.parseInt(request.getParameter("cartera"));
+         try {
+                
+                 SSqlDatosDeudor=cd.getRetornaQuery8(cartera, EmpleadoID, opcion);                 
+                 sesion.setAttribute("SSqlDatosDeudor",SSqlDatosDeudor); 
+                 Tabla2=cd.getDatosCarteras2(SSqlDatosDeudor);
+                 response.getWriter().println(Tabla2);
+            } catch (SQLException ex) {
+                Logger.getLogger(ConsultaxCartera.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }   
+         if(accion.equals("filtrosFechaComp")){
+            String Tabla2="";
+           
+            
+            int opcion=Integer.parseInt(request.getParameter("orden_FechaComp"));
+            int cartera = Integer.parseInt(request.getParameter("cartera"));
+         try {
+                
+                 SSqlDatosDeudor=cd.getRetornaQuery9(cartera, EmpleadoID, opcion);                 
+                 sesion.setAttribute("SSqlDatosDeudor",SSqlDatosDeudor); 
+                 Tabla2=cd.getDatosCarteras2(SSqlDatosDeudor);
+                 response.getWriter().println(Tabla2);
+            } catch (SQLException ex) {
+                Logger.getLogger(ConsultaxCartera.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }      
+         if(accion.equals("filtrosUltima")){
+            String Tabla2="";
+           
+            
+            int opcion=Integer.parseInt(request.getParameter("orden_Ultima"));
+            int cartera = Integer.parseInt(request.getParameter("cartera"));
+         try {
+                
+                 SSqlDatosDeudor=cd.getRetornaQuery11(cartera, EmpleadoID, opcion);                 
+                 sesion.setAttribute("SSqlDatosDeudor",SSqlDatosDeudor); 
+                 Tabla2=cd.getDatosCarteras2(SSqlDatosDeudor);
+                 response.getWriter().println(Tabla2);
+            } catch (SQLException ex) {
+                Logger.getLogger(ConsultaxCartera.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }         
+         if(accion.equals("filtrosResultado")){
+            String Tabla2="";
+           
+            
+            int opcion=Integer.parseInt(request.getParameter("orden_Resultado"));
+            int cartera = Integer.parseInt(request.getParameter("cartera"));
+         try {
+                
+                 SSqlDatosDeudor=cd.getRetornaQuery12(cartera, EmpleadoID, opcion);                 
+                 sesion.setAttribute("SSqlDatosDeudor",SSqlDatosDeudor); 
+                 Tabla2=cd.getDatosCarteras2(SSqlDatosDeudor);
+                 response.getWriter().println(Tabla2);
+            } catch (SQLException ex) {
+                Logger.getLogger(ConsultaxCartera.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        if(accion.equals("filtrosFechaUltPagos")){
+            String Tabla2="";
+           
+            
+            int opcion=Integer.parseInt(request.getParameter("orden_FechaUltPagos"));
+            int cartera = Integer.parseInt(request.getParameter("cartera"));
+         try {
+                
+                 SSqlDatosDeudor=cd.getRetornaQuery13(cartera, EmpleadoID, opcion);                 
+                 sesion.setAttribute("SSqlDatosDeudor",SSqlDatosDeudor); 
+                 Tabla2=cd.getDatosCarteras2(SSqlDatosDeudor);
+                 response.getWriter().println(Tabla2);
+            } catch (SQLException ex) {
+                Logger.getLogger(ConsultaxCartera.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

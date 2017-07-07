@@ -3,7 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Proyecto/laticobsa/web/login.jsp</file>
+            <file>file:/D:/Proyecto/laticobsa/src/java/com/laticobsa/controller/CobranzaController.java</file>
+            <file>file:/D:/Proyecto/laticobsa/web/dist/js/consultaxcatera.js</file>
+            <file>file:/D:/Proyecto/laticobsa/web/dist/js/cobranzas.js</file>
+            <file>file:/D:/Proyecto/laticobsa/web/sistema/gestion/frm_consulta_por_cartera.jsp</file>
         </group>
     </open-files>
 </project-private>

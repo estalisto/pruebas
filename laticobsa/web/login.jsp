@@ -106,10 +106,15 @@
                 
                                </div>
                                 <input id="btn_logeo" type="submit" value="Ingresar" class="btn btn-primary btn-block btn-lg"  title="Ingresar Usuarios" >
-                    
+                               
+                                <div id="DivMensajeError" class="alert alert-warning alert-dismissible" style="display:none;">
+                                    <button type="button" class="close" data-dismiss="alert" onclick=" location.reload(true);" aria-hidden="true">&times;</button>
+                                <h4><i class="icon fa fa-warning"></i> Alert!
+                                <div id="idMensajeError"></div></h4>
+                              </div>
                         </div>
                     </div>
-               
+                    
                 </div>
                 <p class="wow zoomInUp" data-wow-delay="0.7s"></p>
             </div>
@@ -126,6 +131,7 @@
 
         <script>
             $(function () {
+                
                 $('input').iCheck({
                     checkboxClass: 'icheckbox_square-blue',
                     radioClass: 'iradio_square-blue',

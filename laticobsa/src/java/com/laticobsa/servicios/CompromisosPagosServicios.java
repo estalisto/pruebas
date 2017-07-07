@@ -7,6 +7,11 @@ package com.laticobsa.servicios;
 
 import com.laticobsa.modelo.HibernateUtil;
 import com.laticobsa.modelo.LcCompromisosPago;
+import com.laticobsa.utils.Conexion;
+import java.math.BigDecimal;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -95,5 +100,130 @@ public List<LcCompromisosPago> getLcCompromisosPago(Date fechaCompromiso, int ID
         return null;
     } 
     
-    
+  public String getCompromisoxdeudores(Date fechaCompromiso, int IDEmpleado)throws SQLException
+    {   
+        Conexion conexion=new Conexion();
+            PreparedStatement pst;
+            ResultSet rs;
+            String valor = "";
+           try
+            {
+            String SQL="";
+             SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd ");
+            String result;
+            result = dateFormatter.format(fechaCompromiso);
+            Date beginDate = dateFormatter.parse(result);
+            SQL = "select (c.id_compromiso)as id_compromiso,to_char(c.fecha_registro, 'YYYY-MM-DD HH24:MI:SS'::text) as fecha_registro,(d.nombres_completo)as nombre_deudor,to_char(c.fecha_compromiso, 'YYYY-MM-DD'::text)  as fecha_compromiso,\n"
+                    + "(c.valor_compromiso)as valor_compromiso,(c.id_deudor)as id_deudor,(c.id_cliente)as id_cliente\n"
+                    + "from lc_transacciones t, lc_compromisos_pago c ,lc_datos_deudores d\n"
+                    + "where t.id_deudor=c.id_deudor and t.id_empleado = " + IDEmpleado + "\n"
+                    + "and c.id_deudor=d.id_datos_deudor\n"
+                    + "and c.fecha_compromiso >='" + result + "'  order by c.fecha_compromiso";
+            
+            String contenido = "",footer="";
+            String id_compromiso, fecha_registro, nombre_deudor, fecha_compromiso, valor_compromiso;
+            String id_deudor, id_cliente;
+            BigDecimal valores = BigDecimal.ZERO;
+            BigDecimal suma = BigDecimal.ZERO;
+            pst = conexion.getconexion().prepareStatement(SQL);
+            rs = pst.executeQuery();
+            
+            while( rs.next() )    //Mientras haya una sig. tupla
+            {
+                id_compromiso = rs.getString("id_compromiso");
+                fecha_registro = rs.getString("fecha_registro");
+                nombre_deudor =rs.getString("nombre_deudor");
+                fecha_compromiso = rs.getString("fecha_compromiso");
+                valor_compromiso = rs.getString("valor_compromiso");
+                id_deudor = rs.getString("id_deudor");
+                id_cliente = rs.getString("id_cliente");
+                valores = new BigDecimal(valor_compromiso);
+                suma= suma.add(valores);
+                contenido = contenido + "<tr><td class=\"text-center\">" + id_compromiso + "</td>\n"
+                        + "                                  <td class=\"text-center\">" + fecha_registro + "</td>\n"
+                        + "                                  <td><a onclick=\"cobranzas2(" + id_cliente + "," + id_deudor + ")\">" + nombre_deudor + "</a> </td>\n"
+                        + "                                  <td class=\"text-center\">" + fecha_compromiso + "</td>\n"
+                        + "                                  <td class=\"text-center\">" + valor_compromiso + "</td>\n"
+                        + "                                  <td>Llamar a la Hora especificada </td></tr> ";
+            }
+            footer="</tbody></br><tfoot>\n" +
+                                    "<tr>\n" +
+                                    "<th class=\"col-sm-2  text-center\" style=\" font-size:18px; font-type:Arial\"> Total Deuda: </th>  "
+                                    + "<th class=\"col-sm-2\" style=\" font-size:18px; color:#3c8dbc; font-type:Arial\"><strong>$ "+suma+"</strong></th>\n" +
+                                    "<tr>\n" +
+                                    "</tfoot>";
+                rs.close();
+                pst.close();
+                conexion.cierraConexion();
+            valor = contenido+footer;
+                return valor;
+            }catch(Exception ex){
+            }finally{
+                    if(conexion!=null)
+                    conexion.cierraConexion();
+                 }
+        return valor;
+    }   
+  
+   public String getCompromisoxRangos(String fechaInicio,String fechaFin, int IDEmpleado)throws SQLException
+    {   
+        Conexion conexion=new Conexion();
+            PreparedStatement pst;
+            ResultSet rs;
+            String valor = "";
+           try
+            {
+            String SQL="";
+             
+            SQL = "select (c.id_compromiso)as id_compromiso,to_char(c.fecha_registro, 'YYYY-MM-DD HH24:MI:SS'::text) as fecha_registro,(d.nombres_completo)as nombre_deudor,to_char(c.fecha_compromiso, 'YYYY-MM-DD'::text)   as fecha_compromiso,\n"
+                    + "(c.valor_compromiso)as valor_compromiso,(c.id_deudor)as id_deudor,(c.id_cliente)as id_cliente\n"
+                    + "from lc_transacciones t, lc_compromisos_pago c ,lc_datos_deudores d\n"
+                    + "where t.id_deudor=c.id_deudor and t.id_empleado = " + IDEmpleado + "\n"
+                    + "and c.id_deudor=d.id_datos_deudor\n"
+                    + "and c.fecha_compromiso >='" + fechaInicio + "'and c.fecha_compromiso <='" + fechaFin + "'   order by c.fecha_compromiso";
+            
+            String contenido = "",footer="";
+            String id_compromiso, fecha_registro, nombre_deudor, fecha_compromiso, valor_compromiso;
+            String id_deudor, id_cliente;
+            BigDecimal valores = BigDecimal.ZERO;
+            BigDecimal suma = BigDecimal.ZERO;            
+            pst = conexion.getconexion().prepareStatement(SQL);
+            rs = pst.executeQuery();
+            
+            while( rs.next() )    //Mientras haya una sig. tupla
+            {
+                id_compromiso = rs.getString("id_compromiso");
+                fecha_registro = rs.getString("fecha_registro");
+                nombre_deudor =rs.getString("nombre_deudor");
+                fecha_compromiso = rs.getString("fecha_compromiso");
+                valor_compromiso = rs.getString("valor_compromiso");
+                id_deudor = rs.getString("id_deudor");
+                id_cliente = rs.getString("id_cliente");
+                valores = new BigDecimal(valor_compromiso);
+                suma= suma.add(valores);
+                contenido = contenido + "<tr><td class=\"text-center\">" + id_compromiso + "</td>\n"
+                        + "                                  <td class=\"text-center\">" + fecha_registro + "</td>\n"
+                        + "                                  <td><a onclick=\"cobranzas2(" + id_cliente + "," + id_deudor + ")\">" + nombre_deudor + "</a> </td>\n"
+                        + "                                  <td class=\"text-center\">" + fecha_compromiso + "</td>\n"
+                        + "                                  <td  class=\"text-center\">" + valor_compromiso + "</td>\n"
+                        + "                                  <td>Llamar a la Hora especificada </td></tr> ";
+            }
+            footer="</tbody></br><tfoot>\n" +
+                                    "<tr>\n" +
+                                    "<th class=\"col-sm-2  text-center\" style=\" font-size:18px; font-type:Arial\"> Total Deuda: </th>  "
+                                    + "<th class=\"col-sm-2\" style=\" font-size:18px; color:#3c8dbc; font-type:Arial\"><strong>$ "+suma+"</strong></th>\n" +
+                                    "<tr>\n" +
+                                    "</tfoot>";
+                rs.close();
+                pst.close();
+                conexion.cierraConexion();
+            valor = contenido+footer;
+                return valor;
+            }catch(Exception ex){
+            }finally{
+                    if(conexion!=null)
+                    conexion.cierraConexion();
+                 }
+        return valor;
+    }  
 }

@@ -6,11 +6,11 @@
 package com.laticobsa.controller;
 
 import com.laticobsa.modelo.LcAgencia;
-import com.laticobsa.modelo.LcArticulo;
+
 import com.laticobsa.modelo.LcCiudad;
 import com.laticobsa.modelo.LcClientes;
 import com.laticobsa.modelo.LcCompromisosPago;
-import com.laticobsa.modelo.LcCuotas;
+
 import com.laticobsa.modelo.LcDatosDeudores;
 import com.laticobsa.modelo.LcDireccion;
 import com.laticobsa.modelo.LcEmpleados;
@@ -31,6 +31,7 @@ import com.laticobsa.servicios.ConsultaxCarteraServicios;
 import com.laticobsa.servicios.DireccionServicios;
 import com.laticobsa.servicios.EmpresaServicios;
 import com.laticobsa.servicios.ParametrosServicios;
+import com.laticobsa.servicios.RecaudacionServicios;
 import com.laticobsa.servicios.ReferenciasServicios;
 import com.laticobsa.servicios.SucursalServicios;
 import com.laticobsa.servicios.TelefonoServicios;
@@ -80,6 +81,7 @@ public class CobranzaController extends HttpServlet {
         ReferenciasServicios ref = new ReferenciasServicios();
         ParametrosServicios param = new ParametrosServicios();
         ConsultaxCarteraServicios cd = new ConsultaxCarteraServicios();
+        RecaudacionServicios rs = new RecaudacionServicios();
         String accion;
         accion = request.getParameter("accion");
         String id_empresas, id_empleados, id_sucursal;
@@ -104,6 +106,26 @@ public class CobranzaController extends HttpServlet {
          List<LcDatosDeudores> cobranzas = cd.getLcDeudorId(idCliente,idDeudor);
          request.setAttribute("cobranzas", cobranzas);
          List<LcTransacciones> transaccion = cd.getTransaccionesId(idCliente,idDeudor);
+         BigDecimal totalPagar=BigDecimal.ZERO;
+          BigDecimal valorPagado =BigDecimal.ZERO;
+           BigDecimal ValorSaldo=BigDecimal.ZERO;
+         if(!transaccion.isEmpty()){
+         
+         totalPagar =transaccion.get(0).getTotalVencidos();
+             try {
+                 valorPagado=rs.getValorRecaudado(EmpresaID, idCliente, idDeudor);
+             } catch (SQLException ex) {
+                 Logger.getLogger(CobranzaController.class.getName()).log(Level.SEVERE, null, ex);
+             }
+         ValorSaldo=(totalPagar).subtract(valorPagado);
+         
+         
+         
+         }
+          // request.setAttribute("totalPagar2", totalPagar);
+           request.setAttribute("valorPagado2", valorPagado);
+           request.setAttribute("ValorSaldo2", ValorSaldo);
+         
          request.setAttribute("transaccion", transaccion);
          int idcliente = cobranzas.get(0).getLcClientes().getIdCliente();
          List<LcTipoGestion> gestiones = cd.getLcTipoGestion(idcliente);
@@ -122,10 +144,20 @@ public class CobranzaController extends HttpServlet {
          List<LcNotas> notas = cd.getLcNotas(idCliente,idDeudor);
          request.setAttribute("notas", notas);
          
-         List<LcArticulo> detArticulos = cd.getArticulos(idCliente,idDeudor);
+         String detArticulos = null;
+            try {
+                detArticulos = cd.getArticulos2(idCliente,idDeudor);
+            } catch (SQLException ex) {
+                Logger.getLogger(CobranzaController.class.getName()).log(Level.SEVERE, null, ex);
+            }
          request.setAttribute("detArticulos", detArticulos);
          
-         List<LcCuotas> detCuotas = cd.getCuotas(idCliente,idDeudor);
+         String detCuotas = null;
+            try {
+                detCuotas = cd.getCuotas2(idcliente, idDeudor);
+            } catch (SQLException ex) {
+                Logger.getLogger(CobranzaController.class.getName()).log(Level.SEVERE, null, ex);
+            }
          request.setAttribute("detCuotas", detCuotas);
            String TablaGestiones="";
             try {
@@ -137,6 +169,8 @@ public class CobranzaController extends HttpServlet {
          
          //List<LcGestiones> GestionTRX = cd.getGestionesTRX(idCliente,idDeudor);
          request.setAttribute("GestionTRX", TablaGestiones);
+         
+         
          
          
          
@@ -239,13 +273,36 @@ public class CobranzaController extends HttpServlet {
                             response.getWriter().println(idNota);
         }
 
-        
+        if (accion.equals("ResulParametro")) {
+            int id_resultado = Integer.parseInt(request.getParameter("resultado"));
+        try {
+                    if(!param.getValorParametro("COMPROMISO_PAGO").isEmpty()){
+                        String valor_parametro = param.getValorParametro("COMPROMISO_PAGO");
+                        String id_resultados = Integer.toString(id_resultado);
+                        int resultado = valor_parametro.indexOf(id_resultados);
+                        if(resultado != -1){
+                            response.getWriter().println(id_resultado+"|"+1);
+                        }
+                    }
+                    if(!param.getValorParametro("VOLVER_A_LLAMAR").isEmpty()){
+                        String valor_parametro = param.getValorParametro("VOLVER_A_LLAMAR");
+                        String id_resultados = Integer.toString(id_resultado);
+                        int resultado = valor_parametro.indexOf(id_resultados);
+                        if(resultado != -1){
+                            response.getWriter().println(id_resultado+"|"+2);
+                        }
+                    }
+        } catch (SQLException ex) {
+                    Logger.getLogger(CobranzaController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+        }
         if (accion.equals("transaccion")) {
             try{
                 int id = Integer.parseInt(request.getParameter("id"));
                 
                 int id_gestion = Integer.parseInt(request.getParameter("gestion"));
                 int id_resultado = Integer.parseInt(request.getParameter("resultado"));
+                int tipo_resultado = Integer.parseInt(request.getParameter("tipo_resultado"));
                 int id_cliente = Integer.parseInt(request.getParameter("cliente"));
                 int id_Transaccion = Integer.parseInt(request.getParameter("idTransaccion"));
                 int id_Gestion = Integer.parseInt(cd.getNext2().toString());
@@ -258,7 +315,7 @@ public class CobranzaController extends HttpServlet {
                     if(!param.getValorParametro("COMPROMISO_PAGO").isEmpty()){
                         
                         String valor_parametro = param.getValorParametro("COMPROMISO_PAGO");
-                        String id_resultados = Integer.toString(id_resultado);
+                        String id_resultados = Integer.toString(tipo_resultado);
                         int resultado = valor_parametro.indexOf(id_resultados);
                         if(resultado != -1){
                             //NUEVO CAMBIO
@@ -301,7 +358,58 @@ public class CobranzaController extends HttpServlet {
                             estado="C";
                             cd.updateTransactionState(id_Transaccion,estado);
                             //NUEVO CAMBIO
-                        }else{ //Guarda solo Gestion
+                        }
+                    } if(!param.getValorParametro("VOLVER_A_LLAMAR").isEmpty()){
+                        
+                        String valor_parametro = param.getValorParametro("VOLVER_A_LLAMAR");
+                        String id_resultados = Integer.toString(tipo_resultado);
+                        int resultado = valor_parametro.indexOf(id_resultados);
+                        if(resultado != -1){
+                            //NUEVO CAMBIO
+                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                            
+                            int idComPago=Integer.parseInt(cd.getNext4().toString());
+                            String  Fechacompromiso_pago = request.getParameter("Fechacompromiso_pago");
+                            Date  Fecha_final = formatter.parse(Fechacompromiso_pago);
+                            String fecha_comp=formatter.format(Fecha_final);
+                            String hora = request.getParameter("hora");
+                            String Fecha1=Fechacompromiso_pago+" "+hora+":00";
+                            Date  Fecha_recordatorio = formatter.parse(Fecha1);                            
+                            descripcion=descripcion+" RECORDATORIO PROGRAMADO PARA LA FECHA "+Fechacompromiso_pago+" Y HORA"+hora;
+                            int id_recordatorio = Integer.parseInt(cd.getNext().toString());
+                
+                            cd.addRecordatorio(new LcRecordatorios(
+                                    id_recordatorio,
+                                    (new LcAgencia(SucursalID)),
+                                    (new LcClientes(id_cliente)),
+                                    (new LcDatosDeudores(id)),
+                                    (new LcEmpleados(EmpleadoID)),
+                                    (new LcEmpresa(EmpresaID)),
+                                    Fecha_final,
+                                    "A",
+                                    fecha_reg,
+                                    fecha_reg,
+                                    "A"
+                            ));
+                            //Guarda Gestion lc_gestiones
+                            cd.addGestiones(new LcGestiones(
+                                    id_Gestion,
+                                    (new LcClientes(id_cliente)),
+                                    (new LcDatosDeudores(id)),
+                                    (new LcEmpleados(EmpleadoID)),
+                                    (new LcTipoGestion(id_gestion)),
+                                    (new LcTipoResultado(id_resultado)),
+                                    descripcion.toUpperCase(),
+                                    fecha_reg,
+                                    "A"
+                            ));
+                            //Actualiza estado lc_transaciones
+                            estado="C";
+                            cd.updateTransactionState(id_Transaccion,estado);
+                            //NUEVO CAMBIO
+                        }
+                    }
+                    if(tipo_resultado==0){ //Guarda solo Gestion
                             cd.addGestiones(new LcGestiones(
                                     id_Gestion,
                                     (new LcClientes(id_cliente)),
@@ -316,7 +424,6 @@ public class CobranzaController extends HttpServlet {
                             estado="P";
                             cd.updateTransactionState(id_Transaccion,estado);
                     
-                        }
                         }
                 } catch (SQLException ex) {
                     Logger.getLogger(CobranzaController.class.getName()).log(Level.SEVERE, null, ex);

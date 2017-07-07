@@ -92,7 +92,18 @@
                     </div>                   
                 </div>           
         </div> 
-          <input  type="text" class="form-control input-sm" id="IdDiasMora">
+          <input  type="text" class="form-control input-sm hidden" id="IdDiasMora">
+          <input  type="text" class="form-control input-sm hidden" id="IdTotalVenc">
+          <input  type="text" class="form-control input-sm hidden" id="IdFechaUlt">
+          <input  type="text" class="form-control input-sm hidden" id="IdIdentificacion">
+          <input  type="text" class="form-control input-sm hidden" id="IdNombres">
+          <input  type="text" class="form-control input-sm hidden" id="IdPagos">
+          <input  type="text" class="form-control input-sm hidden" id="IdFecUltPagos">
+          <input  type="text" class="form-control input-sm hidden" id="IdSaldo">
+          <input  type="text" class="form-control input-sm hidden" id="IdValorComp">
+          <input  type="text" class="form-control input-sm hidden" id="IdFechaComp">
+          <input  type="text" class="form-control input-sm hidden" id="IdUltima">
+          <input  type="text" class="form-control input-sm hidden" id="IdResultado">
             <div class="panel panel-default well-lg">
                 <div class="row">
                     <div class="col-lg-12">   
@@ -104,22 +115,23 @@
                                 <div  class="col-xs-12" >
                                         <form name="form1" action="consultacartera" method="get">                                
                                          <div>                        
-                                            <div  class="box-body table-responsive"  >
-                                         <table id="consul_cartera" class="table-striped table-hover">
+                                            <div  class="box-body table-responsive" style="overflow-x: auto" >
+                                         <table id="consul_cartera" class="table-striped table-hover " >
                                                             <thead>
                                                                     <tr bgcolor="#FBF5EF">                                  
-                                                                        <th class="col-sm-1 text-left">ID</th>                                                        
-                                                                        <th align="left" class="col-sm-1 text-left">Identificación</th>
-                                                                        <th class="col-sm-2 text-left">Nombres</th>  
+                                                                        <th class="col-sm-1 text-left hidden" style="color: #3c8dbc">ID</th>                                                        
+                                                                        <th align="left" class="col-sm-1 text-left"><a id="IdentificacionID" onclick="orderIdent()">Identificación</a></th>
+                                                                        <th class="col-sm-2 text-left"><a id="NombresID" onclick="orderNombre()">Nombres</a></th>  
                                                                         <th class="col-sm-1 text-left"><a id="DiasMoraID" onclick="orderDiasMora()" >Días Mora</a></th> 
-                                                                        <th class="col-sm-1 text-right"><a id="ordenDesc" onclick="" ><span class="fa fa-arrow-up" ></span></a>Total Vnc<a id="btnordenAsc" onclick="" ><span class="fa fa-arrow-down" ></span></a></th> 
-                                                                        <th align="center" class="col-sm-1 text-right">Pagos</th>
-                                                                        <th align="rigth" class="col-sm-1 text-right">Saldo</th> 
-                                                                        <th align="center" class="col-sm-1 text-right">Valor Comp.</th> 
-                                                                        <th align="center" class="col-sm-2 text-center">Fecha Comp.</th>
-                                                                        <th align="center" class="col-sm-3"><a onclick="" >Fecha Ult. Gestión</a></th> 
-                                                                        <th align="center" class="col-sm-3">Ult. Gestión</th> 
-                                                                        <th align="center" class="col-sm-2">Resultado Gestión</th>
+                                                                        <th class="col-sm-1 text-right"><a id="TotalID" onclick="orderTotalVenc()" >Total Vnc</a></th> 
+                                                                        <th align="center" class="col-sm-1 text-right"><a id="PagosID" onclick="orderPagos()">Pagos</a></th>
+                                                                        <th align="center" class="col-sm-1 text-right"><a id="FecUltPagosID" onclick="orderFechaUltPagos()">Fecha Ult. Pagos</a></th>
+                                                                        <th align="rigth" class="col-sm-1 text-right"><a id="SaldosID" onclick="orderSaldo()">Saldo</a></th> 
+                                                                        <th align="center" class="col-sm-1 text-right"><a id="ValorCompID" onclick="orderValorComp()">Valor Comp.</a></th> 
+                                                                        <th align="center" class="col-sm-2 text-center"><a id="FechaCompID" onclick="orderFechaComp()">Fecha Comp.</a></th>
+                                                                        <th align="center" class="col-sm-3"><a id="FechaID" onclick="orderFchGestion()" >Fecha Ult. Gestión</a></th> 
+                                                                        <th align="center" class="col-sm-3"><a id="UltimaID" onclick="orderUltima()">Ult. Gestión</a></th> 
+                                                                        <th align="center" class="col-sm-2"><a id="ResultadoID" onclick="orderResultado()">Resultado Gestión</a></th>
                                                                     </tr>  
                                                             </thead>
                                                             <tbody id="bodytable">                                

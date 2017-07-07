@@ -5,11 +5,14 @@
  */
 package com.laticobsa.controller;
 
-import com.laticobsa.modelo.LcCompromisosPago;
+
 import com.laticobsa.servicios.CompromisosPagosServicios;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Date;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -45,13 +48,19 @@ public class CompromisosPagos extends HttpServlet {
        int IdEmpleado =Integer.parseInt(ss_idempleado);
 
        Date FechaHoy =new Date();
-       
+       String Tabla="";
       
        
        if(accion.equals("listar"))
         {
-        List<LcCompromisosPago> compromisospg = compp.getLcCompromisosPago(FechaHoy,IdEmpleado);
-        request.setAttribute("compromisospg", compromisospg);
+            try {
+                Tabla=compp.getCompromisoxdeudores(FechaHoy, IdEmpleado);
+            } catch (SQLException ex) {
+                Logger.getLogger(CompromisosPagos.class.getName()).log(Level.SEVERE, null, ex);
+            }
+             request.setAttribute("Tablacompromiso", Tabla);
+//        List<LcCompromisosPago> compromisospg = compp.getLcCompromisosPago(FechaHoy,IdEmpleado);
+//        request.setAttribute("compromisospg", compromisospg);
          request.getRequestDispatcher("sistema/gestion/frm_compromiso_pago.jsp").forward(request, response);
         
         
@@ -63,9 +72,15 @@ public class CompromisosPagos extends HttpServlet {
           // String fecha_inicio = dateFormatter.format(new Date());
           // System.out.print("Fecha: "+fecha_inicio);           
            String fechaIni= request.getParameter("fecha_inicio");
-           String fechaFin= request.getParameter("fecha_fin");           
-           List<LcCompromisosPago> compromisospg = compp.getLcCompromisosPagoFechas(fechaIni,fechaFin,IdEmpleado);       
-           request.setAttribute("compromisospg", compromisospg);
+           String fechaFin= request.getParameter("fecha_fin");
+            try {
+                Tabla=compp.getCompromisoxRangos(fechaIni, fechaFin, IdEmpleado);
+            } catch (SQLException ex) {
+                Logger.getLogger(CompromisosPagos.class.getName()).log(Level.SEVERE, null, ex);
+            }
+           request.setAttribute("Tablacompromiso", Tabla);
+//           List<LcCompromisosPago> compromisospg = compp.getLcCompromisosPagoFechas(fechaIni,fechaFin,IdEmpleado);       
+//           request.setAttribute("compromisospg", compromisospg);
            request.getRequestDispatcher("sistema/gestion/frm_compromiso_pago.jsp").forward(request, response);
         
         

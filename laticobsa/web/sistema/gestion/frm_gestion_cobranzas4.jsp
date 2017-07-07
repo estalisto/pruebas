@@ -256,9 +256,27 @@ border: 2px solid #CB8B07;
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                 <%= request.getAttribute("detArticulos") %> 
+                                                                 <c:set var="actualSum" value="${0}"/> 
+                                                                <c:forEach items="${detArticulos}" var="detArticulo">
+                                                                    <tr>  
+                                                                        <td><c:out value="${detArticulo.getReferencia()}"/></td>
+                                                                        <td><c:out value="${detArticulo.getNombreArticulo()}"/></td>
+                                                                        <td><c:out value="${detArticulo.getValorArticulo()}"/></td>
+                                                                        <td><c:out value="${detArticulo.getFechaCompra()} "/></td>
+                                                                       <c:set var="actualSum" value="${actualSum + detArticulo.getValorArticulo()}"/> 
+                                                               
+                                                                    </tr>                                      
+                                                                </c:forEach>
+                                                                  
+
                                                             </tbody>
-                                                              
+                                                            <tfoot>
+                                                                    <tr>
+                                                                       
+                                                                        <th> Total Deuda: </th>  <th><strong><c:out value="${actualSum} "/></strong></th> 
+
+                                                                    </tr>
+                                                                </tfoot>
                                                             
                                                         </table>
                                                     </div>
@@ -296,8 +314,21 @@ border: 2px solid #CB8B07;
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <%= request.getAttribute("detCuotas") %>
-                                                               
+                                                                <c:set var="actualSum" value="${0}"/> 
+                                                                <c:forEach items="${detCuotas}" var="detCuota">
+                                                                    <tr> 
+                                                                        <td><c:out value="${detCuota.getLcArticulo().getReferencia()}"/></td>
+                                                                        <td><c:out value="${detCuota.getNumCuotas()}"/></td>
+                                                                        <td><c:out value="${detCuota.getInteresCuota()}"/></td>
+                                                                        <td><c:out value="${detCuota.getValorMora()}"/></td>
+                                                                        <td><c:out value="${detCuota.getGastosCobranzas()}"/></td>
+                                                                        <td><c:out value="${detCuota.getGastosAdicional()}"/></td>
+                                                                        <td><c:out value="${detCuota.getOtrosValores()}"/></td>
+                                                                        <td><c:out value="${detCuota.getValorCuota()}"/></td>
+                                                                        <td><c:out value="${detCuota.getTotalCuotas()}"/></td>
+                                                                        <td><c:out value="${detCuota.getFechaMaxPago()} "/></td>  
+                                                                    </tr>                                      
+                                                                </c:forEach>
                                                                 
                                                             </tbody>
 
@@ -324,7 +355,7 @@ border: 2px solid #CB8B07;
                             <div class="col-lg-4">
                                 <div id="table_direccion" class="form-group">                                
                                     <dt>Dirección: </dt>
-                                    <div  class="box table-responsive" >
+                                    <div  class="box table-responsive">
                                         <table id="idAllDireccions" class="table-striped table-hover">
                                             <thead>
                                                 <tr  bgcolor="#FBF5EF">

@@ -301,7 +301,7 @@ $('#btn_logeo').click(function(e){
     var usuario = $('#usuario').val();
     var password = $('#password').val();
     var accion = "autorizar";
-    
+ 
     var parametros = {
                 "accion" : accion,
                 "empresa" : empresa,
@@ -316,7 +316,13 @@ $('#btn_logeo').click(function(e){
                 } ,
                success:  function (response) {
                       if(response){
-                           MsgSalidaModal('Alerta!..',response+'...','Cerrar');
+                          // MsgSalidaModal('Alerta!..',response+'...','Cerrar');
+                         // $('#DivMensajeError').style.display="block";
+                         document.getElementById("DivMensajeError").style="block";
+                           document.getElementById("idMensajeError").innerHTML=response.toString();
+                           document.getElementById("idMensajeError").style="block";
+                           
+                          
                           } else{
                               location.reload(true);
                           }                      

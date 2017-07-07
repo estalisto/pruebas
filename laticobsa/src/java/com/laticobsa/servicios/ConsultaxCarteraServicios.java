@@ -21,6 +21,7 @@ import com.laticobsa.modelo.LcTipoGestion;
 import com.laticobsa.modelo.LcTipoResultado;
 import com.laticobsa.modelo.LcTransacciones;
 import com.laticobsa.utils.Conexion;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -441,6 +442,65 @@ public List<LcArticulo> getArticulos(int idCliente,int idDeudor){
 
          return lista;
     }
+    public String getArticulos2(int idCliente,int idDeudor)throws SQLException
+    {   
+        Conexion conexion=new Conexion();
+            PreparedStatement pst;
+            ResultSet rs;
+            String valor = "";
+           try
+            {
+            String SQL="";
+            
+            SQL="select (a.referencia)as referencia,(a.nombre_articulo)as nombre_articulo,\n" +
+"(a.valor_articulo)as valor_articulo,to_char(a.fecha_compra,'YYYY-MM-DD hh24:mi:ss')as fecha_compra,\n" +
+"(sum(a.valor_articulo))as suma_valor \n" +
+"from lc_articulo a where a.id_deudor="+idDeudor+"and a.id_cliente="+idCliente+"group by id_articulo order by fecha_compra desc"; 
+            
+            String contenido="",footer="";
+            String referencia,nombre_articulo,valor_articulo,fecha_compra,suma_valor;
+            BigDecimal valores = BigDecimal.ZERO;
+            BigDecimal suma = BigDecimal.ZERO;
+            pst = conexion.getconexion().prepareStatement(SQL);
+            rs = pst.executeQuery();
+            
+            while( rs.next() )    //Mientras haya una sig. tupla
+            {
+                referencia = rs.getString("referencia");
+                nombre_articulo = rs.getString("nombre_articulo");
+                valor_articulo =rs.getString("valor_articulo");
+                fecha_compra = rs.getString("fecha_compra");
+                valores = new BigDecimal(valor_articulo);
+                suma= suma.add(valores);
+                
+                
+             // contenido=contenido+"<tbody>\n" +
+                contenido=contenido+ "<tr>  \n" +
+                                    "<td>"+referencia+"</td>\n" +
+                                    "<td>"+nombre_articulo+"</td>\n" +
+                                    "<td>"+valor_articulo+"</td>\n" +
+                                    "<td>"+fecha_compra+"</td>\n" +
+                                    "</tr>\n";// +
+                                   // "</tbody>";
+                                      
+            }
+                footer="<tfoot>\n" +
+                                    "<tr>\n" +
+                                    "<th> Total Deuda: </th>  <th><strong>"+suma+"</strong></th>\n" +
+                                    "<tr>\n" +
+                                    "</tfoot>";
+                rs.close();
+                pst.close();
+                conexion.cierraConexion();
+                 valor=contenido;//+footer;
+                return valor;
+            }catch(Exception ex){
+            }finally{
+                    if(conexion!=null)
+                    conexion.cierraConexion();
+                 }
+        return valor;
+    } 
 public List<LcCuotas> getCuotas(int idCliente,int idDeudor){
          
         SessionFactory sesion = HibernateUtil.getSessionFactory();
@@ -464,7 +524,66 @@ public List<LcCuotas> getCuotas(int idCliente,int idDeudor){
 
          return lista;
     }
+    public String getCuotas2(int idCliente,int idDeudor)throws SQLException
+    {   
+        Conexion conexion=new Conexion();
+            PreparedStatement pst;
+            ResultSet rs;
+            String valor = "";
+           try
+            {
+            String SQL="";
+            
+            SQL="select (a.referencia)as referencia,(c.num_cuotas)as num_cuotas,(c.interes_cuota)as interes,(c.valor_mora)as mora,(c.gastos_cobranzas)as gastos_cobranzas,\n" +
+                "(c.gastos_adicional)as gastos_adicional,(c.otros_valores)as otros_valores,(c.valor_cuota)as valor_cuota,(c.total_cuotas)as total_cuotas,\n" +
+                "to_char(c.fecha_max_pago,'YYYY-MM-DD hh24:mi:ss') fecha_transaccion \n" +
+                "from lc_cuotas c, lc_articulo a where c.id_deudor="+idDeudor+"\n" +
+                "and c.id_cliente="+idCliente+" and c.id_articulo=a.id_articulo"; 
+            
+            String contenido="";
+            String referencia,num_cuotas,interes,mora,gastos_cobranzas,valor_cuota;
+            String gastos_adicional,otros_valores,total_cuotas,fecha_transaccion;
+            pst = conexion.getconexion().prepareStatement(SQL);
+            rs = pst.executeQuery();
+            
+            while( rs.next() )    //Mientras haya una sig. tupla
+            {
+                referencia = rs.getString("referencia");
+                num_cuotas = rs.getString("num_cuotas");
+                interes =rs.getString("interes");
+                mora = rs.getString("mora");
+                gastos_cobranzas = rs.getString("gastos_cobranzas");
+                gastos_adicional = rs.getString("gastos_adicional");
+                otros_valores = rs.getString("otros_valores");
+                valor_cuota = rs.getString("valor_cuota");
+                total_cuotas = rs.getString("total_cuotas");
+                fecha_transaccion = rs.getString("fecha_transaccion");
+              contenido=contenido+"<tr> \n" +
+                                    " <td>"+referencia+"</td>\n" +
+                                    " <td>"+num_cuotas+"</td>\n" +
+                                    " <td>"+interes+"</td>\n" +
+                                    " <td>"+mora+"</td>\n" +
+                                    " <td>"+gastos_cobranzas+"</td>\n" +
+                                    " <td>"+gastos_adicional+"</td>\n" +
+                                    " <td>"+otros_valores+"</td>\n" +
+                                    " <td>"+valor_cuota+"</td>\n" +
+                                    " <td>"+total_cuotas+"</td>\n" +
+                                    " <td>"+fecha_transaccion+"</td>  \n" +
+                                    " </tr>";  
+            }
 
+                rs.close();
+                pst.close();
+                conexion.cierraConexion();
+                 valor=contenido;
+                return valor;
+            }catch(Exception ex){
+            }finally{
+                    if(conexion!=null)
+                    conexion.cierraConexion();
+                 }
+        return valor;
+    }   
     public void addRecordatorio(LcRecordatorios recordatorio){
     SessionFactory factory=HibernateUtil.getSessionFactory();
     Session session= factory.openSession();
@@ -719,7 +838,7 @@ public List<LcCuotas> getCuotas(int idCliente,int idDeudor){
             String Ordenar="";
             String SQL="",SQL2="";   
             
-            SQL="select  id_datos_deudor, id_cliente, identificacion, nombres_completo , dias_mora, total_vencidos, pagos, saldo, valor_compro,fecha_comp, fech_ultima_gestion,ultima_gestion,resultado_gestion,estado\n" +
+            SQL="select  id_datos_deudor, id_cliente, identificacion, nombres_completo , dias_mora, total_vencidos, pagos,fecha_ult_pagos, saldo, valor_compro,fecha_comp, fech_ultima_gestion,ultima_gestion,resultado_gestion,estado\n" +
 "  from vw_consulta_cartera s\n" +
 "where s.id_cliente="+IdCliente+"\n" +
 " and s.id_empleado="+IdEmpleado; 
@@ -802,12 +921,13 @@ String color;
 
  
   contenidoTabla=contenidoTabla+"<tr  bgcolor=\"#E0ECF8\" onclick=\"cobranzas2("+id_cliente+","+id_datos_deudor+");\"  >\n" +
-"                                                                    <td><h6><p "+color+" >"+id_datos_deudor+"</p></h6></td>\n" +
+"                                                                    <td class=\"hidden\"><h6><p "+color+" >"+id_datos_deudor+"</p></h6></td>\n" +
 "                                                                    <td><h6><p "+color+" >"+identificacion+"</p> </h6></td>\n" +
 "                                                                    <td><h6><p "+color+" >"+nombres_completo+"</p></h6></td>\n" +
 "                                                                    <td align=\"center\"><h6><p "+color+" >"+dias_mora+"</p></h6></td>\n" +
 "                                                                    <td align=\"right\"><h6><p "+color+" >"+total_vencidos+"</p></h6></td>\n" +
 "                                                                    <td align=\"right\"><h6><p "+color+" >"+pagos+"</p></h6></td>\n" +
+          "                                                         <td align=\"right\"><h6><p "+color+" >"+rs.getString("fecha_ult_pagos")+"</p></h6></td>\n" +
 "                                                                    <td align=\"right\"><h6><p "+color+" >"+saldo+"</p></h6></td>\n" +
 "                                                                    <td align=\"right\"><h6><p "+color+" >"+valor_compro+"</p></h6> </td>\n" +
 "                                                                    <td align=\"center\"><h6><p "+color+" >"+fecha_comp+"</p></h6></td>\n" +          
@@ -865,7 +985,7 @@ String color;
                 Ordenar="order by s.fech_ultima_gestion asc"; 
             }
             String SQL="";
-            SQL="select  id_datos_deudor, id_cliente, identificacion, nombres_completo , dias_mora, total_vencidos, pagos, saldo, valor_compro,fecha_comp, fech_ultima_gestion,ultima_gestion,resultado_gestion,estado\n" +
+            SQL="select  id_datos_deudor, id_cliente, identificacion, nombres_completo , dias_mora, total_vencidos, pagos,fecha_ult_pagos, saldo, valor_compro,fecha_comp, fech_ultima_gestion,ultima_gestion,resultado_gestion,estado\n" +
             "  from vw_consulta_cartera s\n" +
             " where s.id_cliente="+IdCliente+"\n" +
             " and s.id_empleado="+IdEmpleado+" "+Ordenar; 
@@ -883,7 +1003,7 @@ String color;
             
            
             String SQL="";
-            SQL="select  id_datos_deudor, id_cliente, identificacion, nombres_completo , dias_mora, total_vencidos, pagos, saldo, valor_compro,fecha_comp, fech_ultima_gestion,ultima_gestion,resultado_gestion,estado \n" +
+            SQL="select  id_datos_deudor, id_cliente, identificacion, nombres_completo , dias_mora, total_vencidos, pagos,fecha_ult_pagos, saldo, valor_compro,fecha_comp, fech_ultima_gestion,ultima_gestion,resultado_gestion,estado \n" +
             "  from vw_consulta_cartera s\n" +
             " where s.id_cliente="+IdCliente+"\n" +
             " and s.id_empleado="+IdEmpleado+" "+Ordenar; 
@@ -1018,7 +1138,7 @@ String color;
 "where id_deudor="+IdEmpleado+"\n" +
 "and id_cliente="+IdCliente+"\n" +
 "and estado='A'\n" +
-"order by g.fecha_transaccion desc"; 
+"order by g.fecha_transaccion desc  limit 25"; 
             
             String contenidoTabla="";
 
@@ -1110,12 +1230,13 @@ String color;
 
  
   contenidoTabla=contenidoTabla+"<tr  bgcolor=\"#E0ECF8\" onclick=\"cobranzas2("+id_cliente+","+id_datos_deudor+");\"  >\n" +
-"                                                                    <td><h6><p "+color+" >"+id_datos_deudor+"</p></h6></td>\n" +
+"                                                                    <td class=\"hidden\"><h6><p "+color+" >"+id_datos_deudor+"</p></h6></td>\n" +
 "                                                                    <td><h6><p "+color+" >"+identificacion+"</p> </h6></td>\n" +
 "                                                                    <td><h6><p "+color+" >"+nombres_completo+"</p></h6></td>\n" +
 "                                                                    <td align=\"center\"><h6><p "+color+" >"+dias_mora+"</p></h6></td>\n" +
 "                                                                    <td align=\"right\"><h6><p "+color+" >"+total_vencidos+"</p></h6></td>\n" +
 "                                                                    <td align=\"right\"><h6><p "+color+" >"+pagos+"</p></h6></td>\n" +
+                                                                    " <td align=\"right\"><h6><p "+color+" >"+rs.getString("fecha_ult_pagos")+"</p></h6></td>\n" +
 "                                                                    <td align=\"right\"><h6><p "+color+" >"+saldo+"</p></h6></td>\n" +
 "                                                                    <td align=\"right\"><h6><p "+color+" >"+valor_compro+"</p></h6> </td>\n" +
 "                                                                    <td align=\"center\"><h6><p "+color+" >"+fecha_comp+"</p></h6></td>\n" +          
@@ -1139,6 +1260,192 @@ String color;
         return valor;
             
     }
-  
-   
+    public String getRetornaQuery3(int IdCliente, int IdEmpleado, int IdFiltro)throws SQLException{
+    
+          
+            int opcion;
+            opcion=IdFiltro;
+            String Ordenar="";
+            if (opcion==0){ Ordenar="order by s.identificacion desc"; }
+            if (opcion==1){ Ordenar="order by s.identificacion asc"; }
+            
+           
+            String SQL="";
+            SQL="select  id_datos_deudor, id_cliente, identificacion, nombres_completo , dias_mora, total_vencidos, pagos,fecha_ult_pagos, saldo, valor_compro,fecha_comp, fech_ultima_gestion,ultima_gestion,resultado_gestion,estado \n" +
+            "  from vw_consulta_cartera s\n" +
+            " where s.id_cliente="+IdCliente+"\n" +
+            " and s.id_empleado="+IdEmpleado+" "+Ordenar; 
+        return SQL;
+            
+    }
+    public String getRetornaQuery4(int IdCliente, int IdEmpleado, int IdFiltro)throws SQLException{
+    
+          
+            int opcion;
+            opcion=IdFiltro;
+            String Ordenar="";
+            if (opcion==0){ Ordenar="order by s.nombres_completo desc"; }
+            if (opcion==1){ Ordenar="order by s.nombres_completo asc"; }
+            
+           
+            String SQL="";
+            SQL="select  id_datos_deudor, id_cliente, identificacion, nombres_completo , dias_mora, total_vencidos, pagos,fecha_ult_pagos, saldo, valor_compro,fecha_comp, fech_ultima_gestion,ultima_gestion,resultado_gestion,estado \n" +
+            "  from vw_consulta_cartera s\n" +
+            " where s.id_cliente="+IdCliente+"\n" +
+            " and s.id_empleado="+IdEmpleado+" "+Ordenar; 
+        return SQL;
+    }   
+    public String getRetornaQuery5(int IdCliente, int IdEmpleado, int IdFiltro)throws SQLException{
+    
+          
+            int opcion;
+            opcion=IdFiltro;
+            String Ordenar="";
+            if (opcion==0){ Ordenar="order by s.total_vencidos desc"; }
+            if (opcion==1){ Ordenar="order by s.total_vencidos asc"; }
+            
+           
+            String SQL="";
+            SQL="select  id_datos_deudor, id_cliente, identificacion, nombres_completo , dias_mora, total_vencidos, pagos,fecha_ult_pagos, saldo, valor_compro,fecha_comp, fech_ultima_gestion,ultima_gestion,resultado_gestion,estado \n" +
+            "  from vw_consulta_cartera s\n" +
+            " where s.id_cliente="+IdCliente+"\n" +
+            " and s.id_empleado="+IdEmpleado+" "+Ordenar; 
+        return SQL;
+    }   
+    public String getRetornaQuery6(int IdCliente, int IdEmpleado, int IdFiltro)throws SQLException{
+    
+          
+            int opcion;
+            opcion=IdFiltro;
+            String Ordenar="";
+            if (opcion==0){ Ordenar="order by s.pagos desc"; }
+            if (opcion==1){ Ordenar="order by s.pagos asc"; }
+            
+           
+            String SQL="";
+            SQL="select  id_datos_deudor, id_cliente, identificacion, nombres_completo , dias_mora, total_vencidos, pagos,fecha_ult_pagos, saldo, valor_compro,fecha_comp, fech_ultima_gestion,ultima_gestion,resultado_gestion,estado \n" +
+            "  from vw_consulta_cartera s\n" +
+            " where s.id_cliente="+IdCliente+"\n" +
+            " and s.id_empleado="+IdEmpleado+" "+Ordenar; 
+        return SQL;
+    }
+    public String getRetornaQuery7(int IdCliente, int IdEmpleado, int IdFiltro)throws SQLException{
+    
+          
+            int opcion;
+            opcion=IdFiltro;
+            String Ordenar="";
+            if (opcion==0){ Ordenar="order by s.saldo desc"; }
+            if (opcion==1){ Ordenar="order by s.saldo asc"; }
+            
+           
+            String SQL="";
+            SQL="select  id_datos_deudor, id_cliente, identificacion, nombres_completo , dias_mora, total_vencidos, pagos,fecha_ult_pagos, saldo, valor_compro,fecha_comp, fech_ultima_gestion,ultima_gestion,resultado_gestion,estado \n" +
+            "  from vw_consulta_cartera s\n" +
+            " where s.id_cliente="+IdCliente+"\n" +
+            " and s.id_empleado="+IdEmpleado+" "+Ordenar; 
+        return SQL;
+    }   
+    public String getRetornaQuery8(int IdCliente, int IdEmpleado, int IdFiltro)throws SQLException{
+    
+          
+            int opcion;
+            opcion=IdFiltro;
+            String Ordenar="";
+            if (opcion==0){ Ordenar="order by s.valor_compro desc"; }
+            if (opcion==1){ Ordenar="order by s.valor_compro asc"; }
+            
+           
+            String SQL="";
+            SQL="select  id_datos_deudor, id_cliente, identificacion, nombres_completo , dias_mora, total_vencidos, pagos,fecha_ult_pagos, saldo, valor_compro,fecha_comp, fech_ultima_gestion,ultima_gestion,resultado_gestion,estado \n" +
+            "  from vw_consulta_cartera s\n" +
+            " where s.id_cliente="+IdCliente+"\n" +
+            " and s.id_empleado="+IdEmpleado+" "+Ordenar; 
+        return SQL;
+    }      
+    public String getRetornaQuery9(int IdCliente, int IdEmpleado, int IdFiltro)throws SQLException{
+    
+          
+            int opcion;
+            opcion=IdFiltro;
+            String Ordenar="";
+            if (opcion==0){ Ordenar="order by s.fecha_comp desc"; }
+            if (opcion==1){ Ordenar="order by s.fecha_comp asc"; }
+            
+           
+            String SQL="";
+            SQL="select  id_datos_deudor, id_cliente, identificacion, nombres_completo , dias_mora, total_vencidos, pagos, fecha_ult_pagos,saldo, valor_compro,fecha_comp, fech_ultima_gestion,ultima_gestion,resultado_gestion,estado \n" +
+            "  from vw_consulta_cartera s\n" +
+            " where s.id_cliente="+IdCliente+"\n" +
+            " and s.id_empleado="+IdEmpleado+" "+Ordenar; 
+        return SQL;
+    }
+    public String getRetornaQuery10(int IdCliente, int IdEmpleado, int IdFiltro)throws SQLException{
+    
+          
+            int opcion;
+            opcion=IdFiltro;
+            String Ordenar="";
+            if (opcion==0){ Ordenar="order by s.fech_ultima_gestion desc"; }
+            if (opcion==1){ Ordenar="order by s.fech_ultima_gestion asc"; }
+            
+           
+            String SQL="";
+            SQL="select  id_datos_deudor, id_cliente, identificacion, nombres_completo , dias_mora, total_vencidos, pagos,fecha_ult_pagos, saldo, valor_compro,fecha_comp, fech_ultima_gestion,ultima_gestion,resultado_gestion,estado \n" +
+            "  from vw_consulta_cartera s\n" +
+            " where s.id_cliente="+IdCliente+"\n" +
+            " and s.id_empleado="+IdEmpleado+" "+Ordenar; 
+        return SQL;
+    }   
+    public String getRetornaQuery11(int IdCliente, int IdEmpleado, int IdFiltro)throws SQLException{
+    
+          
+            int opcion;
+            opcion=IdFiltro;
+            String Ordenar="";
+            if (opcion==0){ Ordenar="order by s.ultima_gestion desc"; }
+            if (opcion==1){ Ordenar="order by s.ultima_gestion asc"; }
+            
+           
+            String SQL="";
+            SQL="select  id_datos_deudor, id_cliente, identificacion, nombres_completo , dias_mora, total_vencidos, pagos,fecha_ult_pagos, saldo, valor_compro,fecha_comp, fech_ultima_gestion,ultima_gestion,resultado_gestion,estado \n" +
+            "  from vw_consulta_cartera s\n" +
+            " where s.id_cliente="+IdCliente+"\n" +
+            " and s.id_empleado="+IdEmpleado+" "+Ordenar; 
+        return SQL;
+    } 
+    public String getRetornaQuery12(int IdCliente, int IdEmpleado, int IdFiltro)throws SQLException{
+    
+          
+            int opcion;
+            opcion=IdFiltro;
+            String Ordenar="";
+            if (opcion==0){ Ordenar="order by s.resultado_gestion desc"; }
+            if (opcion==1){ Ordenar="order by s.resultado_gestion asc"; }
+            
+           
+            String SQL="";
+            SQL="select  id_datos_deudor, id_cliente, identificacion, nombres_completo , dias_mora, total_vencidos, pagos,fecha_ult_pagos, saldo, valor_compro,fecha_comp, fech_ultima_gestion,ultima_gestion,resultado_gestion,estado \n" +
+            "  from vw_consulta_cartera s\n" +
+            " where s.id_cliente="+IdCliente+"\n" +
+            " and s.id_empleado="+IdEmpleado+" "+Ordenar; 
+        return SQL;
+    }    
+    public String getRetornaQuery13(int IdCliente, int IdEmpleado, int IdFiltro)throws SQLException{
+    
+          
+            int opcion;
+            opcion=IdFiltro;
+            String Ordenar="";
+            if (opcion==0){ Ordenar="order by s.fecha_ult_pagos desc"; }
+            if (opcion==1){ Ordenar="order by s.fecha_ult_pagos asc"; }
+            
+           
+            String SQL="";
+            SQL="select  id_datos_deudor, id_cliente, identificacion, nombres_completo , dias_mora, total_vencidos, pagos,fecha_ult_pagos, saldo, valor_compro,fecha_comp, fech_ultima_gestion,ultima_gestion,resultado_gestion,estado \n" +
+            "  from vw_consulta_cartera s\n" +
+            " where s.id_cliente="+IdCliente+"\n" +
+            " and s.id_empleado="+IdEmpleado+" "+Ordenar; 
+        return SQL;
+    }    
 }
