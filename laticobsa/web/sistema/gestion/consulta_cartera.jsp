@@ -57,7 +57,6 @@
                                  </div>
                                 </form>
                             </div>
-                            <!-- /.col -->
                         </div>
                         </div>                  
                 </div>
