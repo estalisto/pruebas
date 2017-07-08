@@ -691,9 +691,7 @@ public class CobranzaController extends HttpServlet {
         }
          if(accion.equals("tablaReferencia")){
             int idDeudor = Integer.parseInt(request.getParameter("idDeudor")); 
-            //int idcliente = Integer.parseInt(request.getParameter("idcliente")); 
-            List<LcReferencias> datosref= ref.getDatosLcReferencias(idDeudor);
-           // List<LcReferencias> telefon= ref.getDatosLcReferencias(idDeudor,idDeudor);
+           // List<LcReferencias> datosref= ref.getDatosLcReferencias(idDeudor);
             
             String TablaReferencias ="  <table id='detalle_articulos' class='table table-bordered table-striped'>"
                                     + "     <thead>"
@@ -707,25 +705,27 @@ public class CobranzaController extends HttpServlet {
                                     + "     <tbody>";
 
           
-        
-            int tipoPersona=2;
-            for (LcReferencias referencias : datosref) {
-                
+//        
+//            int tipoPersona=2;
+//            for (LcReferencias referencias : datosref) {
+                String detReferencia=null;
                 try {
-                    TablaReferencias +="<tr>"
-                            + "<td>"+referencias.getLcTipoReferencia().getDescripcion()+"</td>"
-                            + "<td>"+referencias.getNombreReferencia()+"</td>"
-                            + "<td>"
-                            + "     <table>"
-                            + "         <tr><td><a>"+  telf.getTelefonoReferencia2(referencias.getIdReferencia(), tipoPersona)+"</a></td></tr>"
-                            + "     </table>"
-                            + "</td>"
-                            + "<td></td>"
-                            + "</tr>";
+                    detReferencia = ref.getReferencias(idDeudor);
+                    TablaReferencias +=detReferencia;
+//                    TablaReferencias +="<tr>"
+//                            + "<td>"+referencias.getLcTipoRefenullrencia().getDescripcion()+"</td>"
+//                            + "<td>"+referencias.getNombreReferencia()+"</td>"
+//                            + "<td>"
+//                            + "     <table>"
+//                            + "         <tr><td><a>"+  telf.getTelefonoReferencia2(referencias.getIdReferencia(), tipoPersona)+"</a></td></tr>"
+//                            + "     </table>"
+//                            + "</td>"
+//                            + "<td></td>"
+//                            + "</tr>";
                 } catch (SQLException ex) {
                     Logger.getLogger(CobranzaController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }
+//            }
             
             
            TablaReferencias +="</tbody></table>";

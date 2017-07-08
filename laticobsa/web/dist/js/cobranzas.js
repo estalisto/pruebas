@@ -813,10 +813,6 @@ function addHtmlTelefonoRef() {
     //alert("addHtmlTelfRef "+cont);
     if(cont>0){
         var y=0;
-       
-        //var cadena="";
-        
-     
          for (y=0;y<cont;y++){ 
              
             var z=0;
@@ -830,7 +826,7 @@ function addHtmlTelefonoRef() {
                                 </select>\n\
                              </div>\n\
                              <div class='col-lg-3'>\n\
-                                    <input type='text' maxlength='10' class='form-control' onkeyup=solo_numeros('new_telefono_ref"+z+"')   value='"+$("#new_telefono_ref"+z).val()+"'>  <div id='MSMnew_telefono_ref"+cont+"'></div>\n\
+                                    <input type='text' id='new_telefono_ref"+cont+"' maxlength='10' class='form-control' onkeyup=solo_numeros('new_telefono_ref"+z+"')   value='"+$("#new_telefono_ref"+z).val()+"'>  <div id='MSMnew_telefono_ref"+cont+"'></div>\n\
                              </div>\n\
                        </div>";
           
@@ -852,8 +848,9 @@ function addHtmlTelefonoRef() {
                                                             </div>\n\
                                                             ";
     a.value=cont;                                                                               
-  
-
+   if(cont==2){
+       document.getElementById("addInputButton").disabled = true;
+   }
   
   
 }
@@ -893,8 +890,6 @@ function AddReferencias() {
      
       document.getElementById("GuardarRef").disabled=true;
      
-     //alert("ok1"+cont+"Cliente: "+cliente+" deudor: "+idDeudor+" nombre_ref: "+nombre_ref+" TipoRef: "+TipoRef);
-    //    return;
      var parametros = {
             "accion": accion,
             "idDeudor": idDeudor,
@@ -914,20 +909,22 @@ function AddReferencias() {
                 if (response) {
                     var i=0;
                     cont++;
-                   // var IDReferenci=response.trim();
                     for (i=1;i<cont;i++){ 
-                      var tipo_telef = $("#tReferenciaRef"+i).val();  
-                      var NewTelefono = $("#new_telefono_ref"+i).val();
-                     // alert("IDReferenci: "+IDReferenci+"cont: "+cont+"item: -- "+i+" --tipo tel: "+tipo_telef+"telefono: "+NewTelefono);
-                                            
+                      var tipo_telef = $('#tReferenciaRef'+i).val();  
+                      var NewTelefono = $('#new_telefono_ref'+i).val();
+
                       if ((typeof NewTelefono !== 'undefined')|| (!NewTelefono.length)||(!NewTelefono)){
-                          
                        NewTelefonoReferencia(response,tipo_telef,NewTelefono);
                       }
                     }
                  document.getElementById("GuardarRef").disabled=false;
                  $('#listoModal').modal('hide');
-                  alert("Referencia Ingresada exitosamente...")
+                  alert("Referencia Ingresada exitosamente...");
+                  jQuery("#DatosReferencias").html("<br/><br/><center><img alt='cargando' src='dist/img/hourglass.gif' /><center>"); 
+                   MuestraDatosReferencias();
+                   var A = document.getElementById("nombre_ref");
+                    A.value = "";
+                    document.getElementById("addInputButton").disabled = false;
                 }
                 
             }

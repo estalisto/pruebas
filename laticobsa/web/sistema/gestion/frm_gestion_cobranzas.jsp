@@ -193,7 +193,7 @@ border: 2px solid #CB8B07;
                                                     <div class="col-md-12">
                                                         <div class="box">
                                                             <div class="box-header with-border bg-yellow">
-                                                                <h3 class="box-title">Actualizacón de Datos</h3>
+                                                                <h3 class="box-title">Actualización de Datos</h3>
                                                                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                                             </div>  <br>
                                                                 <form class="form-horizontal" role="form" name="miFormulario">  
@@ -258,7 +258,9 @@ border: 2px solid #CB8B07;
                                                             <tbody>
                                                                  <%= request.getAttribute("detArticulos") %> 
                                                             </tbody>
-                                                              
+                                                            <tfoot>
+                                                                <%= request.getAttribute("detTotal") %> 
+                                                            </tfoot>  
                                                             
                                                         </table>
                                                     </div>
@@ -300,7 +302,9 @@ border: 2px solid #CB8B07;
                                                                
                                                                 
                                                             </tbody>
-
+                                                            <tfoot>
+                                                                <%= request.getAttribute("detTotalCuota") %> 
+                                                            </tfoot> 
                                                         </table>
                                                     </div>
                                                     <div class="modal-footer">
