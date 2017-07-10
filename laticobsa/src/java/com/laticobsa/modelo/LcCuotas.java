@@ -1,5 +1,5 @@
 package com.laticobsa.modelo;
-// Generated 27-jun-2017 21:14:43 by Hibernate Tools 4.3.1
+// Generated 09-jul-2017 23:23:34 by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -27,6 +27,7 @@ public class LcCuotas  implements java.io.Serializable {
      private Date fechaMaxPago;
      private Date fechaRegistro;
      private String estado;
+     private String descripcionCarga;
 
     public LcCuotas() {
     }
@@ -35,7 +36,7 @@ public class LcCuotas  implements java.io.Serializable {
     public LcCuotas(int idCuota) {
         this.idCuota = idCuota;
     }
-    public LcCuotas(int idCuota, LcArticulo lcArticulo, LcDatosDeudores lcDatosDeudores, Integer idCliente, Integer numCuotas, BigDecimal valorCuota, BigDecimal interesCuota, BigDecimal valorMora, BigDecimal gastosCobranzas, BigDecimal gastosAdicional, BigDecimal otrosValores, BigDecimal totalCuotas, Date fechaPago, Date fechaMaxPago, Date fechaRegistro, String estado) {
+    public LcCuotas(int idCuota, LcArticulo lcArticulo, LcDatosDeudores lcDatosDeudores, Integer idCliente, Integer numCuotas, BigDecimal valorCuota, BigDecimal interesCuota, BigDecimal valorMora, BigDecimal gastosCobranzas, BigDecimal gastosAdicional, BigDecimal otrosValores, BigDecimal totalCuotas, Date fechaPago, Date fechaMaxPago, Date fechaRegistro, String estado, String descripcionCarga) {
        this.idCuota = idCuota;
        this.lcArticulo = lcArticulo;
        this.lcDatosDeudores = lcDatosDeudores;
@@ -52,6 +53,7 @@ public class LcCuotas  implements java.io.Serializable {
        this.fechaMaxPago = fechaMaxPago;
        this.fechaRegistro = fechaRegistro;
        this.estado = estado;
+       this.descripcionCarga = descripcionCarga;
     }
    
     public int getIdCuota() {
@@ -165,6 +167,13 @@ public class LcCuotas  implements java.io.Serializable {
     
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+    public String getDescripcionCarga() {
+        return this.descripcionCarga;
+    }
+    
+    public void setDescripcionCarga(String descripcionCarga) {
+        this.descripcionCarga = descripcionCarga;
     }
 
 

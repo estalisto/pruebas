@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 09-jul-2017 23:23:36 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.laticobsa.modelo.ChiharuPkPagos" table="chiharu_pk_pagos" schema="public" optimistic-lock="version">
+        <composite-id name="id" class="com.laticobsa.modelo.ChiharuPkPagosId">
+            <key-property name="cedula" type="string">
+                <column name="cedula" />
+            </key-property>
+            <key-property name="valor" type="big_decimal">
+                <column name="valor" precision="131089" scale="0" />
+            </key-property>
+            <key-property name="fecha" type="string">
+                <column name="fecha" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

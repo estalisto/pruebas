@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 27-jun-2017 21:14:45 by Hibernate Tools 4.3.1 -->
+<!-- Generated 09-jul-2017 23:23:36 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="com.laticobsa.modelo.LcDatosDeudores" table="lc_datos_deudores" schema="public" optimistic-lock="version">
         <id name="idDatosDeudor" type="int">
@@ -14,9 +14,6 @@
         <many-to-one name="lcCiudad" class="com.laticobsa.modelo.LcCiudad" fetch="select">
             <column name="id_ciudad" />
         </many-to-one>
-        <many-to-one name="lcClientes" class="com.laticobsa.modelo.LcClientes" fetch="select">
-            <column name="id_cliente" />
-        </many-to-one>
         <many-to-one name="lcEmpresa" class="com.laticobsa.modelo.LcEmpresa" fetch="select">
             <column name="id_empresa" />
         </many-to-one>
@@ -26,9 +23,6 @@
         <many-to-one name="lcTipoCredito" class="com.laticobsa.modelo.LcTipoCredito" fetch="select">
             <column name="tipo_credito" />
         </many-to-one>
-        <property name="idEmpleado" type="java.lang.Integer">
-            <column name="id_empleado" />
-        </property>
         <property name="tipoIdentificacion" type="java.lang.Integer">
             <column name="tipo_identificacion" />
         </property>

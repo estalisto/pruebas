@@ -47,6 +47,7 @@ public class ConsultaxCarteraServicios {
         session = sesion.openSession();
         Transaction tx= session.beginTransaction();
         // hacemos la transaccion
+        // Buscar cliente de la tabla Transacciones [Cambios20170709]
         Query q = session.createQuery("select DISTINCT(E.lcClientes.idCliente)  from LcDatosDeudores  E WHERE E.lcAgencia.idAgencia= :idAgencia and E.idEmpleado= :idEmpleado and E.lcEmpresa.idEmpresa= :idEmpresa and E.estado= :estado");
         q.setParameter("idEmpresa",empresa);
         q.setParameter("idAgencia",agencia);
@@ -55,14 +56,14 @@ public class ConsultaxCarteraServicios {
         List<LcDatosDeudores> lista=q.list();
          for(LcDatosDeudores mrol:lista )
         {
-             System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getIdCliente());
-             System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getRazonSocial());
+             System.out.println("ok: "+mrol.getIdDatosDeudor());//+", "+mrol.getLcClientes().getIdCliente());
+             System.out.println("ok: "+mrol.getIdDatosDeudor());//+", "+mrol.getLcClientes().getRazonSocial());
         }
         tx.commit();
         session.close();
          return lista;
     }
-          public List<LcClientes> getLcDatoscliente(int empresa,int empleado){
+          public List<LcClientes> getLcDatoscliente(int empresa,int idCliente){
          
         SessionFactory sesion = HibernateUtil.getSessionFactory();
         Session session;
@@ -72,7 +73,7 @@ public class ConsultaxCarteraServicios {
         Query q = session.createQuery(" from LcClientes  E WHERE E.idCliente= :idCliente and E.lcEmpresa.idEmpresa= :idEmpresa ");
         q.setParameter("idEmpresa",empresa);
         //q.setParameter("idAgencia",agencia);
-        q.setParameter("idCliente",empleado);
+        q.setParameter("idCliente",idCliente);
         //q.setParameter("estado","P");
         List<LcClientes> lista=q.list();
          for(LcClientes mrol:lista )
@@ -89,7 +90,7 @@ public class ConsultaxCarteraServicios {
             Session session;
             session = sesion.openSession();
             Transaction tx= session.beginTransaction();
-            Query q = session.createQuery("select DISTINCT E.lcClientes.idCliente  from LcDatosDeudores  E WHERE E.lcAgencia.idAgencia= :idAgencia and E.idEmpleado= :idEmpleado and E.lcEmpresa.idEmpresa= :idEmpresa and E.estado= :estado");
+            Query q = session.createQuery("select DISTINCT E.lcClientes.idCliente  from LcTransacciones  E WHERE E.idEmpresa= :idEmpresa and E.idAgencia= :idAgencia and E.lcEmpleados.idEmpleado= :idEmpleado and E.estado= :estado");
             q.setParameter("idEmpresa",empresa);
             q.setParameter("idAgencia",agencia);
             q.setParameter("idEmpleado",empleado);
@@ -117,6 +118,7 @@ public List<LcDatosDeudores> getLcDatosposicion(int empresa, int agencia,int pos
         session = sesion.openSession();
         Transaction tx= session.beginTransaction();
         // hacemos la transaccion
+        //[Cambios 20170709]
         Query q = session.createQuery("from LcDatosDeudores  E WHERE E.idDatosDeudor>= :idDatosDeudor and E.lcAgencia.idAgencia= :idAgencia and  E.lcEmpresa.idEmpresa= :idEmpresa and E.idEmpleado = :IDEmpleado and E.estado= :estado").setMaxResults(10);
         q.setParameter("idEmpresa",empresa);
         q.setParameter("idAgencia",agencia);
@@ -127,8 +129,8 @@ public List<LcDatosDeudores> getLcDatosposicion(int empresa, int agencia,int pos
         List<LcDatosDeudores> lista=q.list();
          for(LcDatosDeudores mrol:lista )
         {
-             System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getIdCliente());
-             System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getRazonSocial());
+            // System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getIdCliente());
+             //System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getRazonSocial());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcTipoCredito().getIdTipocredito());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcTipoCredito().getDescripcion());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcEstatus().getIdEstatus());
@@ -155,8 +157,8 @@ public List<LcDatosDeudores> getLcDatosposicion(int empresa, int agencia,int pos
         List<LcDatosDeudores> lista=q.list();
          for(LcDatosDeudores mrol:lista )
         {
-             System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getIdCliente());
-             System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getRazonSocial());
+            // System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getIdCliente());
+            // System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getRazonSocial());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcTipoCredito().getIdTipocredito());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcTipoCredito().getDescripcion());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcEstatus().getIdEstatus());
@@ -181,8 +183,8 @@ public List<LcDatosDeudores> getLcDatosposicion(int empresa, int agencia,int pos
         List<LcDatosDeudores> lista=q.list();
          for(LcDatosDeudores mrol:lista )
         {
-             System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getIdCliente());
-             System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getRazonSocial());
+          //   System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getIdCliente());
+           //  System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getRazonSocial());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcTipoCredito().getIdTipocredito());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcTipoCredito().getDescripcion());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcEstatus().getIdEstatus());
@@ -238,15 +240,17 @@ public List<LcDatosDeudores> getLcDatosidentifica(String identificacion,int empr
         session = sesion.openSession();
         Transaction tx= session.beginTransaction();
         // hacemos la transaccion
-        Query q = session.createQuery("from LcDatosDeudores  E WHERE E.lcEmpresa.idEmpresa= :idEmpresa and E.lcClientes.idCliente= :idCliente and E.identificacion= :identificacion");
-        q.setParameter("idCliente",cliente);
+      //  Query q = session.createQuery("from LcDatosDeudores  E WHERE E.lcEmpresa.idEmpresa= :idEmpresa and E.lcClientes.idCliente= :idCliente and E.identificacion= :identificacion");
+        Query q = session.createQuery("from LcDatosDeudores  E WHERE  E.identificacion= :identificacion");
+
+        // q.setParameter("idCliente",cliente);
         q.setParameter("identificacion",identificacion);
-        q.setParameter("idEmpresa",empresa);
+       // q.setParameter("idEmpresa",empresa);
         List<LcDatosDeudores> lista=q.list();
          for(LcDatosDeudores mrol:lista )
         {
-             System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getIdCliente());
-             System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getRazonSocial());
+          //   System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getIdCliente());
+           //  System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getRazonSocial());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcEmpresa().getRazonSocial());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcTipoCredito().getIdTipocredito());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcTipoCredito().getDescripcion());
@@ -265,14 +269,16 @@ public List<LcDatosDeudores> getLcDeudorId(int id,int idDeudor){
         session = sesion.openSession();
         Transaction tx= session.beginTransaction();
         // hacemos la transaccion
-        Query q = session.createQuery("from LcDatosDeudores  E WHERE E.lcClientes.idCliente= :idCliente and E.idDatosDeudor= :idDeudor");
-        q.setParameter("idCliente",id);
+        //Query q = session.createQuery("from LcDatosDeudores  E WHERE E.lcClientes.idCliente= :idCliente and E.idDatosDeudor= :idDeudor");
+         Query q = session.createQuery("from LcDatosDeudores  E WHERE E.idDatosDeudor= :idDeudor");
+
+      //  q.setParameter("idCliente",id);
         q.setParameter("idDeudor",idDeudor);
         List<LcDatosDeudores> lista=q.list();
          for(LcDatosDeudores mrol:lista )
         {
-             System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getIdCliente());
-             System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getRazonSocial());
+             //System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getIdCliente());
+             //System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getRazonSocial());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcEmpresa().getRazonSocial());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcTipoCredito().getIdTipocredito());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcTipoCredito().getDescripcion());
@@ -609,16 +615,17 @@ public List<LcCuotas> getCuotas(int idCliente,int idDeudor){
         session = sesion.openSession();
         Transaction tx= session.beginTransaction();
         // hacemos la transaccion
-        Query q = session.createQuery("from LcDatosDeudores  E WHERE E.idDatosDeudor= :idDatosDeudor and E.lcEmpresa.idEmpresa= :idEmpresa and E.lcAgencia.idAgencia= :idAgencia and E.idEmpleado= :idEmpleado");
+        //Query q = session.createQuery("from LcDatosDeudores  E WHERE E.idDatosDeudor= :idDatosDeudor and E.lcEmpresa.idEmpresa= :idEmpresa and E.lcAgencia.idAgencia= :idAgencia and E.idEmpleado= :idEmpleado");
+        Query q = session.createQuery("from LcDatosDeudores  E WHERE E.idDatosDeudor= :idDatosDeudor and E.lcEmpresa.idEmpresa= :idEmpresa and E.lcAgencia.idAgencia= :idAgencia");
         q.setParameter("idDatosDeudor",id);
         q.setParameter("idEmpresa",empresa);
         q.setParameter("idAgencia",sucursal);
-        q.setParameter("idEmpleado",empleado);
+      //  q.setParameter("idEmpleado",empleado);
         List<LcDatosDeudores> lista=q.list();
          for(LcDatosDeudores mrol:lista )
         {
-             System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getIdCliente());
-             System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getRazonSocial());
+             //System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getIdCliente());
+             //System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getRazonSocial());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcEmpresa().getRazonSocial());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcTipoCredito().getIdTipocredito());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcTipoCredito().getDescripcion());
@@ -808,6 +815,7 @@ public List<LcCuotas> getCuotas(int idCliente,int idDeudor){
         session = sesion.openSession();
         Transaction tx= session.beginTransaction();
         // hacemos la transaccion
+        //[Cambios 20170709]
         Query q = session.createQuery("from LcDatosDeudores  E WHERE E.lcClientes.idCliente= :idCliente and E.lcEmpresa.idEmpresa= :idEmpresa and E.idEmpleado = :IDEmpleado and E.estado= :estado order by E.idDatosDeudor");
         q.setParameter("idEmpresa",empresa);
         q.setParameter("idCliente",cliente);
@@ -816,8 +824,8 @@ public List<LcCuotas> getCuotas(int idCliente,int idDeudor){
         List<LcDatosDeudores> lista=q.list();
          for(LcDatosDeudores mrol:lista )
         {
-             System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getIdCliente());
-             System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getRazonSocial());
+           //  System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getIdCliente());
+            // System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getRazonSocial());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcTipoCredito().getIdTipocredito());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcTipoCredito().getDescripcion());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcEstatus().getIdEstatus());

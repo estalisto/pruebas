@@ -37,6 +37,7 @@ public class RecaudacionServicios {
         session = sesion.openSession();
         Transaction tx= session.beginTransaction();
         // hacemos la transaccion
+        // [Cambios 20170709]
         Query q = session.createQuery("from LcDatosDeudores  E WHERE E.lcClientes.idCliente= :idCliente and E.tipoIdentioficacion= :tipoIdentioficacion and  E.identificacion= :identificacion and E.idEmpleado= :idEmpleado and E.lcEmpresa.idEmpresa= :idEmpresa and E.estado= :estado");
         q.setParameter("idEmpresa",empresa);
         q.setParameter("idCliente",cliente);
@@ -47,8 +48,8 @@ public class RecaudacionServicios {
         List<LcDatosDeudores> lista=q.list();
          for(LcDatosDeudores mrol:lista )
         {
-             System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getIdCliente());
-             System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcClientes().getRazonSocial());
+             System.out.println("ok: "+mrol.getIdDatosDeudor());//+", "+mrol.getLcClientes().getIdCliente());
+             System.out.println("ok: "+mrol.getIdDatosDeudor());//+", "+mrol.getLcClientes().getRazonSocial());
         }
         tx.commit();
         session.close();

@@ -1,5 +1,5 @@
 package com.laticobsa.modelo;
-// Generated 27-jun-2017 21:14:43 by Hibernate Tools 4.3.1
+// Generated 09-jul-2017 23:23:34 by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -23,6 +23,7 @@ public class LcRecaudaciones  implements java.io.Serializable {
      private Date fechaRegistro;
      private Date fechaActualizado;
      private String estado;
+     private String descripcionCarga;
      private Set lcFormapagoRecaudacions = new HashSet(0);
      private Set lcDetRecaudacioneses = new HashSet(0);
 
@@ -33,7 +34,7 @@ public class LcRecaudaciones  implements java.io.Serializable {
     public LcRecaudaciones(int idRecaudacion) {
         this.idRecaudacion = idRecaudacion;
     }
-    public LcRecaudaciones(int idRecaudacion, LcDatosDeudores lcDatosDeudores, Integer idEmpresa, Integer idAgencia, Integer idCliente, Integer idEmpleado, BigDecimal valorRecaudado, Date fechaRegistro, Date fechaActualizado, String estado, Set lcFormapagoRecaudacions, Set lcDetRecaudacioneses) {
+    public LcRecaudaciones(int idRecaudacion, LcDatosDeudores lcDatosDeudores, Integer idEmpresa, Integer idAgencia, Integer idCliente, Integer idEmpleado, BigDecimal valorRecaudado, Date fechaRegistro, Date fechaActualizado, String estado, String descripcionCarga, Set lcFormapagoRecaudacions, Set lcDetRecaudacioneses) {
        this.idRecaudacion = idRecaudacion;
        this.lcDatosDeudores = lcDatosDeudores;
        this.idEmpresa = idEmpresa;
@@ -44,6 +45,7 @@ public class LcRecaudaciones  implements java.io.Serializable {
        this.fechaRegistro = fechaRegistro;
        this.fechaActualizado = fechaActualizado;
        this.estado = estado;
+       this.descripcionCarga = descripcionCarga;
        this.lcFormapagoRecaudacions = lcFormapagoRecaudacions;
        this.lcDetRecaudacioneses = lcDetRecaudacioneses;
     }
@@ -117,6 +119,13 @@ public class LcRecaudaciones  implements java.io.Serializable {
     
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+    public String getDescripcionCarga() {
+        return this.descripcionCarga;
+    }
+    
+    public void setDescripcionCarga(String descripcionCarga) {
+        this.descripcionCarga = descripcionCarga;
     }
     public Set getLcFormapagoRecaudacions() {
         return this.lcFormapagoRecaudacions;

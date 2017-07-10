@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 27-jun-2017 21:14:45 by Hibernate Tools 4.3.1 -->
+<!-- Generated 09-jul-2017 23:23:36 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="com.laticobsa.modelo.LcTransacciones" table="lc_transacciones" schema="public" optimistic-lock="version">
         <id name="idTransaccion" type="int">
@@ -17,6 +17,24 @@
         <many-to-one name="lcEmpleados" class="com.laticobsa.modelo.LcEmpleados" fetch="select">
             <column name="id_empleado" />
         </many-to-one>
+        <property name="idEmpresa" type="java.lang.Integer">
+            <column name="id_empresa" />
+        </property>
+        <property name="idAgencia" type="java.lang.Integer">
+            <column name="id_agencia" />
+        </property>
+        <property name="idCartera" type="java.lang.Integer">
+            <column name="id_cartera" />
+        </property>
+        <property name="idSubCartera" type="java.lang.Integer">
+            <column name="id_sub_cartera" />
+        </property>
+        <property name="idSegmento" type="java.lang.Integer">
+            <column name="id_segmento" />
+        </property>
+        <property name="idSubSegmento" type="java.lang.Integer">
+            <column name="id_sub_segmento" />
+        </property>
         <property name="idTipoIdentificacion" type="java.lang.Integer">
             <column name="id_tipo_identificacion" />
         </property>
@@ -25,6 +43,9 @@
         </property>
         <property name="numCuenta" type="string">
             <column name="num_cuenta" length="30" />
+        </property>
+        <property name="numCuenta2" type="string">
+            <column name="num_cuenta2" length="30" />
         </property>
         <property name="montoAsignado" type="big_decimal">
             <column name="monto_asignado" precision="10" />
