@@ -51,9 +51,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+
 
 /**
  *
@@ -127,8 +125,8 @@ public class CobranzaController extends HttpServlet {
            request.setAttribute("ValorSaldo2", ValorSaldo);
          
          request.setAttribute("transaccion", transaccion);
-         int idcliente = cobranzas.get(0).getLcClientes().getIdCliente();
-         List<LcTipoGestion> gestiones = cd.getLcTipoGestion(idcliente);
+      //   int idcliente = cobranzas.get(0).getLcClientes().getIdCliente();
+         List<LcTipoGestion> gestiones = cd.getLcTipoGestion(idCliente);
          request.setAttribute("gestiones", gestiones);
          String identifica= cd.getIdentificacionDeudor(idDeudor);// aqui
          
@@ -146,7 +144,9 @@ public class CobranzaController extends HttpServlet {
          
          String detArticulos = null;
             try {
+               // detArticulos = cd.getArticulos2(idCliente,idDeudor);
                 detArticulos = cd.getArticulos2(idCliente,idDeudor);
+                
             } catch (SQLException ex) {
                 Logger.getLogger(CobranzaController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -154,7 +154,8 @@ public class CobranzaController extends HttpServlet {
          
          String detCuotas = null;
             try {
-                detCuotas = cd.getCuotas2(idcliente, idDeudor);
+                //detCuotas = cd.getCuotas2(idcliente, idDeudor);
+                detCuotas = cd.getCuotas2(idCliente, idDeudor);
             } catch (SQLException ex) {
                 Logger.getLogger(CobranzaController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -185,6 +186,8 @@ public class CobranzaController extends HttpServlet {
             int  id=Integer.parseInt(request.getParameter("id"));
             String  hora=request.getParameter("hora");
             String  compromiso_pago = request.getParameter("compromiso_pago");
+            int  idCliente=Integer.parseInt(request.getParameter("cliente"));
+            
             List<LcDatosDeudores> recordatorio = cd.getLcDeudorRecordatorio(id,EmpresaID,SucursalID,EmpleadoID);
          
             Date fecha_reg = new Date();
@@ -195,17 +198,17 @@ public class CobranzaController extends HttpServlet {
                 int id_empresa = data.getLcEmpresa().getIdEmpresa();
                 int id_agencia = data.getLcAgencia().getIdAgencia();
                 int id_deudor = data.getIdDatosDeudor();
-                int id_cliente = data.getLcClientes().getIdCliente();
-                int id_empleado = data.getIdEmpleado();
+                //int id_cliente = data.getLcClientes().getIdCliente();
+               // int id_empleado = data.getIdEmpleado();
 
                 int id_recordatorio = Integer.parseInt(cd.getNext().toString());
                 
                 cd.addRecordatorio(new LcRecordatorios(
                         id_recordatorio,
                         (new LcAgencia(id_agencia)),
-                        (new LcClientes(id_cliente)),
+                        (new LcClientes(idCliente)),
                         (new LcDatosDeudores(id_deudor)),
-                        (new LcEmpleados(id_empleado)),
+                        (new LcEmpleados(EmpleadoID)),
                         (new LcEmpresa(id_empresa)),
                         Fecha_final,
                         "A",
@@ -214,15 +217,15 @@ public class CobranzaController extends HttpServlet {
                         "A"
                 ));
                 int id_transaccion = Integer.parseInt(cd.getNext2().toString());
-                List<LcTipoGestion> gestion = cd.getLcTipoGestion(id_cliente);
+                List<LcTipoGestion> gestion = cd.getLcTipoGestion(idCliente);
                 int id_gestion = gestion.get(0).getIdTipoGestion();
                 List<LcTipoResultado> resultado = cd.getLcTipoResultado(id_gestion);
                 int id_resultado = resultado.get(0).getIdTipoResultado();
                 cd.addGestiones(new LcGestiones(
                         id_transaccion,
-                        (new LcClientes(id_cliente)),
+                        (new LcClientes(idCliente)),
                         (new LcDatosDeudores(id_deudor)),
-                        (new LcEmpleados(id_empleado)),
+                        (new LcEmpleados(EmpleadoID)),
                         (new LcTipoGestion(id_gestion)),
                         (new LcTipoResultado(id_resultado)),
                         "RECORDATORIO DE LLAMADA Fecha:" + compromiso_pago + "Hora:" + hora,
@@ -510,7 +513,7 @@ public class CobranzaController extends HttpServlet {
             String NewTelef = request.getParameter("newTelefono");
             Date FechaHoyTel= new Date();
             int IdTelefonoDeudor =Integer.parseInt(telf.getNext().toString());
-            telf.addTelefonos(new LcTelefonos(IdTelefonoDeudor,new LcTipoPersona(1),new LcTiposTelefono(IdTipoTelf),ID_deudorTel,cd.getIdentificacionDeudor(ID_deudorTel),NewTelef,0,FechaHoyTel,"A" ));
+            telf.addTelefonos(new LcTelefonos(IdTelefonoDeudor,new LcTipoPersona(1),new LcTiposTelefono(IdTipoTelf),ID_deudorTel,cd.getIdentificacionDeudor(ID_deudorTel),NewTelef,0,FechaHoyTel,"A",null ));
             response.getWriter().println("Teléfono Agregado Exitosamente.");
         }
         
@@ -521,7 +524,7 @@ public class CobranzaController extends HttpServlet {
 		String NewDireccion = request.getParameter("direccion_new");
 		 Date FechaHoyDireccion= new Date();
 		 int IdDireccion =Integer.parseInt(dir.getNext().toString());
-		 dir.addLcDireccion(new LcDireccion(IdDireccion,new LcTiposDireccion(IdTipoDir),cd.getIdentificacionDeudor(ID_deudorTel),NewDireccion,FechaHoyDireccion,"A"  ) );
+		 dir.addLcDireccion(new LcDireccion(IdDireccion,new LcTiposDireccion(IdTipoDir),cd.getIdentificacionDeudor(ID_deudorTel),NewDireccion,FechaHoyDireccion,"A",null  ) );
 		  response.getWriter().println("Dirección Agregada Exitosamente.");
         }
         if (accion.equals("listar_direccion")) {
@@ -650,7 +653,7 @@ public class CobranzaController extends HttpServlet {
                      null,
                      null,
                      FechaHoy,
-                     "A"));
+                     "A",null));
              
             /*  List<LcReferencias> datosref= ref.getDatosLcReferencias(idDeudor);  
               JSONObject obj = new JSONObject();
@@ -684,7 +687,7 @@ public class CobranzaController extends HttpServlet {
                       new LcTipoPersona(2), //Tipo -> 2 Persona Referencia 
                       new LcTiposTelefono(TipoTelefono),
                       IdPersona,
-                      "0000000000",newTelefono,0,FechaHoy,"A" ));
+                      "0000000000",newTelefono,0,FechaHoy,"A" ,null));
 
              response.getWriter().println("ok");
 

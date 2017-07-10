@@ -16,10 +16,10 @@ import javax.swing.JOptionPane;
  */
 public class Conexion {
     
-   String url2="jdbc:postgresql://localhost:5432/bdjsp3";
+   String url2="jdbc:postgresql://localhost:5432/laticobsa_db";
  Connection cn=null;
      public Connection getconexion(){
-        String url="jdbc:postgresql://localhost:5432/bdjsp3";
+        String url="jdbc:postgresql://localhost:5432/laticobsa_db";
         String user = "sgranda";
         String pass = "sgranda";
         

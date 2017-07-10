@@ -61,7 +61,8 @@ public class ConsultaxCartera extends HttpServlet {
        
        if(accion.equals("listar"))
         {            
-           int idclienteok =cd.getIdCliente(EmpresaID, SucursalID, EmpleadoID);
+           int idclienteok;
+            idclienteok = cd.getIdCliente(EmpresaID, SucursalID, EmpleadoID);
            String Tabla="";
          
            int opcion=0;

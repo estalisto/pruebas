@@ -1,5 +1,5 @@
 package com.laticobsa.modelo;
-// Generated 27-jun-2017 21:14:43 by Hibernate Tools 4.3.1
+// Generated 09-jul-2017 23:23:34 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -32,7 +32,6 @@ public class LcClientes  implements java.io.Serializable {
      private Set lcRecordatorioses = new HashSet(0);
      private Set lcDeudors = new HashSet(0);
      private Set lcGestioneses = new HashSet(0);
-     private Set lcDatosDeudoreses = new HashSet(0);
 
     public LcClientes() {
     }
@@ -41,7 +40,7 @@ public class LcClientes  implements java.io.Serializable {
     public LcClientes(int idCliente) {
         this.idCliente = idCliente;
     }
-    public LcClientes(int idCliente, LcCiudad lcCiudad, LcEmpresa lcEmpresa, LcPais lcPais, LcProvincia lcProvincia, LcTiposIdentificacion lcTiposIdentificacion, String identificacion, String razonSocial, String direccion, String contacto, String email, String telefono, String extensioon, String celular, Date fechaCreacion, String estado, Set lcTransaccioneses, Set lcRecordatorioses, Set lcDeudors, Set lcGestioneses, Set lcDatosDeudoreses) {
+    public LcClientes(int idCliente, LcCiudad lcCiudad, LcEmpresa lcEmpresa, LcPais lcPais, LcProvincia lcProvincia, LcTiposIdentificacion lcTiposIdentificacion, String identificacion, String razonSocial, String direccion, String contacto, String email, String telefono, String extensioon, String celular, Date fechaCreacion, String estado, Set lcTransaccioneses, Set lcRecordatorioses, Set lcDeudors, Set lcGestioneses) {
        this.idCliente = idCliente;
        this.lcCiudad = lcCiudad;
        this.lcEmpresa = lcEmpresa;
@@ -62,7 +61,6 @@ public class LcClientes  implements java.io.Serializable {
        this.lcRecordatorioses = lcRecordatorioses;
        this.lcDeudors = lcDeudors;
        this.lcGestioneses = lcGestioneses;
-       this.lcDatosDeudoreses = lcDatosDeudoreses;
     }
    
     public int getIdCliente() {
@@ -204,13 +202,6 @@ public class LcClientes  implements java.io.Serializable {
     
     public void setLcGestioneses(Set lcGestioneses) {
         this.lcGestioneses = lcGestioneses;
-    }
-    public Set getLcDatosDeudoreses() {
-        return this.lcDatosDeudoreses;
-    }
-    
-    public void setLcDatosDeudoreses(Set lcDatosDeudoreses) {
-        this.lcDatosDeudoreses = lcDatosDeudoreses;
     }
 
 

@@ -1,5 +1,5 @@
 package com.laticobsa.modelo;
-// Generated 27-jun-2017 21:14:43 by Hibernate Tools 4.3.1
+// Generated 09-jul-2017 23:23:34 by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -15,9 +15,16 @@ public class LcTransacciones  implements java.io.Serializable {
      private LcClientes lcClientes;
      private LcDatosDeudores lcDatosDeudores;
      private LcEmpleados lcEmpleados;
+     private Integer idEmpresa;
+     private Integer idAgencia;
+     private Integer idCartera;
+     private Integer idSubCartera;
+     private Integer idSegmento;
+     private Integer idSubSegmento;
      private Integer idTipoIdentificacion;
      private String identificacion;
      private String numCuenta;
+     private String numCuenta2;
      private BigDecimal montoAsignado;
      private BigDecimal ultimoPago;
      private Integer numeroPagos;
@@ -40,14 +47,21 @@ public class LcTransacciones  implements java.io.Serializable {
     public LcTransacciones(int idTransaccion) {
         this.idTransaccion = idTransaccion;
     }
-    public LcTransacciones(int idTransaccion, LcClientes lcClientes, LcDatosDeudores lcDatosDeudores, LcEmpleados lcEmpleados, Integer idTipoIdentificacion, String identificacion, String numCuenta, BigDecimal montoAsignado, BigDecimal ultimoPago, Integer numeroPagos, BigDecimal valorCuota, Integer diasMora, BigDecimal interesMora, BigDecimal interesCapital, BigDecimal interesAdicional, BigDecimal interesOtros, Integer diasVencidos, BigDecimal totalVencidos, String descripcionCarga, Date fechaTransaccion, String estado) {
+    public LcTransacciones(int idTransaccion, LcClientes lcClientes, LcDatosDeudores lcDatosDeudores, LcEmpleados lcEmpleados, Integer idEmpresa, Integer idAgencia, Integer idCartera, Integer idSubCartera, Integer idSegmento, Integer idSubSegmento, Integer idTipoIdentificacion, String identificacion, String numCuenta, String numCuenta2, BigDecimal montoAsignado, BigDecimal ultimoPago, Integer numeroPagos, BigDecimal valorCuota, Integer diasMora, BigDecimal interesMora, BigDecimal interesCapital, BigDecimal interesAdicional, BigDecimal interesOtros, Integer diasVencidos, BigDecimal totalVencidos, String descripcionCarga, Date fechaTransaccion, String estado) {
        this.idTransaccion = idTransaccion;
        this.lcClientes = lcClientes;
        this.lcDatosDeudores = lcDatosDeudores;
        this.lcEmpleados = lcEmpleados;
+       this.idEmpresa = idEmpresa;
+       this.idAgencia = idAgencia;
+       this.idCartera = idCartera;
+       this.idSubCartera = idSubCartera;
+       this.idSegmento = idSegmento;
+       this.idSubSegmento = idSubSegmento;
        this.idTipoIdentificacion = idTipoIdentificacion;
        this.identificacion = identificacion;
        this.numCuenta = numCuenta;
+       this.numCuenta2 = numCuenta2;
        this.montoAsignado = montoAsignado;
        this.ultimoPago = ultimoPago;
        this.numeroPagos = numeroPagos;
@@ -92,6 +106,48 @@ public class LcTransacciones  implements java.io.Serializable {
     public void setLcEmpleados(LcEmpleados lcEmpleados) {
         this.lcEmpleados = lcEmpleados;
     }
+    public Integer getIdEmpresa() {
+        return this.idEmpresa;
+    }
+    
+    public void setIdEmpresa(Integer idEmpresa) {
+        this.idEmpresa = idEmpresa;
+    }
+    public Integer getIdAgencia() {
+        return this.idAgencia;
+    }
+    
+    public void setIdAgencia(Integer idAgencia) {
+        this.idAgencia = idAgencia;
+    }
+    public Integer getIdCartera() {
+        return this.idCartera;
+    }
+    
+    public void setIdCartera(Integer idCartera) {
+        this.idCartera = idCartera;
+    }
+    public Integer getIdSubCartera() {
+        return this.idSubCartera;
+    }
+    
+    public void setIdSubCartera(Integer idSubCartera) {
+        this.idSubCartera = idSubCartera;
+    }
+    public Integer getIdSegmento() {
+        return this.idSegmento;
+    }
+    
+    public void setIdSegmento(Integer idSegmento) {
+        this.idSegmento = idSegmento;
+    }
+    public Integer getIdSubSegmento() {
+        return this.idSubSegmento;
+    }
+    
+    public void setIdSubSegmento(Integer idSubSegmento) {
+        this.idSubSegmento = idSubSegmento;
+    }
     public Integer getIdTipoIdentificacion() {
         return this.idTipoIdentificacion;
     }
@@ -112,6 +168,13 @@ public class LcTransacciones  implements java.io.Serializable {
     
     public void setNumCuenta(String numCuenta) {
         this.numCuenta = numCuenta;
+    }
+    public String getNumCuenta2() {
+        return this.numCuenta2;
+    }
+    
+    public void setNumCuenta2(String numCuenta2) {
+        this.numCuenta2 = numCuenta2;
     }
     public BigDecimal getMontoAsignado() {
         return this.montoAsignado;

@@ -143,26 +143,9 @@ public class ClientesController extends HttpServlet {
                             telefono,
                             extensioon,
                             celular,
-                            fecha_reg, "A", null, null, null, null,null));
-               // }
-               /* if (empresa2 == 0) {
-                    es.addclientes(new LcClientes(id_cliente,
-                            (new LcCiudad(ciudad)),
-                            (new LcEmpresa(empresa)),
-                            (new LcPais(pais)),
-                            (new LcProvincia(provincia)),
-                            (new LcTiposIdentificacion(tipo_identificacion)),
-                            identificacion,
-                            razon_social,
-                            direccion,
-                            contacto,
-                            email,
-                            telefono,
-                            extensioon,
-                            celular,
-                            fecha_reg, "A", null, null, null, null,null));
+                            //fecha_reg, "A", null, null, null, null,null));
+                            fecha_reg, "A",  null, null, null,null));
 
-                }*/
                 response.getWriter().println("Cliente Ingresado Correctamente");
             }
 

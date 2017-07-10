@@ -50,10 +50,11 @@ border: 2px solid #CB8B07;
                                             <input type="text" class="form-control" id="id" name="id" value="<c:out value="${cobro.getIdDatosDeudor()}"/>" required="required">
                                         </div> 
                                     </div>
+                                                <c:forEach items="${transaccion}" var="transa">       
                                     <div class="col-xs-3 hidden">
                                         <div class="form-group">
                                             <label>Cliente:</label>
-                                            <input type="text" class="form-control" id="idcliente" name="idcliente" value="<c:out value="${cobro.getLcClientes().getIdCliente()}"/>" required="required">
+                                            <input type="text" class="form-control" id="idcliente" name="idcliente" value="<c:out value="${transa.getLcClientes().getIdCliente()}"/>" required="required">
                                             
                                         </div> 
                                     </div>
@@ -61,7 +62,7 @@ border: 2px solid #CB8B07;
                                         <label class="col-sm-3 control-label">C.I/RUC:</label>   
                                         <input class="col-sm-6 input-sm" type="text" placeholder="Número de identificación" required="required" name="identificacion" value="<c:out value='${cobro.getIdentificacion()}'/>" id="identificacion" readonly>                                    
                                     </div>
-                                     <c:forEach items="${transaccion}" var="transa">     
+                           
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">Cuenta:</label>   
                                         <input class="col-sm-6 input-sm" type="text" placeholder="Número de cuenta" required="required" name="cuenta" id="cuenta" value="<c:out value='${transa.getNumCuenta()}'/>" readonly>                   
@@ -71,12 +72,12 @@ border: 2px solid #CB8B07;
 
                             <div class="col-lg-5">
                                 <strong>  <center><h2 id="deudor"> <c:out value='${cobro.getNombres()} ${cobro.getApellidos()}'/></h2></center></strong>
-                                <center><h4 id="cliente" style="color: #0063dc"><b><c:out value='${cobro.getLcClientes().getRazonSocial()}'/></b></h4></center>   
+                                <center><h4 id="cliente" style="color: #0063dc"><b><c:out value='${transa.getLcClientes().getRazonSocial()}'/></b></h4></center>   
                             </div>
 
                             <div class="col-lg-2"> 
-                                <button id="anterior" type="button" onclick="Antdeudor(${cobro.getIdDatosDeudor()},${cobro.getLcClientes().getIdCliente()})" class="btn btn-primary btn-lg glyphicon glyphicon-arrow-left"></button>
-                                <button id="siguiente" type="button" onclick="Sgtedeudor(${cobro.getIdDatosDeudor()},${cobro.getLcClientes().getIdCliente()})" class="btn btn-primary btn-lg glyphicon glyphicon-arrow-right"> </button>
+                                <button id="anterior" type="button" onclick="Antdeudor(${cobro.getIdDatosDeudor()},${transa.getLcClientes().getIdCliente()})" class="btn btn-primary btn-lg glyphicon glyphicon-arrow-left"></button>
+                                <button id="siguiente" type="button" onclick="Sgtedeudor(${cobro.getIdDatosDeudor()},${transa.getLcClientes().getIdCliente()})" class="btn btn-primary btn-lg glyphicon glyphicon-arrow-right"> </button>
                             </div>  
                             <div class="col-lg-1">
                             <center><img id="img_cargando" src="resources/dist/img/loader.gif" class="img-circle" alt="User Image" width="50" style="display: none"></center>

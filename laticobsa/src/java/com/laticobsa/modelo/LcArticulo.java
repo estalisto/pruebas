@@ -1,5 +1,5 @@
 package com.laticobsa.modelo;
-// Generated 27-jun-2017 21:14:43 by Hibernate Tools 4.3.1
+// Generated 09-jul-2017 23:23:34 by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -29,6 +29,7 @@ public class LcArticulo  implements java.io.Serializable {
      private Date fechaCompra;
      private Date fechaRegistro;
      private String estado;
+     private String descripcionCarga;
      private Set lcCuotases = new HashSet(0);
 
     public LcArticulo() {
@@ -38,7 +39,7 @@ public class LcArticulo  implements java.io.Serializable {
     public LcArticulo(int idArticulo) {
         this.idArticulo = idArticulo;
     }
-    public LcArticulo(int idArticulo, LcDatosDeudores lcDatosDeudores, Integer idCliente, String referencia, String nombreArticulo, Integer tipoCredito, BigDecimal valorArticulo, BigDecimal interes, Integer numCuotas, Integer numCuotasPagadas, Integer numCuotasPendientes, BigDecimal interesMora, BigDecimal gastosAdicional, Date fechaCompra, Date fechaRegistro, String estado, Set lcCuotases) {
+    public LcArticulo(int idArticulo, LcDatosDeudores lcDatosDeudores, Integer idCliente, String referencia, String nombreArticulo, Integer tipoCredito, BigDecimal valorArticulo, BigDecimal interes, Integer numCuotas, Integer numCuotasPagadas, Integer numCuotasPendientes, BigDecimal interesMora, BigDecimal gastosAdicional, Date fechaCompra, Date fechaRegistro, String estado, String descripcionCarga, Set lcCuotases) {
        this.idArticulo = idArticulo;
        this.lcDatosDeudores = lcDatosDeudores;
        this.idCliente = idCliente;
@@ -55,6 +56,7 @@ public class LcArticulo  implements java.io.Serializable {
        this.fechaCompra = fechaCompra;
        this.fechaRegistro = fechaRegistro;
        this.estado = estado;
+       this.descripcionCarga = descripcionCarga;
        this.lcCuotases = lcCuotases;
     }
    
@@ -169,6 +171,13 @@ public class LcArticulo  implements java.io.Serializable {
     
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+    public String getDescripcionCarga() {
+        return this.descripcionCarga;
+    }
+    
+    public void setDescripcionCarga(String descripcionCarga) {
+        this.descripcionCarga = descripcionCarga;
     }
     public Set getLcCuotases() {
         return this.lcCuotases;

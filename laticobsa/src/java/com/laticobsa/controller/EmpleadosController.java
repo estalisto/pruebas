@@ -11,7 +11,6 @@ import com.laticobsa.modelo.LcEmpleados;
 import com.laticobsa.modelo.LcEmpresa;
 import com.laticobsa.modelo.LcEstadoCivil;
 import com.laticobsa.modelo.LcGenero;
-import com.laticobsa.modelo.LcSucursal;
 import com.laticobsa.modelo.LcTiposIdentificacion;
 import com.laticobsa.servicios.AgenciaServicios;
 import com.laticobsa.servicios.CargosServicios;

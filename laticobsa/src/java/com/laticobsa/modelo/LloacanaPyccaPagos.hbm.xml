@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 09-jul-2017 23:23:36 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.laticobsa.modelo.LloacanaPyccaPagos" table="lloacana_pycca_pagos" schema="public" optimistic-lock="version">
+        <composite-id name="id" class="com.laticobsa.modelo.LloacanaPyccaPagosId">
+            <key-property name="camp1" type="string">
+                <column name="camp1" />
+            </key-property>
+            <key-property name="camp2" type="string">
+                <column name="camp2" />
+            </key-property>
+            <key-property name="camp3" type="string">
+                <column name="camp3" />
+            </key-property>
+            <key-property name="camp4" type="string">
+                <column name="camp4" />
+            </key-property>
+            <key-property name="camp5" type="string">
+                <column name="camp5" />
+            </key-property>
+            <key-property name="camp6" type="string">
+                <column name="camp6" />
+            </key-property>
+            <key-property name="camp7" type="string">
+                <column name="camp7" />
+            </key-property>
+            <key-property name="camp8" type="string">
+                <column name="camp8" />
+            </key-property>
+            <key-property name="camp9" type="big_decimal">
+                <column name="camp9" precision="10" />
+            </key-property>
+            <key-property name="camp10" type="string">
+                <column name="camp10" />
+            </key-property>
+            <key-property name="camp11" type="string">
+                <column name="camp11" />
+            </key-property>
+            <key-property name="camp12" type="string">
+                <column name="camp12" />
+            </key-property>
+            <key-property name="camp13" type="string">
+                <column name="camp13" />
+            </key-property>
+            <key-property name="camp14" type="string">
+                <column name="camp14" />
+            </key-property>
+            <key-property name="camp15" type="string">
+                <column name="camp15" />
+            </key-property>
+            <key-property name="camp16" type="string">
+                <column name="camp16" />
+            </key-property>
+            <key-property name="camp17" type="string">
+                <column name="camp17" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

@@ -108,7 +108,8 @@ function GuardarRecordatorio()
         "accion": accion,
         "id": id,
         "hora": hora,
-        "compromiso_pago": compromiso_pago
+        "compromiso_pago": compromiso_pago,
+        "cliente": cliente
     };
     $.ajax({
         data: parametros,

@@ -1,5 +1,5 @@
 package com.laticobsa.modelo;
-// Generated 27-jun-2017 21:14:43 by Hibernate Tools 4.3.1
+// Generated 09-jul-2017 23:23:34 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -19,6 +19,7 @@ public class LcTelefonos  implements java.io.Serializable {
      private Integer scoring;
      private Date fechaCreacion;
      private String estado;
+     private String descripcionCarga;
 
     public LcTelefonos() {
     }
@@ -27,7 +28,7 @@ public class LcTelefonos  implements java.io.Serializable {
     public LcTelefonos(int idTelefono) {
         this.idTelefono = idTelefono;
     }
-    public LcTelefonos(int idTelefono, LcTipoPersona lcTipoPersona, LcTiposTelefono lcTiposTelefono, Integer idPersona, String identificacionDeudor, String telefono, Integer scoring, Date fechaCreacion, String estado) {
+    public LcTelefonos(int idTelefono, LcTipoPersona lcTipoPersona, LcTiposTelefono lcTiposTelefono, Integer idPersona, String identificacionDeudor, String telefono, Integer scoring, Date fechaCreacion, String estado, String descripcionCarga) {
        this.idTelefono = idTelefono;
        this.lcTipoPersona = lcTipoPersona;
        this.lcTiposTelefono = lcTiposTelefono;
@@ -37,6 +38,7 @@ public class LcTelefonos  implements java.io.Serializable {
        this.scoring = scoring;
        this.fechaCreacion = fechaCreacion;
        this.estado = estado;
+       this.descripcionCarga = descripcionCarga;
     }
    
     public int getIdTelefono() {
@@ -101,6 +103,13 @@ public class LcTelefonos  implements java.io.Serializable {
     
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+    public String getDescripcionCarga() {
+        return this.descripcionCarga;
+    }
+    
+    public void setDescripcionCarga(String descripcionCarga) {
+        this.descripcionCarga = descripcionCarga;
     }
 
 

@@ -1,5 +1,5 @@
 package com.laticobsa.modelo;
-// Generated 27-jun-2017 21:14:43 by Hibernate Tools 4.3.1
+// Generated 09-jul-2017 23:23:34 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -15,11 +15,9 @@ public class LcDatosDeudores  implements java.io.Serializable {
      private int idDatosDeudor;
      private LcAgencia lcAgencia;
      private LcCiudad lcCiudad;
-     private LcClientes lcClientes;
      private LcEmpresa lcEmpresa;
      private LcEstatus lcEstatus;
      private LcTipoCredito lcTipoCredito;
-     private Integer idEmpleado;
      private Integer tipoIdentificacion;
      private String identificacion;
      private String nombres;
@@ -43,15 +41,13 @@ public class LcDatosDeudores  implements java.io.Serializable {
     public LcDatosDeudores(int idDatosDeudor) {
         this.idDatosDeudor = idDatosDeudor;
     }
-    public LcDatosDeudores(int idDatosDeudor, LcAgencia lcAgencia, LcCiudad lcCiudad, LcClientes lcClientes, LcEmpresa lcEmpresa, LcEstatus lcEstatus, LcTipoCredito lcTipoCredito, Integer idEmpleado, Integer tipoIdentificacion, String identificacion, String nombres, String apellidos, String nombresCompleto, String email, Date fechaCreacion, String estado, Set lcGestioneses, Set lcArticulos, Set lcRecaudacioneses, Set lcRecordatorioses, Set lcTransaccioneses, Set lcCuotases, Set lcCompromisosPagos) {
+    public LcDatosDeudores(int idDatosDeudor, LcAgencia lcAgencia, LcCiudad lcCiudad, LcEmpresa lcEmpresa, LcEstatus lcEstatus, LcTipoCredito lcTipoCredito, Integer tipoIdentificacion, String identificacion, String nombres, String apellidos, String nombresCompleto, String email, Date fechaCreacion, String estado, Set lcGestioneses, Set lcArticulos, Set lcRecaudacioneses, Set lcRecordatorioses, Set lcTransaccioneses, Set lcCuotases, Set lcCompromisosPagos) {
        this.idDatosDeudor = idDatosDeudor;
        this.lcAgencia = lcAgencia;
        this.lcCiudad = lcCiudad;
-       this.lcClientes = lcClientes;
        this.lcEmpresa = lcEmpresa;
        this.lcEstatus = lcEstatus;
        this.lcTipoCredito = lcTipoCredito;
-       this.idEmpleado = idEmpleado;
        this.tipoIdentificacion = tipoIdentificacion;
        this.identificacion = identificacion;
        this.nombres = nombres;
@@ -90,13 +86,6 @@ public class LcDatosDeudores  implements java.io.Serializable {
     public void setLcCiudad(LcCiudad lcCiudad) {
         this.lcCiudad = lcCiudad;
     }
-    public LcClientes getLcClientes() {
-        return this.lcClientes;
-    }
-    
-    public void setLcClientes(LcClientes lcClientes) {
-        this.lcClientes = lcClientes;
-    }
     public LcEmpresa getLcEmpresa() {
         return this.lcEmpresa;
     }
@@ -117,13 +106,6 @@ public class LcDatosDeudores  implements java.io.Serializable {
     
     public void setLcTipoCredito(LcTipoCredito lcTipoCredito) {
         this.lcTipoCredito = lcTipoCredito;
-    }
-    public Integer getIdEmpleado() {
-        return this.idEmpleado;
-    }
-    
-    public void setIdEmpleado(Integer idEmpleado) {
-        this.idEmpleado = idEmpleado;
     }
     public Integer getTipoIdentificacion() {
         return this.tipoIdentificacion;

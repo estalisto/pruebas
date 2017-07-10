@@ -1,5 +1,5 @@
 package com.laticobsa.modelo;
-// Generated 27-jun-2017 21:14:43 by Hibernate Tools 4.3.1
+// Generated 09-jul-2017 23:23:34 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -16,6 +16,7 @@ public class LcDireccion  implements java.io.Serializable {
      private String direccionCompleta;
      private Date fechaCreacion;
      private String estado;
+     private String descripcionCarga;
 
     public LcDireccion() {
     }
@@ -24,13 +25,14 @@ public class LcDireccion  implements java.io.Serializable {
     public LcDireccion(int idDireccion) {
         this.idDireccion = idDireccion;
     }
-    public LcDireccion(int idDireccion, LcTiposDireccion lcTiposDireccion, String identificacionDeudor, String direccionCompleta, Date fechaCreacion, String estado) {
+    public LcDireccion(int idDireccion, LcTiposDireccion lcTiposDireccion, String identificacionDeudor, String direccionCompleta, Date fechaCreacion, String estado, String descripcionCarga) {
        this.idDireccion = idDireccion;
        this.lcTiposDireccion = lcTiposDireccion;
        this.identificacionDeudor = identificacionDeudor;
        this.direccionCompleta = direccionCompleta;
        this.fechaCreacion = fechaCreacion;
        this.estado = estado;
+       this.descripcionCarga = descripcionCarga;
     }
    
     public int getIdDireccion() {
@@ -74,6 +76,13 @@ public class LcDireccion  implements java.io.Serializable {
     
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+    public String getDescripcionCarga() {
+        return this.descripcionCarga;
+    }
+    
+    public void setDescripcionCarga(String descripcionCarga) {
+        this.descripcionCarga = descripcionCarga;
     }
 
 

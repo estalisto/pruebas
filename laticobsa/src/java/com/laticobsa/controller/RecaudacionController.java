@@ -263,7 +263,7 @@ public class RecaudacionController extends HttpServlet {
                  EmpleadoID,
                  valor_total,       
                  fecha_reg,
-                 fecha_reg,"A",null,null));
+                 fecha_reg,"A",null,null,null));
             /*
                    this.idRecaudacion = idRecaudacion;
        this.lcDatosDeudores = lcDatosDeudores;
