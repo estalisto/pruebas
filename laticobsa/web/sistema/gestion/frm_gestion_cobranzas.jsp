@@ -16,7 +16,8 @@
 	resize: none;
                 }            
         </style>
-        <link href="dist/css/bootstrap-datepicker.css" rel="stylesheet" /> 
+        <!--link href="dist/css/bootstrap-datepicker.css" rel="stylesheet" /--> 
+        <link rel="stylesheet" href="dist/css/jquery.datetimepicker.css">
              <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
     </head>
@@ -85,8 +86,9 @@ border: 2px solid #CB8B07;
                         </div>
                           
                         <div class="row">                           
-                            
+                          
                             <form class="form-horizontal">
+                               
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Total Deuda: </label> 
                                     <label class="col-sm-1 control-label" style="color: #FF3A2D"><u>$ <c:out value='${transa.getMontoAsignado()}'/></u></label>
@@ -105,9 +107,9 @@ border: 2px solid #CB8B07;
                                     
                                     
                                     
-
-                                </div>   
-                            </form>
+ 
+                                </div>    
+                            </form>  
                         </div>  
                             <div class="col-xs-3 hidden">
                                         <div class="form-group">
@@ -526,8 +528,9 @@ border: 2px solid #CB8B07;
             </div>     
                
 
-        <!--script src="bootstrap/js/bootstrap-datetimepicker.min.js"></script-->
-        <script src="bootstrap/js/bootstrap-datepicker.js"></script>
+        <!--script src="bootstrap/js/bootstrap-datetimepicker.min.js"></script
+        <script src="bootstrap/js/bootstrap-datepicker.js"></script>-->
+        <script src="dist/js/jquery.datetimepicker.full.js"></script>
         <script src="dist/js/consultaxcatera.js"></script>  
         <script src="dist/js/cobranzas.js"></script>
         <script src="dist/js/validaciones.js"></script>
@@ -552,14 +555,18 @@ border: 2px solid #CB8B07;
                     "info": false,
                     "autoWidth": false
                 });
-                $('#datepicker').datepicker({
+               /* $('#datepicker').datepicker({
                     weekStart: 1,
                     color: 'red'
                 });
                 $('#datepicker2').datepicker({
                     weekStart: 1,
                     color: 'red'
-                });
+                });*/
+                $('#datepicker').datetimepicker({   format:'Y-m-d' }); 
+                $('#datepicker2').datetimepicker({   format:'Y-m-d' }); 
+                
+                
                 $('#idAllTelefonos').DataTable( {
                     scrollY:        100,
                     scrollX:        false,

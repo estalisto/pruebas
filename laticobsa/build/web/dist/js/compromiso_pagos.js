@@ -5,15 +5,17 @@ function compropago()
  }
  
 
-
-    $('#datepicker').datepicker({
-    weekStart:1,
-    color: 'red'
-    });
-    $('#datepicker2').datepicker({
-    weekStart:1,
-    color: 'red'
-    });
+$('#datepicker').datetimepicker({   format:'Y-m-d' }); 
+$('#datepicker2').datetimepicker({   format:'Y-m-d' }); 
+// $('#datepicker').datepicker({
+//    weekStart:1,
+//    color: 'red'
+//    });
+//    $('#datepicker2').datepicker({
+//    weekStart:1,
+//    color: 'red'
+//    });
+   /* */
     
     
      $('#buscarCompromisos').click(function(e){
@@ -37,4 +39,5 @@ function compropago()
 
       });
     
+
     

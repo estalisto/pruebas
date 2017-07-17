@@ -80,9 +80,9 @@ public class ConsultaxCartera extends HttpServlet {
                 Tabla=cd.getDatosCarteras(idclienteok, EmpleadoID, opcion);
                
                  request.setAttribute("Tablacartera", Tabla);
-                  SSqlDatosDeudor=cd.getRetornaQuery(idclienteok, EmpleadoID, opcion);
+                 SSqlDatosDeudor=cd.getRetornaQuery(idclienteok, EmpleadoID, opcion);
                  sesion.setAttribute("SSqlDatosDeudor",SSqlDatosDeudor); 
-                         request.getRequestDispatcher("sistema/gestion/frm_consulta_por_cartera.jsp").forward(request, response);
+                 request.getRequestDispatcher("sistema/gestion/frm_consulta_por_cartera.jsp").forward(request, response);
                     }
                    if(filtro1!=null){
                        int valorFiltro1 = Integer.parseInt(filtro1);
@@ -342,7 +342,51 @@ public class ConsultaxCartera extends HttpServlet {
             } catch (SQLException ex) {
                 Logger.getLogger(ConsultaxCartera.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }        
+        }
+        
+        if(accion.equals("TiposGestiones")){
+          int idclienteok;
+            idclienteok = cd.getIdCliente(EmpresaID, SucursalID, EmpleadoID);
+            
+            String DatosTiposGestion="{\"tipo_gestion\": ["+ cd.getTiposGestion(idclienteok)+"]}";//  getTiposGestion
+            System.out.println("json: "+DatosTiposGestion);
+             response.getWriter().println(DatosTiposGestion);
+        }
+        
+        if(accion.equals("TiposResulatdos")){
+         int IdTipoGestion=Integer.parseInt(request.getParameter("IdTipoGestion"));
+            
+         String DatosTiposResultados="";
+         if(cd.getTiposResultados(IdTipoGestion).equals("[]")){
+             DatosTiposResultados="{\"tipos_resultado\": []}";
+         }else{
+             DatosTiposResultados="{\"tipos_resultado\": "+ cd.getTiposResultados(IdTipoGestion)+"}";//  getTiposGestion
+  
+         }
+            System.out.println("json: "+DatosTiposResultados);
+             response.getWriter().println(DatosTiposResultados);
+        }
+        
+         if(accion.equals("nuevaConsulta")){
+                     int cartera = Integer.parseInt(request.getParameter("cartera")); 
+                 String QueryConsulta =request.getParameter("sqlQuery");
+                 String NuevosDatos="";
+                 QueryConsulta = QueryConsulta.replaceAll("IDClienteConsulta", Integer.toString(cartera));
+                 QueryConsulta = QueryConsulta.replaceAll("IDEmpleadoConsulta", Integer.toString(EmpleadoID));
+                 
+            try {
+                sesion.setAttribute("SSqlDatosDeudor",QueryConsulta); 
+                NuevosDatos=cd.getDatosCarteras2(QueryConsulta);
+            } catch (SQLException ex) {
+                Logger.getLogger(ConsultaxCartera.class.getName()).log(Level.SEVERE, null, ex);
+                
+            }
+                 response.getWriter().println(NuevosDatos);
+             
+                 
+                 
+         }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

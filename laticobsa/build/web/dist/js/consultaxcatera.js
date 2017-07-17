@@ -650,3 +650,226 @@ function orderFechaUltPagos(){
         }
     }); 
 }
+
+
+
+function consulta_filtro_cartera(){
+
+    var pagos_ini=$('#pagos').val();
+    var pagos_fin=$('#pagos1').val();
+    var tvencido_ini=$('#tvencido').val();
+    var tvencido_fin=$('#tvencido1').val();
+    var vcompromiso_ini=$('#vcompromiso').val();
+    var vcompromiso_fin=$('#vcompromiso1').val();
+    var saldos_ini=$('#saldos').val();
+    var saldos_fin=$('#saldos1').val();
+    var dia_mora_ini=$('#dia_mora').val();
+    var dia_mora_fin=$('#dia_mora1').val();
+    var fUltimo_pago_ini=$('#datetimepicker10').val();
+    var fUltimo_pago_fin=$('#datetimepicker11').val();
+    var fUltimo_gestion_ini=$('#datetimepicker12').val();
+    var fUltimo_gestion_fin=$('#datetimepicker13').val();
+    var fUltimo_compromiso_ini=$('#datetimepicker14').val();
+    var fUltimo_compromiso_fin=$('#datetimepicker15').val();
+    var SelectTipoGestion=$("#tgestion").val();
+    var SelectTipoResultado=$("#tresultado_gestion").val();
+    var cartera = $("#cartera").val();
+    var accion = "nuevaConsulta";
+    var order_by=$('#order_by').val();
+    var sqlQuery=" select * from vw_consulta_cartera s  where s.id_cliente=IDClienteConsulta and s.id_empleado=IDEmpleadoConsulta ";
+    
+    //
+   var fmontos="";
+   /*valida critrios de pagos*/
+    if (pagos_ini.length !== 0 && pagos_fin.length !==0  && parseInt(pagos_ini) >= parseInt(pagos_fin)){        alert("El valor de PAGO Inicial debe ser MENOR a la PAGO final para realizar la consulta");        return; }
+    if (pagos_ini.length !== 0 && pagos_fin.length !==0  && parseInt(pagos_ini) < parseInt(pagos_fin)){        fmontos+= " AND s.pagos >= "+pagos_ini+" AND s.pagos <= "+pagos_fin;    }
+    if (pagos_ini.length !== 0 && pagos_fin.length === 0  && parseInt(pagos_ini) < 0){         alert("El valor en PAGOS ingresdo debe ser mayor a 0 para realizar la consulta.");        return;   }
+    if (pagos_ini.length !== 0 && pagos_fin.length === 0  && parseInt(pagos_ini) > 0){        fmontos+= " AND s.pagos >= "+pagos_ini ;    }
+    if (pagos_ini.length === 0 && pagos_fin.length !== 0  && parseInt(pagos_fin) < 0){         alert("El valor ingresdo en PAGOS debe ser mayo a 0 para realizar la consulta");        return;    }
+    if (pagos_ini.length === 0 && pagos_fin.length !== 0  && parseInt(pagos_fin) > 0){        fmontos+= " AND s.pagos <= "+pagos_fin ;    }
+     /*valida critrios de Total Deuda*/ 
+    if (tvencido_ini.length !== 0 && tvencido_fin.length !==0  && parseInt(tvencido_ini) >= parseInt(tvencido_fin)){       alert("El valor de Deudoa Total Inicial debe ser MENOR a la PAGO final para realizar la consulta");        return; }
+    if (tvencido_ini.length !== 0 && tvencido_fin.length !==0  && parseInt(tvencido_ini) < parseInt(tvencido_fin)){        fmontos+= " AND s.total_vencidos >= "+tvencido_ini+" AND s.total_vencidos <= "+tvencido_fin;    }
+    if (tvencido_ini.length !== 0 && tvencido_fin.length === 0  && parseInt(tvencido_ini) < 0){        alert("El valor en Total Deuda ingresdo debe ser mayor a 0 para realizar la consulta.");        return;   }
+    if (tvencido_ini.length !== 0 && tvencido_fin.length === 0  && parseInt(tvencido_ini) > 0){        fmontos+= " AND s.total_vencidos >= "+tvencido_ini ;    }
+    if (tvencido_ini.length === 0 && tvencido_fin.length !== 0  && parseInt(tvencido_fin) < 0){        alert("El valor ingresdo en Total Deuda debe ser mayor a 0 para realizar la consulta");        return;    }
+    if (tvencido_ini.length === 0 && tvencido_fin.length !== 0  && parseInt(tvencido_fin) > 0){        fmontos+= " AND s.pagtotal_vencidosos <= "+tvencido_fin ;    }
+   
+    /*valida critrios de Valor Compromiso*/ 
+    if (vcompromiso_ini.length !== 0 && vcompromiso_fin.length !==0  && parseInt(vcompromiso_ini) >= parseInt(vcompromiso_fin)){       alert("El valor de Compromiso de Pago Inicial debe ser MENOR a  Compromiso de Pago final para realizar la consulta");        return; }
+    if (vcompromiso_ini.length !== 0 && vcompromiso_fin.length !==0  && parseInt(vcompromiso_ini) < parseInt(vcompromiso_fin)){        fmontos+= " AND s.valor_compro >= "+vcompromiso_ini+" AND s.valor_compro <= "+vcompromiso_fin;    }
+    if (vcompromiso_ini.length !== 0 && vcompromiso_fin.length === 0  && parseInt(vcompromiso_ini) < 0){        alert("El valor en Compromiso de Pago ingresdo debe ser mayor a 0 para realizar la consulta.");        return;   }
+    if (vcompromiso_ini.length !== 0 && vcompromiso_fin.length === 0  && parseInt(vcompromiso_ini) > 0){        fmontos+= " AND s.valor_compro >= "+vcompromiso_ini ;    }
+    if (vcompromiso_ini.length === 0 && vcompromiso_fin.length !== 0  && parseInt(vcompromiso_fin) < 0){        alert("El valor Compromiso de Pago Deuda debe ser mayor a 0 para realizar la consulta");        return;    }
+    if (vcompromiso_ini.length === 0 && vcompromiso_fin.length !== 0  && parseInt(vcompromiso_fin) > 0){        fmontos+= " AND s.valor_compro <= "+vcompromiso_fin ;    }
+  
+     /*valida critrios de Saldos*/ 
+    if (saldos_ini.length !== 0 && saldos_fin.length !==0  && parseInt(saldos_ini) >= parseInt(saldos_fin)){       alert("El valor de Saldo Inicial debe ser MENOR al Saldo final para realizar la consulta");        return; }
+    if (saldos_ini.length !== 0 && saldos_fin.length !==0  && parseInt(saldos_ini) < parseInt(saldos_fin)){        fmontos+= " AND s.saldo >= "+saldos_ini+" AND s.saldo <= "+saldos_fin;    }
+    if (saldos_ini.length !== 0 && saldos_fin.length === 0  && parseInt(saldos_ini) < 0){        alert("El valor Saldo ingresdo debe ser mayor a 0 para realizar la consulta.");        return;   }
+    if (saldos_ini.length !== 0 && saldos_fin.length === 0  && parseInt(saldos_ini) > 0){        fmontos+= " AND s.saldo >= "+saldos_ini ;    }
+    if (saldos_ini.length === 0 && saldos_fin.length !== 0  && parseInt(saldos_fin) < 0){        alert("El valor Saldo Deuda debe ser mayor a 0 para realizar la consulta");        return;    }
+    if (saldos_ini.length === 0 && saldos_fin.length !== 0  && parseInt(saldos_fin) > 0){        fmontos+= " AND s.saldo <= "+saldos_fin ;    }
+  
+     /*valida critrios de Dias de Mora*/ 
+    if (dia_mora_ini.length !== 0 && dia_mora_fin.length !==0  && parseInt(dia_mora_ini) >= parseInt(dia_mora_fin)){       alert("El valor de Dias Mora Inicial debe ser MENOR a Dias Mora final para realizar la consulta");        return; }
+    if (dia_mora_ini.length !== 0 && dia_mora_fin.length !==0  && parseInt(dia_mora_ini) < parseInt(dia_mora_fin)){        fmontos+= " AND s.dias_mora >= "+dia_mora_ini+" AND s.dias_mora <= "+dia_mora_fin;    }
+    if (dia_mora_ini.length !== 0 && dia_mora_fin.length === 0  && parseInt(dia_mora_ini) < 0){        alert("El valor Dias Mora ingresdo debe ser mayor a 0 para realizar la consulta.");        return;   }
+    if (dia_mora_ini.length !== 0 && dia_mora_fin.length === 0  && parseInt(dia_mora_ini) > 0){        fmontos+= " AND s.dias_mora >= "+dia_mora_ini ;    }
+    if (dia_mora_ini.length === 0 && dia_mora_fin.length !== 0  && parseInt(dia_mora_fin) < 0){        alert("El valor Dias Mora Deuda debe ser mayor a 0 para realizar la consulta");        return;    }
+    if (dia_mora_ini.length === 0 && dia_mora_fin.length !== 0  && parseInt(dia_mora_fin) > 0){        fmontos+= " AND s.dias_mora <= "+dia_mora_fin ;    }
+  
+     /*valida critrios de Fecha Ultimo Pago*/ 
+    if (fUltimo_pago_ini.length !== 0 && fUltimo_pago_fin.length !==0  && Date.parse(fUltimo_pago_ini) >= Date.parse(fUltimo_pago_fin)){       alert("La fecha de Ultimo Pago Inicial debe ser MENOR a la fecha de Ultimo Pago final para realizar la consulta");        return; }
+    if (fUltimo_pago_ini.length !== 0 && fUltimo_pago_fin.length !==0  && Date.parse(fUltimo_pago_ini) < Date.parse(fUltimo_pago_fin)){        fmontos+= " AND s.fecha_ult_pagos >= '"+fUltimo_pago_ini+"' AND s.fecha_ult_pagos <= '"+fUltimo_pago_fin+"' ";    }
+    if (fUltimo_pago_ini.length !== 0 && fUltimo_pago_fin.length === 0 ){ fmontos+= " AND s.fecha_ult_pagos >= '"+fUltimo_pago_ini+"' ";     }
+    if (fUltimo_pago_ini.length === 0 && fUltimo_pago_fin.length !== 0 ){ fmontos+= " AND s.fecha_ult_pagos <= '"+fUltimo_pago_fin+"' ";    }
+  
+    /*valida critrios de Fecha Ultima Gestión*/ 
+    if (fUltimo_gestion_ini.length !== 0 && fUltimo_gestion_fin.length !==0  && Date.parse(fUltimo_gestion_ini) >= Date.parse(fUltimo_gestion_fin)){       alert("La fecha de Ultimo Gestión Inicial debe ser MENOR a la fecha de Ultimo Gestión final para realizar la consulta");        return; }
+    if (fUltimo_gestion_ini.length !== 0 && fUltimo_gestion_fin.length !==0  && Date.parse(fUltimo_gestion_ini) < Date.parse(fUltimo_gestion_fin)){        fmontos+= " AND s.fech_ultima_gestion >= '"+fUltimo_pago_ini+"' AND s.fech_ultima_gestion <= '"+fUltimo_gestion_fin+"' ";    }
+    if (fUltimo_gestion_ini.length !== 0 && fUltimo_gestion_fin.length === 0 ){ fmontos+= " AND s.fech_ultima_gestion >= '"+fUltimo_gestion_ini+"' ";     }
+    if (fUltimo_gestion_ini.length === 0 && fUltimo_gestion_fin.length !== 0 ){ fmontos+= " AND s.fech_ultima_gestion <= '"+fUltimo_gestion_fin+"' ";    }
+  
+    /*valida critrios de Fecha Ultima Compromiso*/ 
+    if (fUltimo_compromiso_ini.length !== 0 && fUltimo_compromiso_fin.length !==0  && Date.parse(fUltimo_compromiso_ini) >= Date.parse(fUltimo_compromiso_fin)){       alert("La fecha de Compromiso inicial debe ser MENOR a la fecha de Compromiso final para realizar la consulta");        return; }
+    if (fUltimo_compromiso_ini.length !== 0 && fUltimo_compromiso_fin.length !==0  && Date.parse(fUltimo_compromiso_ini) < Date.parse(fUltimo_compromiso_fin)){        fmontos+= " AND s.fecha_comp >='"+fUltimo_compromiso_ini+"' AND s.fecha_comp <= '"+fUltimo_compromiso_fin+"' ";    }
+    if (fUltimo_compromiso_ini.length !== 0 && fUltimo_compromiso_fin.length === 0 ){ fmontos+= " AND s.fecha_comp >= '"+fUltimo_compromiso_ini+"'";     }
+    if (fUltimo_compromiso_ini.length === 0 && fUltimo_compromiso_fin.length !== 0 ){ fmontos+= " AND s.fecha_comp <= '"+fUltimo_compromiso_fin+"' ";    }
+  
+//  alert(SelectTipoGestion);
+//  return;
+    if (SelectTipoGestion!== "0"){
+       fmontos+= " AND s.ultima_gestion = '"+$('#tgestion').find('option:selected').text()+"'";         
+    }  
+    if (SelectTipoResultado!== "0"){
+       fmontos+= " AND s.resultado_gestion = '"+$('#tresultado_gestion').find('option:selected').text()+"'";      
+    } 
+    
+    if (order_by!==""){
+        
+       order_by= " ORDER BY s."+order_by+" DESC";
+    }
+    
+       $('#id_loader').css("display", "block");
+       //arma el query para la consula
+    sqlQuery=sqlQuery+fmontos+order_by;
+   // alert(sqlQuery);
+     var parametros = {
+        "sqlQuery":sqlQuery,
+        "cartera": cartera,
+        "accion": accion
+    };
+        $.ajax({
+        data: parametros,
+        url: 'consultacartera',
+        type: 'GET',
+        beforeSend: function () {
+        },
+        success: function (response) {
+             $('#id_loader').css("display", "none");
+             if (response) {
+                 //alert(response.toString());
+              //  document.getElementById("bodytable").innerHTML = "";
+              //  document.getElementById("bodytable").innerHTML = response;
+              $("#consul_cartera tbody").remove();           
+               $("#consul_cartera").append(response.toString());
+       
+               
+            }      
+        }
+    });
+    
+ // alert(sqlQuery);
+}
+
+function fnc_order_by(orden) {
+    document.getElementById("order_by").value = "";
+    document.getElementById("order_by").value = orden;
+}
+
+ function verificaFecha3(nameInput){
+    var fecha = $("#"+nameInput).val();       
+    if(validarFormatoFecha(fecha)){
+          if(existeFecha(fecha)){            
+            if(validarFechaMenorActual(fecha)){
+                  return 1;
+              }else{
+                   return 2;
+              }
+          }else{
+            return 3;
+          }
+    }else{
+        return 4;
+    }
+}
+function validarFechaMenorActual(date){
+      var x=new Date();
+      var fecha = date.split("-");
+      x.setFullYear(fecha[0],fecha[1]-1,fecha[2]);
+      //console.log("existe v: "+x);
+      var today = new Date(); 
+      if (x >= today)
+        return false;
+      else
+        return true;
+}
+function validarFormatoFecha(campo) {
+      var RegExPattern = /^\d{2,4}\-\d{1,2}\-\d{1,2}$/;
+      if ((campo.match(RegExPattern)) && (campo!='')) {
+            return true;
+      } else {
+            return false;
+      }
+}
+function existeFecha(fecha){
+      var fechaf = fecha.split("-");
+      var year = fechaf[0];
+      var month = fechaf[1];
+      var day = fechaf[2];
+      var date = new Date(year,month,'0');
+      if((day-0)>(date.getDate()-0)){
+            return false;
+      }
+      return true;
+}
+
+function getTiposGestiones(){
+document.getElementById("tgestion").innerHTML="";
+$("#tgestion").append($("<option>",{value:"0",text:"Seleccione Tipo Gestión"}));
+    $.getJSON("consultacartera", {"accion" : "TiposGestiones"}, function(result){
+          $.each(result.tipo_gestion, function(key, val){             
+          // $("#tgestion").append('<option id="' + val.idTipoGestion + '">' + val.nombreTipoGestion +'</option>');
+           $("#tgestion").append($("<option>",{value:val.idTipoGestion,text:val.nombreTipoGestion}));
+          });
+    });
+    
+   document.getElementById("tresultado_gestion").disabled=true;
+   $("#tresultado_gestion").append($("<option>",{value:"0",text:"Seleccione Tipo Gestión"}));
+   
+    
+}
+
+
+function ConsultaTipoResultado(){
+  var IdTipoGestion=$("#tgestion").val();
+  if(IdTipoGestion===0){
+     document.getElementById("tresultado_gestion").disabled=true;
+     document.getElementById("tresultado_gestion").innerHTML="";
+     $("#tresultado_gestion").append($("<option>",{value:"0",text:"Seleccione Tipo Gestión"}));  
+  }
+  if(IdTipoGestion!==0){
+      document.getElementById("tresultado_gestion").disabled=false;
+      document.getElementById("tresultado_gestion").innerHTML="";
+      $("#tresultado_gestion").append($("<option>",{value:"0",text:"Seleccione Tipo Resultado"}));
+     $.getJSON("consultacartera", {"accion" : "TiposResulatdos","IdTipoGestion":IdTipoGestion}, function(result){
+         console.log(result);
+         console.log('size: '+result.tipos_resultado.tipos_resultado);
+          $.each(result.tipos_resultado, function(key, val){             
+           $("#tresultado_gestion").append($("<option>",{value:val.idTipoResultado,text:val.nombreTipoResultado}));
+          });
+    });
+  }
+    
+}
