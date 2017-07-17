@@ -120,7 +120,7 @@ public List<LcCompromisosPago> getLcCompromisosPago(Date fechaCompromiso, int ID
                     + "and c.id_deudor=d.id_datos_deudor\n"
                     + "and c.fecha_compromiso >='" + result + "'  order by c.fecha_compromiso";
             
-            String contenido = "",footer="";
+            String contenido = "<tbody>",footer="";
             String id_compromiso, fecha_registro, nombre_deudor, fecha_compromiso, valor_compromiso;
             String id_deudor, id_cliente;
             BigDecimal valores = BigDecimal.ZERO;
@@ -146,12 +146,24 @@ public List<LcCompromisosPago> getLcCompromisosPago(Date fechaCompromiso, int ID
                         + "                                  <td class=\"text-center\">" + valor_compromiso + "</td>\n"
                         + "                                  <td>Llamar a la Hora especificada </td></tr> ";
             }
-            footer="</tbody></br><tfoot>\n" +
-                                    "<tr>\n" +
-                                    "<th class=\"col-sm-2  text-center\" style=\" font-size:18px; font-type:Arial\"> Total Deuda: </th>  "
-                                    + "<th class=\"col-sm-2\" style=\" font-size:18px; color:#3c8dbc; font-type:Arial\"><strong>$ "+suma+"</strong></th>\n" +
-                                    "<tr>\n" +
+            footer="</tbody><tfoot>\n" +
+                               
+                                    "<th class=\"col-sm-2  text-center\" style=\" font-size:18px; font-type:Arial\"> Total Compromiso: </th>  "+
+                                    "<th class=\"col-sm-2\"              style=\" font-size:18px; color:#3c8dbc; font-type:Arial\"><strong>$ "+suma+"</strong></th>\n" +
+                                    "<th></th><th></th><th></th><th></th> "+
+                                  
                                     "</tfoot>";
+            
+          /*  footer="</tbody><tfoot> \n" +
+
+"<th> Total Compromiso: </th>  \n" +
+"<th><strong>$ "+suma+"</strong></th>\n" +
+"<th></th>\n" +
+"<th></th>\n" +
+"<th></th> \n" +
+"<th></th> \n" +
+"</tfoot>";*/   
+            
                 rs.close();
                 pst.close();
                 conexion.cierraConexion();
@@ -182,7 +194,7 @@ public List<LcCompromisosPago> getLcCompromisosPago(Date fechaCompromiso, int ID
                     + "and c.id_deudor=d.id_datos_deudor\n"
                     + "and c.fecha_compromiso >='" + fechaInicio + "'and c.fecha_compromiso <='" + fechaFin + "'   order by c.fecha_compromiso";
             
-            String contenido = "",footer="";
+            String contenido = "<tbody>",footer="";
             String id_compromiso, fecha_registro, nombre_deudor, fecha_compromiso, valor_compromiso;
             String id_deudor, id_cliente;
             BigDecimal valores = BigDecimal.ZERO;
@@ -208,11 +220,12 @@ public List<LcCompromisosPago> getLcCompromisosPago(Date fechaCompromiso, int ID
                         + "                                  <td  class=\"text-center\">" + valor_compromiso + "</td>\n"
                         + "                                  <td>Llamar a la Hora especificada </td></tr> ";
             }
-            footer="</tbody></br><tfoot>\n" +
-                                    "<tr>\n" +
-                                    "<th class=\"col-sm-2  text-center\" style=\" font-size:18px; font-type:Arial\"> Total Deuda: </th>  "
-                                    + "<th class=\"col-sm-2\" style=\" font-size:18px; color:#3c8dbc; font-type:Arial\"><strong>$ "+suma+"</strong></th>\n" +
-                                    "<tr>\n" +
+            footer="</tbody><tfoot>\n" +
+                               
+                                    "<th class=\"col-sm-2  text-center\" style=\" font-size:18px; font-type:Arial\"> Total Compromiso: </th>  "+
+                                    "<th class=\"col-sm-2\"              style=\" font-size:18px; color:#3c8dbc; font-type:Arial\"><strong>$ "+suma+"</strong></th>\n" +
+                                    "<th></th><th></th><th></th><th></th> "+
+                                  
                                     "</tfoot>";
                 rs.close();
                 pst.close();

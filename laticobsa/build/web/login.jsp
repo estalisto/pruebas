@@ -50,12 +50,12 @@
         
 
     </head>
-    <body class="m-404" data-scrolling-animations="true">
+    <body class="m-404" data-scrolling-animations="true"  style="background-color: rgba(0, 198, 243, 0.05);">
 
         <!-- Loader -->
 
         <!-- Loader end -->
-        <nav class="b-nav" style="background-color: rgba(0, 198, 243, 0.05);">
+        <nav class="b-nav">
             <div class="container">
                 <div class="row">
                     <div class="col-sm-3 col-xs-4">
@@ -67,7 +67,7 @@
                 </div>
             </div>
         </nav><!--b-nav-->
-        <section class="b-error b-login" style="background-color: rgba(0, 198, 243, 0.05);">
+        <section class="b-error b-login" >
             <div class="container">
                 <div class="row">
                     <div class="col-lg-4"></div>

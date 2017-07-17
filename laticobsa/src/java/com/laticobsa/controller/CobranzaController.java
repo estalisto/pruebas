@@ -142,24 +142,30 @@ public class CobranzaController extends HttpServlet {
          List<LcNotas> notas = cd.getLcNotas(idCliente,idDeudor);
          request.setAttribute("notas", notas);
          
-         String detArticulos = null;
+         String detArticulos = null,detalleArt = null,footTotal=null;
             try {
                // detArticulos = cd.getArticulos2(idCliente,idDeudor);
                 detArticulos = cd.getArticulos2(idCliente,idDeudor);
-                
+                String separo[]=detArticulos.split("&");
+                 detalleArt=separo[0];
+                 footTotal=separo[1];
             } catch (SQLException ex) {
                 Logger.getLogger(CobranzaController.class.getName()).log(Level.SEVERE, null, ex);
             }
-         request.setAttribute("detArticulos", detArticulos);
-         
-         String detCuotas = null;
+         request.setAttribute("detArticulos", detalleArt);
+         request.setAttribute("detTotal", footTotal);
+         String detCuotas = null,detalleCuota = null,footCuota=null;
             try {
                 //detCuotas = cd.getCuotas2(idcliente, idDeudor);
                 detCuotas = cd.getCuotas2(idCliente, idDeudor);
+                String separo[]=detCuotas.split("&");
+                detalleCuota=separo[0];
+                footCuota=separo[1];
             } catch (SQLException ex) {
                 Logger.getLogger(CobranzaController.class.getName()).log(Level.SEVERE, null, ex);
             }
-         request.setAttribute("detCuotas", detCuotas);
+         request.setAttribute("detCuotas", detalleCuota);
+         request.setAttribute("detTotalCuota", footCuota);
            String TablaGestiones="";
             try {
                  TablaGestiones=cd.getGestiones(idCliente, idDeudor);
@@ -575,14 +581,28 @@ public class CobranzaController extends HttpServlet {
                                 if((i+1) > sgte.size()){
                                     response.getWriter().println(0);
                                     break;
-                                }else{
+                                }
+                                if((i+1) < sgte.size()){
                                     otro=sgte.get(i+1);
                                     id = Integer.parseInt(otro);
                                     response.getWriter().println(id);
                                     break;
-                                    
-                                    
-                                }}
+                                }
+                                if((i+1) == sgte.size()){
+//                                    int otros= i+1;
+                                    opcion=7;
+                                    List<String> sgte3= cd.getDatosCarterasSiguienteAnterior(idCliente,EmpleadoID, opcion);
+//                                    if(!sgte3.isEmpty()){
+//                                        for(int j=0; j< sgte.size(); j++) {
+                                            id = Integer.parseInt(sgte3.get(0));
+//                                            if(otros==id){
+                                                response.getWriter().println(id);
+//                                            }
+//                                        }
+//                                    }
+                                    break;
+                                }
+                            }
                         }
                     }
                 }

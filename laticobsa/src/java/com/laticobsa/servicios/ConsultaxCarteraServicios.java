@@ -34,6 +34,12 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+//import org.json.simple.JSONObject;
+import com.google.gson.Gson;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+
 
 /**
  *
@@ -490,15 +496,13 @@ public List<LcArticulo> getArticulos(int idCliente,int idDeudor){
                                    // "</tbody>";
                                       
             }
-                footer="<tfoot>\n" +
-                                    "<tr>\n" +
-                                    "<th> Total Deuda: </th>  <th><strong>"+suma+"</strong></th>\n" +
-                                    "<tr>\n" +
-                                    "</tfoot>";
+                footer="<tr>\n" +
+                        "<th> Total Deuda: </th>  <th><strong>"+suma+"</strong></th>\n" +
+                        "</tr>";
                 rs.close();
                 pst.close();
                 conexion.cierraConexion();
-                 valor=contenido;//+footer;
+                 valor=contenido+"&"+footer;
                 return valor;
             }catch(Exception ex){
             }finally{
@@ -547,8 +551,10 @@ public List<LcCuotas> getCuotas(int idCliente,int idDeudor){
                 "and c.id_cliente="+idCliente+" and c.id_articulo=a.id_articulo"; 
             
             String contenido="";
-            String referencia,num_cuotas,interes,mora,gastos_cobranzas,valor_cuota;
+            String referencia,num_cuotas,interes,mora,gastos_cobranzas,valor_cuota,footer;
             String gastos_adicional,otros_valores,total_cuotas,fecha_transaccion;
+            BigDecimal valores = BigDecimal.ZERO;
+            BigDecimal suma = BigDecimal.ZERO;
             pst = conexion.getconexion().prepareStatement(SQL);
             rs = pst.executeQuery();
             
@@ -564,6 +570,8 @@ public List<LcCuotas> getCuotas(int idCliente,int idDeudor){
                 valor_cuota = rs.getString("valor_cuota");
                 total_cuotas = rs.getString("total_cuotas");
                 fecha_transaccion = rs.getString("fecha_transaccion");
+                valores = new BigDecimal(total_cuotas);
+                suma= suma.add(valores);
               contenido=contenido+"<tr> \n" +
                                     " <td>"+referencia+"</td>\n" +
                                     " <td>"+num_cuotas+"</td>\n" +
@@ -577,11 +585,13 @@ public List<LcCuotas> getCuotas(int idCliente,int idDeudor){
                                     " <td>"+fecha_transaccion+"</td>  \n" +
                                     " </tr>";  
             }
-
+            footer="<tr>\n" +
+                        "<th> Total Cuotas: </th>  <th><strong>"+suma+"</strong></th>\n" +
+                        "</tr>";
                 rs.close();
                 pst.close();
                 conexion.cierraConexion();
-                 valor=contenido;
+                 valor=contenido+"&"+footer;
                 return valor;
             }catch(Exception ex){
             }finally{
@@ -1052,6 +1062,9 @@ String color;
             if(opcion==6){ //ordena por fecha ultima gestion de Menor a Mayor
                 Ordenar="order by s.fech_ultima_gestion asc"; 
              }
+            if(opcion==7){ //ordena por fecha ultima gestion de Menor a Mayor solo cuando es igual el registro y el numero de de registro
+                Ordenar="order by s.fech_ultima_gestion asc"; 
+             }
             String SQL="";   
             
             SQL="select  id_datos_deudor\n" +
@@ -1455,5 +1468,59 @@ String color;
             " where s.id_cliente="+IdCliente+"\n" +
             " and s.id_empleado="+IdEmpleado+" "+Ordenar; 
         return SQL;
-    }    
+    }  
+    
+    public String getTiposGestion(int IDCliente){
+        JSONObject json = new JSONObject();
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        // hacemos la transaccion     
+        Query q = session.createQuery("from LcTipoGestion  E WHERE E.idCliente=:IDCliente and E.estado= :estado");
+        q.setParameter("IDCliente",IDCliente);
+        q.setParameter("estado","A");
+        List<LcTipoGestion> lista=q.list(); 
+            for(LcTipoGestion datos:lista )
+            {
+               System.out.print("Datos: "+datos.getIdCliente());
+               json.put("idTipoGestion",datos.getIdTipoGestion());
+               json.put("nombreTipoGestion", datos.getNombreTipoGestion());
+               
+               
+            }
+            
+            tx.commit();
+            session.close();
+
+         return  json.toString();
+      
+    }
+    public String getTiposResultados(int IdTipoGestion){
+        JSONObject json = new JSONObject();
+        JSONArray itemSelectedJson = new JSONArray();
+
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        // hacemos la transaccion     
+        Query q = session.createQuery("from LcTipoResultado  E WHERE E.lcTipoGestion.idTipoGestion=:IdTipoGestion and E.estado= :estado");
+        q.setParameter("IdTipoGestion",IdTipoGestion);
+        q.setParameter("estado","A");
+        List<LcTipoResultado> lista=q.list(); 
+    
+            for(LcTipoResultado datos:lista )
+            { 
+               json = new JSONObject();
+               json.put("idTipoResultado",datos.getIdTipoResultado());
+               json.put("nombreTipoResultado", datos.getNombreTipoResultado());
+               itemSelectedJson.add(json);
+            }
+            tx.commit();
+            session.close();
+
+         return  itemSelectedJson.toString();
+      
+    }
 }

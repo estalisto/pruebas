@@ -336,9 +336,16 @@ border: 0px groove #000000;
 <!-- Bootstrap 3.3.6 -->
 <script src="bootstrap/js/bootstrap.min.js"></script>
 <!-- DataTables -->
+  
 <script src="plugins/datatables/jquery.dataTables.min.js"></script>
-<script src="bootstrap/js/bootstrap-datepicker.js"></script>
 <script src="plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- 
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js"></script> -->
+
+
+<!--datapicker
+<script src="bootstrap/js/bootstrap-datepicker.js"></script>-->
 <!-- SlimScroll -->
 <script src="plugins/slimScroll/jquery.slimscroll.min.js"></script>
 <!-- FastClick -->

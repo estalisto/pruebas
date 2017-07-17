@@ -13,7 +13,8 @@
   <!DOCTYPE html>
 <html>
   <head>      
-        
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="dist/css/jquery.datetimepicker.css">   
        
   </head>
     <body>
@@ -21,8 +22,9 @@
 
   <div> <!-- div inicio  -->
       
-    <div class="col-lg-8"> 
-        <br><div class="box box-danger">
+    <div class="col-lg-10"> 
+        <br>
+        <div class="box box-danger">
             <div class="box-header with-border bg-yellow">
                 <h3 class="box-title">Compromiso de Pago</h3>
             </div>
@@ -43,30 +45,32 @@
                <button type="button" class="btn btn-success " id="buscarCompromisos">
                  <span class="glyphicon glyphicon-search"></span> <strong> Buscar </strong>
               </button>
+                <div id="example_wrapper" class="form-group has-feedback"></div> 
           </form>
           <br>
           
             <div class="row">
                 <div  class="box">
-                    <div id="busca_compromisos"> 
-                      <table  id="compro_pago" class="table-striped table-hover">    
-                          
-                        <tbody>
+                     <div  class="box-body table-responsive" style="overflow-x: auto" >
+                        <div id="busca_compromisos"> 
+                          <table  id="compro_pago" class="table table-striped table-bordered table-hover " cellspacing="0" width="100%">                            
+                            <thead>  
+                            <tr bgcolor="#FBF5EF">
+                              <th class="col-sm-1 text-center" >N°</th>
+                              <th class="col-sm-1  text-center">Fecha llamada</th>
+                              <th class="col-sm-3">Deudor</th>
+                              <th class="col-sm-1 text-center">Fech. Compromiso</th>
+                              <th class="col-sm-1">Monto Compromiso</th>
+                              <th class="col-sm-3">Observación</th>
+                            </tr>
+                             </thead>         
                             
-                        <tr>
-                          <th class="col-sm-1 text-center" >N°</th>
-                          <th class="col-sm-2  text-center">Fecha de llamada</th>
-                          <th class="col-sm-3">Deudor</th>
-                          <th class="col-sm-2 text-center">Fecha de Compromiso</th>
-                          <th class="col-sm-2">Monto de Compromiso</th>
-                          <th class="col-sm-3">Observación</th>
-                        </tr>
-                                
-                                
-                                    <%= request.getAttribute("Tablacompromiso") %>
-                      </tbody>
-		      </table>
-                    </div>
+                                        <%= request.getAttribute("Tablacompromiso") %>
+
+                            
+                          </table>
+                        </div>
+                     </div>
                 </div>                
             </div>
       </div>
@@ -79,27 +83,34 @@
   
   <!-- /.content-wrapper 
 <script src="bootstrap/js/bootstrap-datetimepicker.min.js"></script>-->
-
+<script src="dist/js/jquery.datetimepicker.full.js"></script>
 <script src="dist/js/compromiso_pagos.js"></script> 
 <script src="dist/js/cobranzas.js"></script>
 
 
 <!-- DataTables
-<script src="plugins/datatables/jquery.dataTables.min.js"></script> -->
-<!--script src="plugins/datatables/dataTables.bootstrap.min.js"></script-->
-
+<script src="plugins/datatables/jquery.dataTables.min.js"></script> 
+<script src="plugins/datatables/dataTables.bootstrap.min.js"></script>
+--> 
 <script>    
 $(function() {
-    $('#datepicker').datepicker({
-    weekStart:1,
-    color: 'red'
-    });
-    $('#datepicker2').datepicker({
-    weekStart:1,
-    color: 'red'
-    });
+ $("#compro_pago").DataTable({
+    "paging": true,
+    "lengthChange": false,
+    "lengthMenu": [10],
+    "ordering": false,
+    "info": false,
+    "autoWidth": false
+  });
+   
+ 
+
+
+    
 });
-         </script> 
+
+</script> 
+
 <!-- ./wrapper -->
 </body>
 </html>
