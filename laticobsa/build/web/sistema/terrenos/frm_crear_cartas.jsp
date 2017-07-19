@@ -1,4 +1,4 @@
-<%-- 
+    <%-- 
     Document   : index
     Created on : 12-feb-2017, 22:28:05
     Author     : Stalyn Granda
@@ -55,7 +55,7 @@
 
 
                             <div class="col-sm-4">
-                                <label>Cliente</label>  
+                                <label>Cartera: </label>  
                                 <select class="form-control" id="cliente" required="required" >
                                     <option value='' >Seleccionar</option>
                                     <option value='CLI1' >DePrati</option>
@@ -99,9 +99,9 @@
         </div>
       
   </div>
-  <!-- /.content-wrapper -->
+  <!-- /.content-wrapper 
   
-  <script src="dist/js/plantillas.js">  </script>
+  <script src="dist/js/plantillas.js">  </script>-->
   
   
 </body>
