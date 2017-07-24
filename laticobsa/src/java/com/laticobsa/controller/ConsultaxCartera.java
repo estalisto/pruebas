@@ -76,18 +76,17 @@ public class ConsultaxCartera extends HttpServlet {
                     String filtro1 = request.getParameter("orden_dia");
                     String filtro2 = request.getParameter("orden_valor");
                     String filtro3 = request.getParameter("orden_fecha");
-                    if((filtro1==null)&&(filtro2==null)&&(filtro3==null)){
-                Tabla=cd.getDatosCarteras(idclienteok, EmpleadoID, opcion);
-               
-                 request.setAttribute("Tablacartera", Tabla);
-                 SSqlDatosDeudor=cd.getRetornaQuery(idclienteok, EmpleadoID, opcion);
-                 sesion.setAttribute("SSqlDatosDeudor",SSqlDatosDeudor); 
-                 request.getRequestDispatcher("sistema/gestion/frm_consulta_por_cartera.jsp").forward(request, response);
-                    }
+                 if((filtro1==null)&&(filtro2==null)&&(filtro3==null)){
+                     //Tabla=cd.getDatosCarteras(idclienteok, EmpleadoID, opcion);
+                     request.setAttribute("Tablacartera", Tabla);
+                    // SSqlDatosDeudor=cd.getRetornaQuery(idclienteok, EmpleadoID, opcion);
+                     sesion.setAttribute("SSqlDatosDeudor",SSqlDatosDeudor); 
+                    
+                 }
                    if(filtro1!=null){
                        int valorFiltro1 = Integer.parseInt(filtro1);
-                        Tabla=cd.getDatosCarteras(idclienteok, EmpleadoID, valorFiltro1);
-                       request.setAttribute("Tablacartera", Tabla);
+                      // Tabla=cd.getDatosCarteras(idclienteok, EmpleadoID, valorFiltro1);
+                      // request.setAttribute("Tablacartera", Tabla);
                        SSqlDatosDeudor=cd.getRetornaQuery(idclienteok, EmpleadoID, valorFiltro1);
                        sesion.setAttribute("SSqlDatosDeudor",SSqlDatosDeudor); 
                        response.getWriter().println(Tabla);
@@ -108,6 +107,7 @@ public class ConsultaxCartera extends HttpServlet {
                         sesion.setAttribute("SSqlDatosDeudor",SSqlDatosDeudor); 
                         response.getWriter().println(Tabla);
                     }
+                     request.getRequestDispatcher("sistema/gestion/frm_consulta_por_cartera_1.jsp").forward(request, response);
             } catch (SQLException ex) {
                 Logger.getLogger(ConsultaxCartera.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -354,13 +354,21 @@ public class ConsultaxCartera extends HttpServlet {
         }
         
         if(accion.equals("TiposResulatdos")){
-         int IdTipoGestion=Integer.parseInt(request.getParameter("IdTipoGestion"));
+         int idcliente;
+       
+         if(!request.getParameter("idcliente").isEmpty()){
+             idcliente=Integer.parseInt(request.getParameter("idcliente"));
+            
+         }else{
+             idcliente = cd.getIdCliente(EmpresaID, SucursalID, EmpleadoID);
+         }
             
          String DatosTiposResultados="";
-         if(cd.getTiposResultados(IdTipoGestion).equals("[]")){
+         DatosTiposResultados=cd.getTiposResultados(idcliente);
+         if(DatosTiposResultados.equals("[]")){
              DatosTiposResultados="{\"tipos_resultado\": []}";
          }else{
-             DatosTiposResultados="{\"tipos_resultado\": "+ cd.getTiposResultados(IdTipoGestion)+"}";//  getTiposGestion
+             DatosTiposResultados="{\"tipos_resultado\": "+ DatosTiposResultados+"}";//  getTiposGestion
   
          }
             System.out.println("json: "+DatosTiposResultados);
@@ -368,7 +376,7 @@ public class ConsultaxCartera extends HttpServlet {
         }
         
          if(accion.equals("nuevaConsulta")){
-                     int cartera = Integer.parseInt(request.getParameter("cartera")); 
+                 int cartera = Integer.parseInt(request.getParameter("cartera")); 
                  String QueryConsulta =request.getParameter("sqlQuery");
                  String NuevosDatos="";
                  QueryConsulta = QueryConsulta.replaceAll("IDClienteConsulta", Integer.toString(cartera));

@@ -33,6 +33,39 @@ function Sgtedeudor(stridDeudor, stridCliente) {
         }
     });
 }
+function Sgtedeudor2() {
+    var idDeudor = document.getElementById("id_deudor").value;
+    var idCliente = document.getElementById("idcliente").value;
+
+              
+    var accion = "deudor";
+    $('#img_cargando').css("display", "block");
+    var parametros = {
+        "idCliente": idCliente,
+        "idDeudor": idDeudor,
+        "accion": accion
+
+    };
+    $.ajax({
+        data: parametros,
+        url: 'cobranzas',
+        type: 'GET',
+        beforeSend: function () {
+        },
+        success: function (response) {
+
+            if (response) {
+                if(parseInt(response) === 0){
+                   document.getElementById("siguiente").disabled = true;  
+		   $('#img_cargando').css("display", "none");
+                }else{
+                     GestionCliente(idCliente, parseInt(response));
+                      $('#img_cargando').css("display", "none");
+                }
+            }
+        }
+    });
+}
 function Antdeudor(stridDeudor, stridCliente) {
     var idDeudor = stridDeudor;
     var idCliente = stridCliente;
@@ -59,6 +92,39 @@ function Antdeudor(stridDeudor, stridCliente) {
 		  $('#img_cargando').css("display", "none");
                 }else{
                 cobranzas2(idCliente, parseInt(response));
+                
+            }
+            }
+        }
+    });
+}
+function Antdeudor2() {
+    var idDeudor = document.getElementById("id_deudor").value;
+    var idCliente = document.getElementById("idcliente").value;
+    var accion = "anterior";
+    $('#img_cargando').css("display", "block");
+    var parametros = {
+        "idCliente": idCliente,
+        "idDeudor": idDeudor,
+        "accion": accion
+
+    };
+    $.ajax({
+        data: parametros,
+        url: 'cobranzas',
+        type: 'GET',
+        beforeSend: function () {
+        },
+        success: function (response) {
+
+            if (response) {
+                //alert(response);
+                if(parseInt(response) === 0){
+                 document.getElementById("anterior").disabled = true;   
+		  $('#img_cargando').css("display", "none");
+                }else{
+                GestionCliente(idCliente, parseInt(response));
+                 $('#img_cargando').css("display", "none");
             }
             }
         }
@@ -68,19 +134,33 @@ function cobranzas2(stridCliente, stride){
 var idCliente = stridCliente;
 var idDeudor= stride;
     jQuery("#page-wrapper").html("<br/><br/><center><img alt='cargando' src='dist/img/hourglass.gif' /><center>");
-        jQuery("#page-wrapper").load("cobranzas?accion=envio&idCliente="+idCliente+"&idDeudor="+idDeudor,{},function(){ });
+    jQuery("#page-wrapper").load("cobranzas?accion=envio&idCliente="+idCliente+"&idDeudor="+idDeudor,{},function(){ });
         
 
 }
-function obtenerResultado() {
-    var gestion = $("#gestion").val();
 
-    if (gestion !== "") {
-        $.post("sistema/gestion/combo_resultado.jsp", $("#data").serialize(), function (data) {
-            $("#resultado").html(data);
+function obtenerResultado() {
+    var idcliente = $("#idcliente").val();
+     var gestion = $("#gestion").val();
+    
+     document.getElementById("resultado").innerHTML="";
+     $("#resultado").append($("<option>",{value:"0",text:"Seleccione Tipo Resultado"}));  
+   //  alert(gestion);
+     if(gestion === 0 || gestion === "0" ) {  
+         return;
+     }
+    //if(gestion !== 0 || gestion !== "0" ) {   
+        $.getJSON("consultacartera", {"accion" : "TiposResulatdos","idcliente":idcliente}, function(result){
+             console.log(result);
+             console.log('size: '+result.tipos_resultado.tipos_resultado);
+              $.each(result.tipos_resultado, function(key, val){             
+               $("#resultado").append($("<option>",{value:val.idTipoResultado,text:val.nombreTipoResultado}));
+              });
         });
-        document.getElementById("resultado").disabled = false;
-    }
+    //}
+    
+    
+    
 }
 function GuardarRecordatorio()
 {
@@ -266,13 +346,24 @@ function validaDatos( resultado, gestion, descripcion,accion,id,cliente) {
 }
 
 function obtenerResultado2() {
-    var gestion = $("#gestion").val();
+    var gestion = $("#idcliente").val();
 
     if (gestion !== "") {
-        $.post("sistema/gestion/combo_resultado.jsp", $("#data").serialize(), function (data) {
+       /* $.post("sistema/gestion/combo_resultado.jsp", $("#data").serialize(), function (data) {
             $("#resultado").html(data);
         });
-        document.getElementById("resultado").disabled = false;
+        document.getElementById("resultado").disabled = false;*/
+    $.getJSON("consultacartera", {"accion" : "TiposResulatdos","IdTipoGestion":IdTipoGestion}, function(result){
+         console.log(result);
+         console.log('size: '+result.tipos_resultado.tipos_resultado);
+          $.each(result.tipos_resultado, function(key, val){             
+           $("#resultado").append($("<option>",{value:val.idTipoResultado,text:val.nombreTipoResultado}));
+          });
+    });
+    
+    }else {
+        
+    
     }
 }
 
@@ -295,12 +386,17 @@ function GuardarTransaccnormal() {
     var bdisabled = document.getElementById("monto_compromiso").disabled;
     var cdisabled = document.getElementById("datepicker").disabled;
      //JG fin
+
+     
+   if(gestion === 0 || gestion === "0"){       MsgSalidaModalA("Debe elegir un tipo gestion...");       return;   } 
+   if(resultado === 0 || resultado === "0"){   MsgSalidaModalA("Debe elegir un tipo resultado...");     return;   }
+   
    
     if (validaDatos(resultado, gestion, descripcion, accion, id, cliente)) {
       //JG ini
-        if (resultado == tipo_resultado) {
+        if (resultado === tipo_resultado) {
             
-            if ((bdisabled == false) && (cdisabled == false)) {
+            if ((bdisabled === false) && (cdisabled === false)) {
         if (comp_pago !== "") {
             if (verificaFecha3('datepicker') !== 2) {
                     if (verificaFecha3('datepicker') === 1) {
@@ -373,7 +469,7 @@ function GuardarTransaccnormal() {
                     MsgSalidaModalM("Debe Ingresar una Fecha de Compromiso De Pago");
                 }
             }
-            if ((xdisabled == false) && (adisabled == false)) {
+            if ((xdisabled === false) && (adisabled === false)) {
                 
                 if (Fechacompromiso_pago !== "") {
                     if (verificaFecha3('datepicker2') !== 2) {
@@ -447,7 +543,7 @@ function GuardarTransaccnormal() {
                 }
             }
         }
-        if (tipo_resultado == "") {
+        if (tipo_resultado === "") {
             tipo_resultado = 0;
             //JG fin
 
@@ -1291,5 +1387,80 @@ function AddDirModal(){
                     });
  $("#agrega_direccion").modal();
    $('#direccion_new').validCampoFranz('abcdefghijklmnñopqrstuvwxyzáéíóúüABCDEFGHIJKLMNÑOPQRSTUVWXYZÁÉÍÓÚÜ0123456789/-# ');    
+    
+}
+
+
+
+
+
+function GestionCliente(stridCliente, stride){
+var idCliente = stridCliente;
+var idDeudor= stride;
+var accion="GestionCliente";
+hidden_cartera_cliente('true');
+
+  $.getJSON("cobranzas", {"accion" : accion,"idCliente":idCliente,"idDeudor":idDeudor}, function(result){
+         console.log(result);
+          $.each(result.ClienteDeudor, function(key, val){             
+              document.getElementById("deudor").innerHTML  ="";
+              document.getElementById("cliente").innerHTML  ="";
+              document.getElementById("labelTotalDeuda").innerHTML  ="";
+              document.getElementById("labelTotalVencido").innerHTML  ="";
+              document.getElementById("labelPagos").innerHTML  ="";
+              document.getElementById("labelSaldos").innerHTML  ="";
+              document.getElementById("labelDiasMora").innerHTML  ="";
+              
+              document.getElementById("id_deudor").value=val.IdDeudor;
+              document.getElementById("idcliente").value=val.IdCliente;
+              console.log('NombresCompletos: '+val.NombresCompletos);            
+             document.getElementById("identificacion").value = val.Identificacion; 
+             document.getElementById("deudor").innerHTML  = val.NombresCompletos; 
+             document.getElementById("cliente").innerHTML = val.RazonSocialCliente; 
+             document.getElementById("cuenta").value = val.NumCuenta; 
+             document.getElementById("labelTotalDeuda").innerHTML = val.TotalDeuda; 
+             document.getElementById("labelTotalVencido").innerHTML = val.TotalVencido; 
+             document.getElementById("labelPagos").innerHTML = val.Pago; 
+             document.getElementById("labelSaldos").innerHTML = val.Saldo; 
+             document.getElementById("labelDiasMora").innerHTML = val.DiasMora+" Días"; 
+             $("#Ciudad").append($("<option>",{value:val.IDCiudad,text:val.Ciudad}));
+            
+            
+            
+          });
+    });
+
+
+document.getElementById("gestion").innerHTML="";
+document.getElementById("resultado").innerHTML="";
+ $("#resultado").append($("<option>",{value:"0",text:"Seleccione Tipo Resultado"}));
+getTiposGestiones();
+DireccionesJson(idCliente, idDeudor);
+        
+
+}
+
+function DireccionesJson(idCliente, idDeudor){
+      $('#idAllDireccions tbody').remove();
+     $.getJSON("cobranzas", {"accion" : "listar_direccion","idCliente":idCliente,"idDeudor":idDeudor}, function(result){
+        
+          $.each(result.DireccionesDeudor, function(key, val){    
+                       console.log("Direcciones: "+val.Direccion);
+                       console.log("Direcciones: "+val.TipoDireccion);
+                        $('#idAllDireccions').append(
+                    function() {
+                        return "<tr bgcolor='#E0ECF8' width='100%'>"+
+                                    "<td>"+val.TipoDireccion+"</td>"+
+                                    "<td>"+val.Direccion+"</td>"+
+                                "<tr>"; 
+                    }
+                );
+            
+
+//             $("#Ciudad").append($("<option>",{value:val.IDCiudad,text:val.Ciudad}));
+           
+         });
+    }); 
+    
     
 }

@@ -447,7 +447,7 @@ border: 2px solid #CB8B07;
                                 <div class="col-lg-4">                                  
                                     <dt>Tipo de Gestión: </dt>
                                     <select class="input-sm form-control" name="gestion" id="gestion" required="required" onchange="obtenerResultado()">
-                                        <option value=''>Gestión</option>
+                                        <option value='0'>Seleccione la Gestión</option>
                                         <c:forEach items="${gestiones}" var="gestion">
                                             <option value="<c:out value="${gestion.getIdTipoGestion()}"/>" ><c:out value="${gestion.getNombreTipoGestion()}" /></option>
                                         </c:forEach>
@@ -461,8 +461,8 @@ border: 2px solid #CB8B07;
                                 </div>    
                                 <div class="col-lg-4">                                  
                                     <dt>Resultado: </dt>
-                                    <select class="input-sm form-control" name="resultado" required="required" id="resultado" disabled="true">
-                                        <option value=''>Resultado</option>
+                                    <select class="input-sm form-control" name="resultado" required="required" id="resultado">
+                                        <option value='0'>Seleccione Tipo Resultado</option>
 
                                     </select>                                 
                                 </div>
@@ -626,35 +626,35 @@ border: 2px solid #CB8B07;
                 } );
             });
         </script>
-            <script type="text/javascript">
-                $(document).ready(function(){
+<script type="text/javascript">
+    $(document).ready(function(){
 
-                    var max_chars = 600;
+        var max_chars = 600;
 
-                    $('#max').html(max_chars);
+        $('#max').html(max_chars);
 
-                    $('#descripcion').keyup(function() {
-                        var chars = $(this).val().length;
-                        var diff = max_chars - chars;
-                        $('#contador_descripcion').html(diff);   
-                    });
-                }); 
-            </script>
+        $('#descripcion').keyup(function() {
+            var chars = $(this).val().length;
+            var diff = max_chars - chars;
+            $('#contador_descripcion').html(diff);   
+        });
+    }); 
+</script>
            
-        <script type="text/javascript">
-                $(document).ready(function(){
+<script type="text/javascript">
+        $(document).ready(function(){
 
-                    var max_chars = 500;
+            var max_chars = 500;
 
-                    $('#max').html(max_chars);
+            $('#max').html(max_chars);
 
-                    $('#txtnota').keyup(function() {
-                        var chars = $(this).val().length;
-                        var diff = max_chars - chars;
-                        $('#contador_notas').html(diff);   
-                    });
-                }); 
-            </script>
+            $('#txtnota').keyup(function() {
+                var chars = $(this).val().length;
+                var diff = max_chars - chars;
+                $('#contador_notas').html(diff);   
+            });
+        }); 
+</script>
         
             <script src="dist/js/ValidaNumeros.js"></script>
             
