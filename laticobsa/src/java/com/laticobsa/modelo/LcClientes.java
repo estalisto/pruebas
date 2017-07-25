@@ -1,5 +1,5 @@
 package com.laticobsa.modelo;
-// Generated 09-jul-2017 23:23:34 by Hibernate Tools 4.3.1
+// Generated 22-jul-2017 13:48:47 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -31,6 +31,7 @@ public class LcClientes  implements java.io.Serializable {
      private Set lcTransaccioneses = new HashSet(0);
      private Set lcRecordatorioses = new HashSet(0);
      private Set lcDeudors = new HashSet(0);
+     private Set lcClienteResultados = new HashSet(0);
      private Set lcGestioneses = new HashSet(0);
 
     public LcClientes() {
@@ -40,7 +41,7 @@ public class LcClientes  implements java.io.Serializable {
     public LcClientes(int idCliente) {
         this.idCliente = idCliente;
     }
-    public LcClientes(int idCliente, LcCiudad lcCiudad, LcEmpresa lcEmpresa, LcPais lcPais, LcProvincia lcProvincia, LcTiposIdentificacion lcTiposIdentificacion, String identificacion, String razonSocial, String direccion, String contacto, String email, String telefono, String extensioon, String celular, Date fechaCreacion, String estado, Set lcTransaccioneses, Set lcRecordatorioses, Set lcDeudors, Set lcGestioneses) {
+    public LcClientes(int idCliente, LcCiudad lcCiudad, LcEmpresa lcEmpresa, LcPais lcPais, LcProvincia lcProvincia, LcTiposIdentificacion lcTiposIdentificacion, String identificacion, String razonSocial, String direccion, String contacto, String email, String telefono, String extensioon, String celular, Date fechaCreacion, String estado, Set lcTransaccioneses, Set lcRecordatorioses, Set lcDeudors, Set lcClienteResultados, Set lcGestioneses) {
        this.idCliente = idCliente;
        this.lcCiudad = lcCiudad;
        this.lcEmpresa = lcEmpresa;
@@ -60,6 +61,7 @@ public class LcClientes  implements java.io.Serializable {
        this.lcTransaccioneses = lcTransaccioneses;
        this.lcRecordatorioses = lcRecordatorioses;
        this.lcDeudors = lcDeudors;
+       this.lcClienteResultados = lcClienteResultados;
        this.lcGestioneses = lcGestioneses;
     }
    
@@ -195,6 +197,13 @@ public class LcClientes  implements java.io.Serializable {
     
     public void setLcDeudors(Set lcDeudors) {
         this.lcDeudors = lcDeudors;
+    }
+    public Set getLcClienteResultados() {
+        return this.lcClienteResultados;
+    }
+    
+    public void setLcClienteResultados(Set lcClienteResultados) {
+        this.lcClienteResultados = lcClienteResultados;
     }
     public Set getLcGestioneses() {
         return this.lcGestioneses;

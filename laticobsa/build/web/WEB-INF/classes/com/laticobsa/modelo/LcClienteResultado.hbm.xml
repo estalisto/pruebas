@@ -3,14 +3,17 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 22-jul-2017 13:49:09 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="com.laticobsa.modelo.LcExcepcionIdentificaciones" table="lc_excepcion_identificaciones" schema="public" optimistic-lock="version">
-        <id name="idExcepIde" type="int">
-            <column name="id_excep_ide" />
+    <class name="com.laticobsa.modelo.LcClienteResultado" table="lc_cliente_resultado" schema="public" optimistic-lock="version">
+        <id name="idClienteResultado" type="int">
+            <column name="id_cliente_resultado" />
             <generator class="assigned" />
         </id>
-        <property name="numIde" type="string">
-            <column name="num_ide" length="100" />
-        </property>
+        <many-to-one name="lcClientes" class="com.laticobsa.modelo.LcClientes" fetch="select">
+            <column name="id_cliente" />
+        </many-to-one>
+        <many-to-one name="lcTipoResultado" class="com.laticobsa.modelo.LcTipoResultado" fetch="select">
+            <column name="id_tipo_resultado" />
+        </many-to-one>
         <property name="fechaRegistro" type="timestamp">
             <column name="fecha_registro" length="29" />
         </property>

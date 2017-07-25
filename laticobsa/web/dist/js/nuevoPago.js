@@ -728,14 +728,18 @@ function ActualizarTipoPago() {
     }
 }
 $(function() {
-    $('#datepicker').datepicker({
-    weekStart:1,
-    color: 'red'
-    });
-    $('#datepicker2').datepicker({
-    weekStart:1,
-    color: 'red'
-    });
+//    $('#datepicker').datepicker({
+//    weekStart:1,
+//    color: 'red'
+//    });
+//    $('#datepicker2').datepicker({
+//    weekStart:1,
+//    color: 'red'
+//    });
+    
+             $('#datepicker').datetimepicker({   format:'Y-m-d' }); 
+              $('#datepicker2').datetimepicker({   format:'Y-m-d' }); 
+    
 });
 
 function consultaRecaudaciones(){

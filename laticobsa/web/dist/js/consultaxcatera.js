@@ -91,15 +91,7 @@ $('#btnordenAsc').click(function(e){
     });
 });
 
- $("#consul_cartera").DataTable({
-                    "paging": true,
-                    "lengthChange": false,
-                    "lengthMenu": [25],
-                    "searching": true,
-                    "ordering": false,
-                    "info": false,
-                    "autoWidth": false
-                  });
+
               
 
 $('#ordenDesc').click(function(e){
@@ -241,18 +233,33 @@ $('#btnordenDesc2').click(function(e){
 function orderDiasMora(){
     var orden_dia=  document.getElementById("IdDiasMora").value;
     var cartera=$("#cartera").val();
-    var accion="filtrosDiasMora";
+   // var accion="filtrosDiasMora";
+   var order_by="";
+    var sqlQuery=$("#input_query").val();
+   
+    if(sqlQuery===""){
+         MsgSalidaModalA("Debe realizar la consulta en la pantalla de filtros");
+    return;    
+    }
    
     if(orden_dia==="0" || orden_dia===""){
        document.getElementById("IdDiasMora").value="1"; //ascendente    Menor a Mayor      
      orden_dia=document.getElementById("IdDiasMora").value;
+     order_by = " ORDER BY s.dias_mora ASC";
     }else{
          document.getElementById("IdDiasMora").value="0";   //descendente    Mayor a Menor  
     orden_dia=document.getElementById("IdDiasMora").value;
+    order_by = " ORDER BY s.dias_mora DESC";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("DiasMoraID").disabled="true";
-    var parametros = {
+    
+            sqlQuery=sqlQuery+order_by;
+    console.log(sqlQuery);
+    //realiza la consulta
+    consulta_query(sqlQuery,cartera);
+    document.getElementById("DiasMoraID").disabled="false";
+    /*var parametros = {
         "orden_dia": orden_dia,
         "cartera": cartera,
         "accion": accion
@@ -270,7 +277,7 @@ function orderDiasMora(){
               document.getElementById("bodytable").innerHTML = "";
               document.getElementById("bodytable").innerHTML = respuesta;
         }
-    });
+    });*/
     
     
     
@@ -278,18 +285,34 @@ function orderDiasMora(){
 function orderFchGestion(){
    var orden_Fecha=  document.getElementById("IdFechaUlt").value;
     var cartera=$("#cartera").val();
-    var accion="filtrosDiasFecha";
+   // var accion="filtrosDiasFecha";
+   
+   var order_by="";
+    var sqlQuery=$("#input_query").val();
+   
+    if(sqlQuery===""){
+         MsgSalidaModalA("Debe realizar la consulta en la pantalla de filtros");
+    return;    
+    }
    
     if(orden_Fecha==="0" || orden_Fecha===""){
        document.getElementById("IdFechaUlt").value="1"; //ascendente    Menor a Mayor      
      orden_Fecha=document.getElementById("IdFechaUlt").value;
+      order_by = " ORDER BY s.fech_ultima_gestion ASC";
     }else{
          document.getElementById("IdFechaUlt").value="0";   //descendente    Mayor a Menor  
     orden_Fecha=document.getElementById("IdFechaUlt").value;
+     order_by = " ORDER BY s.fech_ultima_gestion DESC";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("FechaID").disabled="true";
-    var parametros = {
+    
+        sqlQuery=sqlQuery+order_by;
+    console.log(sqlQuery);
+    //realiza la consulta
+    consulta_query(sqlQuery,cartera);
+    document.getElementById("FechaID").disabled="false";
+    /*var parametros = {
         "orden_Fecha": orden_Fecha,
         "cartera": cartera,
         "accion": accion
@@ -307,24 +330,40 @@ function orderFchGestion(){
               document.getElementById("bodytable").innerHTML = "";
               document.getElementById("bodytable").innerHTML = respuesta;
         }
-    }); 
+    }); */
 }
 
 function orderTotalVenc(){
    var orden_total=  document.getElementById("IdTotalVenc").value;
     var cartera=$("#cartera").val();
-    var accion="filtrosTotalVenc";
+    //var accion="filtrosTotalVenc";
+   
+   var order_by="";
+    var sqlQuery=$("#input_query").val();
+   
+    if(sqlQuery===""){
+         MsgSalidaModalA("Debe realizar la consulta en la pantalla de filtros");
+    return;    
+    }
    
     if(orden_total==="0" || orden_total===""){
        document.getElementById("IdTotalVenc").value="1"; //ascendente    Menor a Mayor      
      orden_total=document.getElementById("IdTotalVenc").value;
+      order_by = " ORDER BY s.total_vencidos ASC";
     }else{
          document.getElementById("IdTotalVenc").value="0";   //descendente    Mayor a Menor  
     orden_total=document.getElementById("IdTotalVenc").value;
+     order_by = " ORDER BY s.total_vencidos DESC";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("TotalID").disabled="true";
-    var parametros = {
+    
+    sqlQuery=sqlQuery+order_by;
+    console.log(sqlQuery);
+    //realiza la consulta
+    consulta_query(sqlQuery,cartera);
+    document.getElementById("TotalID").disabled="false";
+   /* var parametros = {
         "orden_total": orden_total,
         "cartera": cartera,
         "accion": accion
@@ -342,23 +381,37 @@ function orderTotalVenc(){
               document.getElementById("bodytable").innerHTML = "";
               document.getElementById("bodytable").innerHTML = respuesta;
         }
-    }); 
+    }); */
 }
 function orderIdent(){
    var orden_IDE=  document.getElementById("IdIdentificacion").value;
     var cartera=$("#cartera").val();
-    var accion="filtrosIDE";
+    //var accion="filtrosIDE";
+    var order_by="";
+    var sqlQuery=$("#input_query").val();
    
+    if(sqlQuery===""){
+         MsgSalidaModalA("Debe realizar la consulta en la pantalla de filtros");
+    return;    
+    }
     if(orden_IDE==="0" || orden_IDE===""){
        document.getElementById("IdIdentificacion").value="1"; //ascendente    Menor a Mayor      
      orden_IDE=document.getElementById("IdIdentificacion").value;
+     order_by = " ORDER BY s.identificacion ASC";
     }else{
          document.getElementById("IdIdentificacion").value="0";   //descendente    Mayor a Menor  
     orden_IDE=document.getElementById("IdIdentificacion").value;
+    order_by = " ORDER BY s.identificacion DESC";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("IdentificacionID").disabled="true";
-    var parametros = {
+   
+     sqlQuery=sqlQuery+order_by;
+    console.log(sqlQuery);
+    //realiza la consulta
+    consulta_query(sqlQuery,cartera);
+    document.getElementById("IdentificacionID").disabled="false";
+    /* var parametros = {
         "orden_IDE": orden_IDE,
         "cartera": cartera,
         "accion": accion
@@ -376,23 +429,40 @@ function orderIdent(){
               document.getElementById("bodytable").innerHTML = "";
               document.getElementById("bodytable").innerHTML = respuesta;
         }
-    }); 
+    }); */
 }
 function orderNombre(){
    var orden_Nombre=  document.getElementById("IdNombres").value;
     var cartera=$("#cartera").val();
-    var accion="filtrosNombre";
+    //var accion="filtrosNombre";
+    var order_by="";
+    var sqlQuery=$("#input_query").val();
+   
+    if(sqlQuery===""){
+         MsgSalidaModalA("Debe realizar la consulta en la pantalla de filtros");
+    return;    
+    }
    
     if(orden_Nombre==="0" || orden_Nombre===""){
        document.getElementById("IdNombres").value="1"; //ascendente    Menor a Mayor      
      orden_Nombre=document.getElementById("IdNombres").value;
+      order_by = " ORDER BY s.nombres_completo ASC";
     }else{
          document.getElementById("IdNombres").value="0";   //descendente    Mayor a Menor  
     orden_Nombre=document.getElementById("IdNombres").value;
+     order_by = " ORDER BY s.nombres_completo DESC";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("NombresID").disabled="true";
-    var parametros = {
+    
+    
+     sqlQuery=sqlQuery+order_by;
+    console.log(sqlQuery);
+    //realiza la consulta
+    consulta_query(sqlQuery,cartera);
+    document.getElementById("NombresID").disabled="false";
+    
+    /*var parametros = {
         "orden_Nombre": orden_Nombre,
         "cartera": cartera,
         "accion": accion
@@ -410,23 +480,38 @@ function orderNombre(){
               document.getElementById("bodytable").innerHTML = "";
               document.getElementById("bodytable").innerHTML = respuesta;
         }
-    }); 
+    }); */
 }
 function orderPagos(){
    var orden_Pago=  document.getElementById("IdPagos").value;
     var cartera=$("#cartera").val();
-    var accion="filtrosPagos";
+   // var accion="filtrosPagos";
+     var order_by="";
+    var sqlQuery=$("#input_query").val();
    
+    if(sqlQuery===""){
+         MsgSalidaModalA("Debe realizar la consulta en la pantalla de filtros");
+    return;    
+    }
     if(orden_Pago==="0" || orden_Pago===""){
        document.getElementById("IdPagos").value="1"; //ascendente    Menor a Mayor      
      orden_Pago=document.getElementById("IdPagos").value;
+     order_by = " ORDER BY s.pagos ASC";
     }else{
          document.getElementById("IdPagos").value="0";   //descendente    Mayor a Menor  
     orden_Pago=document.getElementById("IdPagos").value;
+    order_by = " ORDER BY s.pagos DESC";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("PagosID").disabled="true";
-    var parametros = {
+    
+    
+     sqlQuery=sqlQuery+order_by;
+    console.log(sqlQuery);
+    //realiza la consulta
+    consulta_query(sqlQuery,cartera);
+    document.getElementById("PagosID").disabled="false";
+    /*var parametros = {
         "orden_Pago": orden_Pago,
         "cartera": cartera,
         "accion": accion
@@ -444,23 +529,42 @@ function orderPagos(){
               document.getElementById("bodytable").innerHTML = "";
               document.getElementById("bodytable").innerHTML = respuesta;
         }
-    }); 
+    }); */
 }
 function orderSaldo(){
    var orden_Saldo=  document.getElementById("IdSaldo").value;
     var cartera=$("#cartera").val();
-    var accion="filtrosSaldo";
+   // var accion="filtrosSaldo";
+     var order_by="";
+    var sqlQuery=$("#input_query").val();
+   
+    if(sqlQuery===""){
+         MsgSalidaModalA("Debe realizar la consulta en la pantalla de filtros");
+    return;    
+    }
+   
    
     if(orden_Saldo==="0" || orden_Saldo===""){
        document.getElementById("IdSaldo").value="1"; //ascendente    Menor a Mayor      
      orden_Saldo=document.getElementById("IdSaldo").value;
+     order_by = " ORDER BY s.saldo ASC";
     }else{
          document.getElementById("IdSaldo").value="0";   //descendente    Mayor a Menor  
     orden_Saldo=document.getElementById("IdSaldo").value;
+    order_by = " ORDER BY s.saldo DESC";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("SaldosID").disabled="true";
-    var parametros = {
+   
+      sqlQuery=sqlQuery+order_by;
+    console.log(sqlQuery);
+    //realiza la consulta
+    consulta_query(sqlQuery,cartera);
+    document.getElementById("SaldosID").disabled="false";
+    
+    
+    
+    /* var parametros = {
         "orden_Saldo": orden_Saldo,
         "cartera": cartera,
         "accion": accion
@@ -478,23 +582,39 @@ function orderSaldo(){
               document.getElementById("bodytable").innerHTML = "";
               document.getElementById("bodytable").innerHTML = respuesta;
         }
-    }); 
+    }); */
 }
 function orderValorComp(){
    var orden_ValorComp=  document.getElementById("IdValorComp").value;
     var cartera=$("#cartera").val();
-    var accion="filtrosValorComp";
+   // var accion="filtrosValorComp";
+    var order_by="";
+    var sqlQuery=$("#input_query").val();
    
+    if(sqlQuery===""){
+         MsgSalidaModalA("Debe realizar la consulta en la pantalla de filtros");
+    return;    
+    }
     if(orden_ValorComp==="0" || orden_ValorComp===""){
        document.getElementById("IdValorComp").value="1"; //ascendente    Menor a Mayor      
      orden_ValorComp=document.getElementById("IdValorComp").value;
+     order_by = " ORDER BY s.valor_compro ASC";
     }else{
          document.getElementById("IdValorComp").value="0";   //descendente    Mayor a Menor  
     orden_ValorComp=document.getElementById("IdValorComp").value;
+    order_by = " ORDER BY s.valor_compro DESC";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("ValorCompID").disabled="true";
-    var parametros = {
+   
+     sqlQuery=sqlQuery+order_by;
+    console.log(sqlQuery);
+    //realiza la consulta
+    consulta_query(sqlQuery,cartera);
+    document.getElementById("ValorCompID").disabled="false";
+    
+    
+    /* var parametros = {
         "orden_ValorComp": orden_ValorComp,
         "cartera": cartera,
         "accion": accion
@@ -512,23 +632,39 @@ function orderValorComp(){
               document.getElementById("bodytable").innerHTML = "";
               document.getElementById("bodytable").innerHTML = respuesta;
         }
-    }); 
+    }); */
 }
 function orderFechaComp(){
    var orden_FechaComp=  document.getElementById("IdFechaComp").value;
     var cartera=$("#cartera").val();
-    var accion="filtrosFechaComp";
+    //var accion="filtrosFechaComp";
+   var order_by="";
+    var sqlQuery=$("#input_query").val();
    
+    if(sqlQuery===""){
+         MsgSalidaModalA("Debe realizar la consulta en la pantalla de filtros");
+    return;    
+    }
     if(orden_FechaComp==="0" || orden_FechaComp===""){
        document.getElementById("IdFechaComp").value="1"; //ascendente    Menor a Mayor      
-     orden_FechaComp=document.getElementById("IdFechaComp").value;
+       orden_FechaComp=document.getElementById("IdFechaComp").value;
+        order_by = " ORDER BY s.fecha_comp ASC";
     }else{
          document.getElementById("IdFechaComp").value="0";   //descendente    Mayor a Menor  
-    orden_FechaComp=document.getElementById("IdFechaComp").value;
+        orden_FechaComp=document.getElementById("IdFechaComp").value;
+         order_by = " ORDER BY s.fecha_comp DESC";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("FechaCompID").disabled="true";
-    var parametros = {
+   
+    sqlQuery=sqlQuery+order_by;
+    console.log(sqlQuery);
+    //realiza la consulta
+    consulta_query(sqlQuery,cartera);
+    document.getElementById("FechaCompID").disabled="false";
+    
+    
+    /*var parametros = {
         "orden_FechaComp": orden_FechaComp,
         "cartera": cartera,
         "accion": accion
@@ -546,23 +682,37 @@ function orderFechaComp(){
               document.getElementById("bodytable").innerHTML = "";
               document.getElementById("bodytable").innerHTML = respuesta;
         }
-    }); 
+    }); */
 }
 function orderUltima(){
    var orden_Ultima=  document.getElementById("IdUltima").value;
     var cartera=$("#cartera").val();
-    var accion="filtrosUltima";
+   // var accion="filtrosUltima";
+    var order_by="";
+    var sqlQuery=$("#input_query").val();
    
+    if(sqlQuery===""){
+         MsgSalidaModalA("Debe realizar la consulta en la pantalla de filtros");
+    return;    
+    }
     if(orden_Ultima==="0" || orden_Ultima===""){
        document.getElementById("IdUltima").value="1"; //ascendente    Menor a Mayor      
-     orden_Ultima=document.getElementById("IdUltima").value;
+       orden_Ultima=document.getElementById("IdUltima").value;
+       order_by = " ORDER BY s.ultima_gestion ASC";
     }else{
          document.getElementById("IdUltima").value="0";   //descendente    Mayor a Menor  
-    orden_Ultima=document.getElementById("IdUltima").value;
+         orden_Ultima=document.getElementById("IdUltima").value;
+         order_by = " ORDER BY s.ultima_gestion DESC";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("UltimaID").disabled="true";
-    var parametros = {
+    
+     sqlQuery=sqlQuery+order_by;
+    console.log(sqlQuery);
+    //realiza la consulta
+    consulta_query(sqlQuery,cartera);
+    document.getElementById("UltimaID").disabled="false";
+    /*var parametros = {
         "orden_Ultima": orden_Ultima,
         "cartera": cartera,
         "accion": accion
@@ -580,23 +730,37 @@ function orderUltima(){
               document.getElementById("bodytable").innerHTML = "";
               document.getElementById("bodytable").innerHTML = respuesta;
         }
-    }); 
+    }); */
 }
 function orderResultado(){
    var orden_Resultado=  document.getElementById("IdResultado").value;
     var cartera=$("#cartera").val();
     var accion="filtrosResultado";
+    var order_by="";
+   var sqlQuery=$("#input_query").val();
    
+    if(sqlQuery===""){
+         MsgSalidaModalA("Debe realizar la consulta en la pantalla de filtros");
+    return;    
+    }
     if(orden_Resultado==="0" || orden_Resultado===""){
        document.getElementById("IdResultado").value="1"; //ascendente    Menor a Mayor      
      orden_Resultado=document.getElementById("IdResultado").value;
+        order_by = " ORDER BY s.resultado_gestion ASC";
     }else{
          document.getElementById("IdResultado").value="0";   //descendente    Mayor a Menor  
     orden_Resultado=document.getElementById("IdResultado").value;
+       order_by = " ORDER BY s.resultado_gestion DESC";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("ResultadoID").disabled="true";
-    var parametros = {
+    
+    sqlQuery=sqlQuery+order_by;
+    console.log(sqlQuery);
+    //realiza la consulta
+    consulta_query(sqlQuery,cartera);
+    document.getElementById("ResultadoID").disabled="false";
+    /*var parametros = {
         "orden_Resultado": orden_Resultado,
         "cartera": cartera,
         "accion": accion
@@ -614,22 +778,38 @@ function orderResultado(){
               document.getElementById("bodytable").innerHTML = "";
               document.getElementById("bodytable").innerHTML = respuesta;
         }
-    }); 
+    }); */
 }
 function orderFechaUltPagos(){
    var orden_FechaUltPagos=  document.getElementById("IdFecUltPagos").value;
     var cartera=$("#cartera").val();
     var accion="filtrosFechaUltPagos";
+   var order_by="";
+   var sqlQuery=$("#input_query").val();
    
+    if(sqlQuery===""){
+         MsgSalidaModalA("Debe realizar la consulta en la pantalla de filtros");
+    return;    
+    }
+    
     if(orden_FechaUltPagos==="0" || orden_FechaUltPagos===""){
-       document.getElementById("IdFecUltPagos").value="1"; //ascendente    Menor a Mayor      
+      document.getElementById("IdFecUltPagos").value="1"; //ascendente    Menor a Mayor      
      orden_FechaUltPagos=document.getElementById("IdFecUltPagos").value;
+      order_by = " ORDER BY s.fecha_ult_pagos ASC";
     }else{
          document.getElementById("IdFecUltPagos").value="0";   //descendente    Mayor a Menor  
     orden_FechaUltPagos=document.getElementById("IdFecUltPagos").value;
+     order_by = " ORDER BY s.fecha_ult_pagos DESC";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("FecUltPagosID").disabled="true";
+    
+    sqlQuery=sqlQuery+order_by;
+    console.log(sqlQuery);
+    //realiza la consulta
+    consulta_query(sqlQuery,cartera);
+    document.getElementById("FecUltPagosID").disabled="false";
+    /*
     var parametros = {
         "orden_FechaUltPagos": orden_FechaUltPagos,
         "cartera": cartera,
@@ -648,7 +828,7 @@ function orderFechaUltPagos(){
               document.getElementById("bodytable").innerHTML = "";
               document.getElementById("bodytable").innerHTML = respuesta;
         }
-    }); 
+    }); */
 }
 
 
@@ -754,7 +934,10 @@ function consulta_filtro_cartera(){
        $('#id_loader').css("display", "block");
        //arma el query para la consula
     sqlQuery=sqlQuery+fmontos+order_by;
+    document.getElementById("input_query").value = "";
+    document.getElementById("input_query").value = sqlQuery;
    // alert(sqlQuery);
+   var htmlTable="<table id='consul_cartera' class='table table-striped table-bordered dt-responsive nowrap table-hover' cellspacing='0' width='100%'><thead><tr bgcolor='#FBF5EF'><th class='col-sm-1 text-left hidden' style='color: #3c8dbc'>ID</th><th align='left' class='col-sm-1 text-left'><a id='IdentificacionID' onclick='orderIdent()'>Identificación</a></th><th class='col-sm-2 text-left'><a id='NombresID' onclick='orderNombre()'>Nombres</a></th>  <th class='col-sm-1 text-left'><a id='DiasMoraID' onclick='orderDiasMora()' >Días Mora</a></th> <th class='col-sm-1 text-right'><a id='TotalID' onclick='orderTotalVenc()' >Total Vnc</a></th> <th align='center' class='col-sm-1 text-right'><a id='PagosID' onclick='orderPagos()'>Pagos</a></th><th align='center' class='col-sm-1 text-right'><a id='FecUltPagosID' onclick='orderFechaUltPagos()'>Fecha Ult. Pagos</a></th><th align='rigth' class='col-sm-1 text-right'><a id='SaldosID' onclick='orderSaldo()'>Saldo</a></th><th align='center' class='col-sm-1 text-right'><a id='ValorCompID' onclick='orderValorComp()'>Valor Comp.</a></th> <th align='center' class='col-sm-2 text-center'><a id='FechaCompID' onclick='orderFechaComp()'>Fecha Comp.</a></th><th align='center' class='col-sm-3'><a id='FechaID' onclick='orderFchGestion()' >Fecha Ult. Gestión</a></th> <th align='center' class='col-sm-3'><a id='UltimaID' onclick='orderUltima()'>Ult. Gestión</a></th> <th align='center' class='col-sm-2'><a id='ResultadoID' onclick='orderResultado()'>Resultado Gestión</a></th></tr> </thead><tbody>";
      var parametros = {
         "sqlQuery":sqlQuery,
         "cartera": cartera,
@@ -769,19 +952,48 @@ function consulta_filtro_cartera(){
         success: function (response) {
              $('#id_loader').css("display", "none");
              if (response) {
-                 //alert(response.toString());
-              //  document.getElementById("bodytable").innerHTML = "";
-              //  document.getElementById("bodytable").innerHTML = response;
-              $("#consul_cartera tbody").remove();           
-               $("#consul_cartera").append(response.toString());
-       
-               
+              $("#consul_cartera").remove();           
+              // $("#consul_cartera").append(response.toString());
+           document.getElementById("tabla_div").innerHTML = "";
+           document.getElementById("tabla_div").innerHTML = htmlTable+response.toString()+"</tbody></table>";
+           datatableok();
+            $('#det_filtro').modal('hide');   
             }      
         }
     });
     
  // alert(sqlQuery);
 }
+
+function consulta_query(sqlQuery,cartera){
+    var accion="nuevaConsulta";
+       var htmlTable="<table id='consul_cartera' class='table table-striped table-bordered dt-responsive nowrap table-hover' cellspacing='0' width='100%'><thead><tr bgcolor='#FBF5EF'><th class='col-sm-1 text-left hidden' style='color: #3c8dbc'>ID</th><th align='left' class='col-sm-1 text-left'><a id='IdentificacionID' onclick='orderIdent()'>Identificación</a></th><th class='col-sm-2 text-left'><a id='NombresID' onclick='orderNombre()'>Nombres</a></th>  <th class='col-sm-1 text-left'><a id='DiasMoraID' onclick='orderDiasMora()' >Días Mora</a></th> <th class='col-sm-1 text-right'><a id='TotalID' onclick='orderTotalVenc()' >Total Vnc</a></th> <th align='center' class='col-sm-1 text-right'><a id='PagosID' onclick='orderPagos()'>Pagos</a></th><th align='center' class='col-sm-1 text-right'><a id='FecUltPagosID' onclick='orderFechaUltPagos()'>Fecha Ult. Pagos</a></th><th align='rigth' class='col-sm-1 text-right'><a id='SaldosID' onclick='orderSaldo()'>Saldo</a></th><th align='center' class='col-sm-1 text-right'><a id='ValorCompID' onclick='orderValorComp()'>Valor Comp.</a></th> <th align='center' class='col-sm-2 text-center'><a id='FechaCompID' onclick='orderFechaComp()'>Fecha Comp.</a></th><th align='center' class='col-sm-3'><a id='FechaID' onclick='orderFchGestion()' >Fecha Ult. Gestión</a></th> <th align='center' class='col-sm-3'><a id='UltimaID' onclick='orderUltima()'>Ult. Gestión</a></th> <th align='center' class='col-sm-2'><a id='ResultadoID' onclick='orderResultado()'>Resultado Gestión</a></th></tr> </thead><tbody>";
+     var parametros = {
+        "sqlQuery":sqlQuery,
+        "cartera": cartera,
+        "accion": accion
+    };
+        $.ajax({
+        data: parametros,
+        url: 'consultacartera',
+        type: 'GET',
+        beforeSend: function () {
+        },
+        success: function (response) {
+             $('#id_loader').css("display", "none");
+             if (response) {
+              $("#consul_cartera").remove();           
+              // $("#consul_cartera").append(response.toString());
+           document.getElementById("tabla_div").innerHTML = "";
+           document.getElementById("tabla_div").innerHTML = htmlTable+response.toString()+"</tbody></table>";
+           datatableok();
+               
+            }      
+        }
+    });
+    
+}
+
 
 function fnc_order_by(orden) {
     document.getElementById("order_by").value = "";
@@ -837,11 +1049,14 @@ function existeFecha(fecha){
 
 function getTiposGestiones(){
 document.getElementById("tgestion").innerHTML="";
+document.getElementById("gestion").innerHTML="";
 $("#tgestion").append($("<option>",{value:"0",text:"Seleccione Tipo Gestión"}));
+$("#gestion").append($("<option>",{value:"0",text:"Seleccione Tipo Gestión"}));
     $.getJSON("consultacartera", {"accion" : "TiposGestiones"}, function(result){
           $.each(result.tipo_gestion, function(key, val){             
           // $("#tgestion").append('<option id="' + val.idTipoGestion + '">' + val.nombreTipoGestion +'</option>');
            $("#tgestion").append($("<option>",{value:val.idTipoGestion,text:val.nombreTipoGestion}));
+           $("#gestion").append($("<option>",{value:val.idTipoGestion,text:val.nombreTipoGestion}));
           });
     });
     
@@ -854,16 +1069,20 @@ $("#tgestion").append($("<option>",{value:"0",text:"Seleccione Tipo Gestión"}))
 
 function ConsultaTipoResultado(){
   var IdTipoGestion=$("#tgestion").val();
-  if(IdTipoGestion===0){
+  var idcliente="";
+   // if(IdTipoGestion===0){
+   
      document.getElementById("tresultado_gestion").disabled=true;
      document.getElementById("tresultado_gestion").innerHTML="";
      $("#tresultado_gestion").append($("<option>",{value:"0",text:"Seleccione Tipo Gestión"}));  
-  }
+  if(IdTipoGestion === 0 || IdTipoGestion === "0" ) {  
+         return;
+     }
   if(IdTipoGestion!==0){
       document.getElementById("tresultado_gestion").disabled=false;
       document.getElementById("tresultado_gestion").innerHTML="";
       $("#tresultado_gestion").append($("<option>",{value:"0",text:"Seleccione Tipo Resultado"}));
-     $.getJSON("consultacartera", {"accion" : "TiposResulatdos","IdTipoGestion":IdTipoGestion}, function(result){
+     $.getJSON("consultacartera", {"accion" : "TiposResulatdos","idcliente":idcliente}, function(result){
          console.log(result);
          console.log('size: '+result.tipos_resultado.tipos_resultado);
           $.each(result.tipos_resultado, function(key, val){             
@@ -873,3 +1092,31 @@ function ConsultaTipoResultado(){
   }
     
 }
+
+function hidden_cartera_cliente(valor){
+   
+   if(valor==="true"){
+       document.getElementById("cliente_cartera").style.display = 'none';
+        document.getElementById("gestion_cliente").style.display = 'block';
+  
+       
+   }
+   if(valor==="false"){
+         document.getElementById("cliente_cartera").style.display = 'block';
+        document.getElementById("gestion_cliente").style.display = 'none'; 
+   }
+   
+        
+
+}
+function datatableok(){
+    console.log("consulta cartera");
+           $("#consul_cartera").DataTable({
+                    "paging": false,
+                    "lengthChange": false,
+                    "searching": true,
+                    "ordering": false,
+                    "info": false,
+                    "autoWidth": true
+                  }); 
+        }

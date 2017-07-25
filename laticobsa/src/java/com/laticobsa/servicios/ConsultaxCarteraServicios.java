@@ -35,7 +35,12 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 //import org.json.simple.JSONObject;
-import com.google.gson.Gson;
+
+import com.laticobsa.modelo.LcClienteResultado;
+import java.math.MathContext;
+import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -46,6 +51,8 @@ import org.json.simple.JSONValue;
  * @author ViewSoft
  */
 public class ConsultaxCarteraServicios {
+    
+
          public List<LcDatosDeudores> getLcDatosDeudores(int empresa, int agencia,int empleado){
          
         SessionFactory sesion = HibernateUtil.getSessionFactory();
@@ -1201,7 +1208,7 @@ String color;
             ResultSet rs;
             String valor = "";          
             String SQL="";               
-            SQL=query;             
+            SQL=query+" limit 1000";             
             String contenidoTabla="";
             String id_datos_deudor;
             String identificacion;
@@ -1250,7 +1257,7 @@ String color;
 // contenidoTabla=contenidoTabla+"<tr onclick='cobranzas2("+id_cliente+","+id_datos_deudor+");'>"+
 
  
-  contenidoTabla=contenidoTabla+"<tr  bgcolor=\"#E0ECF8\" onclick=\"cobranzas2("+id_cliente+","+id_datos_deudor+");\"  >\n" +
+  contenidoTabla=contenidoTabla+"<tr  bgcolor=\"#E0ECF8\" onclick=\"GestionCliente("+id_cliente+","+id_datos_deudor+");\"  >\n" +
 "                                                                    <td class=\"hidden\"><h6><p "+color+" >"+id_datos_deudor+"</p></h6></td>\n" +
 "                                                                    <td><h6><p "+color+" >"+identificacion+"</p> </h6></td>\n" +
 "                                                                    <td><h6><p "+color+" >"+nombres_completo+"</p></h6></td>\n" +
@@ -1496,7 +1503,7 @@ String color;
          return  json.toString();
       
     }
-    public String getTiposResultados(int IdTipoGestion){
+    public String getTiposResultados(int idcliente){
         JSONObject json = new JSONObject();
         JSONArray itemSelectedJson = new JSONArray();
 
@@ -1505,22 +1512,318 @@ String color;
         session = sesion.openSession();
         Transaction tx= session.beginTransaction();
         // hacemos la transaccion     
-        Query q = session.createQuery("from LcTipoResultado  E WHERE E.lcTipoGestion.idTipoGestion=:IdTipoGestion and E.estado= :estado");
-        q.setParameter("IdTipoGestion",IdTipoGestion);
+        Query q = session.createQuery("from LcClienteResultado  E WHERE E.lcClientes.idCliente=:idcliente and E.estado= :estado");
+        q.setParameter("idcliente",idcliente);
         q.setParameter("estado","A");
-        List<LcTipoResultado> lista=q.list(); 
+        List<LcClienteResultado> lista=q.list(); 
     
-            for(LcTipoResultado datos:lista )
-            { 
-               json = new JSONObject();
-               json.put("idTipoResultado",datos.getIdTipoResultado());
-               json.put("nombreTipoResultado", datos.getNombreTipoResultado());
-               itemSelectedJson.add(json);
-            }
-            tx.commit();
-            session.close();
+        for(LcClienteResultado datos:lista )
+        { 
+           json = new JSONObject();
+           json.put("idTipoResultado",datos.getLcTipoResultado().getIdTipoResultado());
+           json.put("nombreTipoResultado", datos.getLcTipoResultado().getNombreTipoResultado());
+           itemSelectedJson.add(json);
+        }
+        tx.commit();
+        session.close();
 
          return  itemSelectedJson.toString();
       
     }
+    
+    public String getGestionCliente(int idCliente,int idDeudor){
+        RecaudacionServicios rs = new RecaudacionServicios();
+        JSONObject json = new JSONObject();
+        JSONArray itemSelectedJson = new JSONArray();   
+        BigDecimal tsaldo=BigDecimal.ZERO;
+        BigDecimal valorPagado =BigDecimal.ZERO;
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        Query q = session.createQuery("from LcTransacciones  E WHERE E.lcClientes.idCliente= :idCliente and E.lcDatosDeudores.idDatosDeudor=:idDeudor");
+        q.setParameter("idCliente",idCliente);
+        q.setParameter("idDeudor",idDeudor);
+        List<LcTransacciones> lista=q.list();
+         for(LcTransacciones datos:lista )
+        {
+             json = new JSONObject();
+             json.put("IdDeudor",idDeudor);
+             json.put("Identificacion",datos.getLcDatosDeudores().getIdentificacion());
+             json.put("NombresCompletos",datos.getLcDatosDeudores().getNombresCompleto());
+             json.put("IdCliente",datos.getLcClientes().getIdCliente());
+             json.put("RazonSocialCliente",datos.getLcClientes().getRazonSocial());
+             json.put("NumCuenta",datos.getNumCuenta());
+             json.put("TotalDeuda",datos.getTotalVencidos());
+             json.put("TotalVencido",datos.getTotalVencidos());
+             json.put("Pago",datos.getUltimoPago());
+            try {
+                valorPagado=rs.getValorRecaudado(datos.getIdEmpresa(),idCliente, idDeudor);
+            } catch (SQLException ex) {
+                Logger.getLogger(ConsultaxCarteraServicios.class.getName()).log(Level.SEVERE, null, ex);
+               
+            }
+             tsaldo=datos.getTotalVencidos().subtract(valorPagado);
+             json.put("Saldo",tsaldo);
+             json.put("Notas",getLcNotas2(idCliente,idDeudor));
+             json.put("IDNotas",getLcNotasID(idCliente,idDeudor));             
+             json.put("DiasMora",datos.getDiasMora());
+             json.put("IDCiudad",datos.getLcDatosDeudores().getLcCiudad().getIdCiudad());
+             json.put("Ciudad",datos.getLcDatosDeudores().getLcCiudad().getCiudad()); 
+             json.put("IDTransaccion",datos.getIdTransaccion()); 
+            
+             
+             itemSelectedJson.add(json);
+            
+        }
+        tx.commit();
+        session.close();
+        return  itemSelectedJson.toString();
+    }
+    
+    public String getLcDireccionJSON(String ide){
+        JSONObject json = new JSONObject();
+        JSONArray itemSelectedJson = new JSONArray(); 
+        String tablaDireccion="";
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        Query q = session.createQuery("from LcDireccion  E WHERE E.identificacionDeudor= :identificacionDeudor");      
+        q.setParameter("identificacionDeudor",ide);
+        List<LcDireccion> lista=q.list();
+       
+         for(LcDireccion mrol:lista )
+        {
+             json = new JSONObject();
+             json.put("TipoDireccion",mrol.getLcTiposDireccion().getNombreTipoDireccion());
+             json.put("Direccion",mrol.getDireccionCompleta());
+             itemSelectedJson.add(json);
+           // tablaDireccion+="<tr bgcolor='#E0ECF8' width='100%'><td class='col-sm-2'>"+mrol.getLcTiposDireccion().getNombreTipoDireccion()+"</td><td class='col-sm-6'>"+mrol.getDireccionCompleta()+"</td></tr>";
+             
+        }
+        tx.commit();
+        session.close();
+           // return  tablaDireccion;
+        return  itemSelectedJson.toString();
+    }
+    public String  getLcTelefonoJSON(String ide){
+        JSONObject json = new JSONObject();
+        JSONArray itemSelectedJson = new JSONArray();  
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        Query q = session.createQuery("from LcTelefonos  E WHERE E.identificacionDeudor= :identificacionDeudor");
+        q.setParameter("identificacionDeudor",ide);
+        List<LcTelefonos> lista=q.list();
+
+         for(LcTelefonos mrol:lista )
+        {
+            // System.out.println("ok: "+mrol.getIdTelefono()+", "+mrol.getTelefono());
+            // System.out.println("ok: "+mrol.getIdTelefono()+", "+mrol.getLcTiposTelefono().getNombreTipoTlf());
+              json = new JSONObject();
+             json.put("TipoTelefono",mrol.getLcTiposTelefono().getNombreTipoTlf());
+             json.put("Telefono",mrol.getTelefono());
+             json.put("Llamar","<a  href='#' ><span class='glyphicon glyphicon-phone-alt' aria-hidden='true'></span></a>");
+             itemSelectedJson.add(json);
+             
+        }
+        tx.commit();
+        session.close();
+        return  itemSelectedJson.toString();
+    }
+    
+    public String getGestionesJSON(int idCliente,int idDeudor){
+        JSONObject json = new JSONObject();
+        JSONArray itemSelectedJson = new JSONArray();  
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String FechaGestion="";
+           
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        Query q = session.createQuery("from LcGestiones  E WHERE  E.lcDatosDeudores.idDatosDeudor = :idDeudor  and   E.lcClientes.idCliente= :idCliente and  E.estado= :estado order by E.fechaTransaccion desc");
+        
+        q.setParameter("idCliente",idCliente);
+        q.setParameter("idDeudor",idDeudor);
+        q.setParameter("estado","A");
+        List<LcGestiones> lista=q.list();
+         for(LcGestiones mrol:lista )
+        {
+             FechaGestion = dateFormatter.format(mrol.getFechaTransaccion());
+            // System.out.println("ok: "+mrol.getLcClientes().getRazonSocial()+" "+ mrol.getLcDatosDeudores().getNombres()+" "+mrol.getLcTipoGestion().getNombreTipoGestion()+" "+ mrol.getLcTipoResultado().getNombreTipoResultado()+""+mrol.getLcEmpleados().getNombres()+""+mrol.getLcEmpleados().getApellidos());
+              json = new JSONObject();
+             json.put("TipoGestion",mrol.getLcTipoGestion().getNombreTipoGestion());
+             json.put("Gestion",mrol.getLcTipoResultado().getNombreTipoResultado());
+             json.put("Descripcion",mrol.getObservacion());
+             json.put("Oficial", getNombreUsuario(mrol.getLcEmpleados().getIdEmpleado()).toUpperCase());
+             json.put("fecha",FechaGestion);
+             itemSelectedJson.add(json);
+        }
+          tx.commit();
+        session.close();
+
+         return  itemSelectedJson.toString();
+    }
+    public String getNombreUsuario(int id_empleado){
+    
+       SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        Query q = session.createQuery("select E.usuario from LcUsuarios  E WHERE  E.lcEmpleados.idEmpleado = :id_empleado");
+        
+        q.setParameter("id_empleado",id_empleado);
+        String  NombreUsuario="";
+        NombreUsuario = (String) q.uniqueResult();
+        
+        tx.commit();
+        session.close();
+
+         return  NombreUsuario;
+    
+    
+    
+    }
+     public String getLcNotas2(int idCliente,int idDeudor){
+        String misnotas=""; 
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        ArrayList<LcNotas> arreglo = new ArrayList<LcNotas>();
+        Query q = session.createQuery("from LcNotas  E WHERE E.idCliente= :idCliente and E.idDeudor= :idDeudor and E.estado= :estado");
+        q.setParameter("idCliente",idCliente);
+        q.setParameter("idDeudor",idDeudor);
+        q.setParameter("estado","A");
+        List<LcNotas> lista=q.list();
+         for(LcNotas notas:lista )
+        {
+            /* System.out.println("ok: "+mrol.getIdNota());
+             System.out.println("ok: "+mrol.getIdNota()+", "+mrol.getIdDeudor());
+             System.out.println("ok: "+mrol.getIdNota()+", "+mrol.getIdCliente());*/
+             misnotas+= notas.getObservacion();
+        }
+        tx.commit();
+        session.close();
+         return misnotas;
+    }
+      public int getLcNotasID(int idCliente,int idDeudor){
+        int id_notas = 0; 
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        ArrayList<LcNotas> arreglo = new ArrayList<LcNotas>();
+        Query q = session.createQuery("from LcNotas  E WHERE E.idCliente= :idCliente and E.idDeudor= :idDeudor and E.estado= :estado");
+        q.setParameter("idCliente",idCliente);
+        q.setParameter("idDeudor",idDeudor);
+        q.setParameter("estado","A");
+        List<LcNotas> lista=q.list();
+         for(LcNotas notas:lista )
+        {
+            /* System.out.println("ok: "+mrol.getIdNota());
+             System.out.println("ok: "+mrol.getIdNota()+", "+mrol.getIdDeudor());
+             System.out.println("ok: "+mrol.getIdNota()+", "+mrol.getIdCliente());*/
+             id_notas= notas.getIdNota();
+        }
+        tx.commit();
+        session.close();
+         return id_notas;
+    }
+    public String getDetallesComprasJSON(int idCliente,int idDeudor){
+        JSONObject json = new JSONObject();
+        JSONArray itemSelectedJson = new JSONArray();  
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String FechaCompra=""; 
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        Query q = session.createQuery("from LcArticulo  E WHERE  E.lcDatosDeudores.idDatosDeudor = :idDeudor  and   E.idCliente= :idCliente and  E.estado= :estado order by E.fechaRegistro");       
+        q.setParameter("idCliente",idCliente);
+        q.setParameter("idDeudor",idDeudor);
+        q.setParameter("estado","A");
+        List<LcArticulo> lista=q.list();
+         for(LcArticulo mrol:lista )
+        {
+            
+            // System.out.println("ok: "+mrol.getNombreArticulo()+" "+ mrol.getReferencia()+" "+mrol.getFechaCompra()+""+mrol.getValorArticulo());
+             FechaCompra = dateFormatter.format(mrol.getFechaCompra());
+            // System.out.println("ok: "+mrol.getLcClientes().getRazonSocial()+" "+ mrol.getLcDatosDeudores().getNombres()+" "+mrol.getLcTipoGestion().getNombreTipoGestion()+" "+ mrol.getLcTipoResultado().getNombreTipoResultado()+""+mrol.getLcEmpleados().getNombres()+""+mrol.getLcEmpleados().getApellidos());
+             json = new JSONObject();
+             json.put("ReferenciaCompra",mrol.getReferencia());
+             json.put("Descripcion",mrol.getNombreArticulo());
+             json.put("ValorCompra",mrol.getValorArticulo());
+             json.put("Fecha", FechaCompra);
+             itemSelectedJson.add(json);
+        }
+          tx.commit();
+        session.close();
+
+         return  itemSelectedJson.toString();
+    }
+    public String getDetallesCuotasComprasJSON(int idCliente,int idDeudor){
+        JSONObject json = new JSONObject();
+        JSONArray itemSelectedJson = new JSONArray();  
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String FechaCompra="",FechaMaxPago=""; 
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+       Query q = session.createQuery("from LcCuotas  E WHERE  E.lcDatosDeudores.idDatosDeudor = :idDeudor  and   E.idCliente= :idCliente and  E.estado= :estado order by E.fechaMaxPago DESC");       
+        q.setParameter("idCliente",idCliente);
+        q.setParameter("idDeudor",idDeudor);
+        q.setParameter("estado","A");
+        List<LcCuotas> lista=q.list();
+         for(LcCuotas mrol:lista )
+        {
+            
+            // System.out.println("ok: "+mrol.getNombreArticulo()+" "+ mrol.getReferencia()+" "+mrol.getFechaCompra()+""+mrol.getValorArticulo());
+             FechaCompra = dateFormatter.format(mrol.getFechaRegistro());
+             FechaMaxPago = dateFormatter.format(mrol.getFechaMaxPago());
+            // System.out.println("ok: "+mrol.getLcClientes().getRazonSocial()+" "+ mrol.getLcDatosDeudores().getNombres()+" "+mrol.getLcTipoGestion().getNombreTipoGestion()+" "+ mrol.getLcTipoResultado().getNombreTipoResultado()+""+mrol.getLcEmpleados().getNombres()+""+mrol.getLcEmpleados().getApellidos());
+             json = new JSONObject();
+             json.put("ReferenciaCompra",mrol.getLcArticulo().getReferencia());
+             json.put("NumCuota",mrol.getNumCuotas());
+             json.put("Interes",mrol.getInteresCuota());
+             json.put("Mora",mrol.getValorMora());
+             json.put("GastosCobranzas",mrol.getGastosCobranzas());
+             json.put("GastosAdicionales",mrol.getGastosAdicional());
+             json.put("OtrosGastos",mrol.getOtrosValores());
+             json.put("ValorCuota",mrol.getValorCuota());
+             json.put("Total",mrol.getValorMora().add(mrol.getInteresCuota()).add(mrol.getValorMora()).add(mrol.getGastosCobranzas()).add(mrol.getGastosAdicional()).add(mrol.getOtrosValores()).add(mrol.getValorCuota()));
+             json.put("FechaMaxPago",FechaMaxPago);
+             json.put("PagosRealizado","0");
+             json.put("FechaPagoRealizado","");
+             json.put("Fecha", FechaCompra);
+             itemSelectedJson.add(json);
+        }
+          tx.commit();
+        session.close();
+
+         return  itemSelectedJson.toString();
+    }
+    
+    
+    /*
+    
+            Query q = session.createQuery("from LcCuotas  E WHERE  E.lcDatosDeudores.idDatosDeudor = :idDeudor  and   E.idCliente= :idCliente and  E.estado= :estado order by E.numCuotas DESC");       
+        q.setParameter("idCliente",idCliente);
+        q.setParameter("idDeudor",idDeudor);
+        q.setParameter("estado","A");
+        List<LcCuotas> lista=q.list();
+         for(LcCuotas mrol:lista )
+        {
+            
+             System.out.println("ok: "+mrol.getIdCuota()+" "+ mrol.getLcArticulo().getReferencia()+" "+mrol.getInteresCuota()+""+mrol.getNumCuotas()+mrol.getGastosAdicional()+
+                     mrol.getGastosCobranzas()+mrol.getInteresCuota()+mrol.getValorMora()+mrol.getOtrosValores()+mrol.getTotalCuotas()+mrol.getFechaMaxPago()+mrol.getValorCuota());
+             
+        }
+    
+    */
+    
 }

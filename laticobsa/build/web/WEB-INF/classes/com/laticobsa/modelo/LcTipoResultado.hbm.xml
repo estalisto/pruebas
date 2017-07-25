@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 09-jul-2017 23:23:36 by Hibernate Tools 4.3.1 -->
+<!-- Generated 22-jul-2017 13:49:09 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="com.laticobsa.modelo.LcTipoResultado" table="lc_tipo_resultado" schema="public" optimistic-lock="version">
         <id name="idTipoResultado" type="int">
             <column name="id_tipo_resultado" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="lcTipoGestion" class="com.laticobsa.modelo.LcTipoGestion" fetch="select">
+        <property name="idTipoGestion" type="java.lang.Integer">
             <column name="id_tipo_gestion" />
-        </many-to-one>
+        </property>
         <property name="nombreTipoResultado" type="string">
             <column name="nombre_tipo_resultado" length="20" />
         </property>
@@ -23,6 +23,12 @@
         <property name="estado" type="string">
             <column name="estado" length="1" />
         </property>
+        <set name="lcClienteResultados" table="lc_cliente_resultado" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="id_tipo_resultado" />
+            </key>
+            <one-to-many class="com.laticobsa.modelo.LcClienteResultado" />
+        </set>
         <set name="lcGestioneses" table="lc_gestiones" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="id_tipo_resultado" />

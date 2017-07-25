@@ -105,8 +105,8 @@ public class CobranzaController extends HttpServlet {
          request.setAttribute("cobranzas", cobranzas);
          List<LcTransacciones> transaccion = cd.getTransaccionesId(idCliente,idDeudor);
          BigDecimal totalPagar=BigDecimal.ZERO;
-          BigDecimal valorPagado =BigDecimal.ZERO;
-           BigDecimal ValorSaldo=BigDecimal.ZERO;
+         BigDecimal valorPagado =BigDecimal.ZERO;
+         BigDecimal ValorSaldo=BigDecimal.ZERO;
          if(!transaccion.isEmpty()){
          
          totalPagar =transaccion.get(0).getTotalVencidos();
@@ -447,21 +447,25 @@ public class CobranzaController extends HttpServlet {
             int idCliente = Integer.parseInt(request.getParameter("idCliente"));
             int idDeudor = Integer.parseInt(request.getParameter("idDeudor"));
            // List<LcGestiones> GestionTRX = cd.getGestionesTRX(idCliente, idDeudor);
+            
+            String GestionesJSON= "{\"data\": "+cd.getGestionesJSON(idCliente, idDeudor)+"}";
+            response.getWriter().println(GestionesJSON);
+            /*
             String TablaGestiones="";
             try {
                  TablaGestiones=cd.getGestiones(idCliente, idDeudor);
             } catch (SQLException ex) {
                 Logger.getLogger(CobranzaController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }*/
          
          
          //List<LcGestiones> GestionTRX = cd.getGestionesTRX(idCliente,idDeudor);
-         request.setAttribute("GestionTRX", TablaGestiones);
+        // request.setAttribute("GestionTRX", TablaGestiones);
             
             
           //  request.setAttribute("GestionTRX", GestionTRX);
 
-            request.getRequestDispatcher("sistema/gestion/transacciones_pendientes.jsp").forward(request, response);
+           // request.getRequestDispatcher("sistema/gestion/transacciones_pendientes.jsp").forward(request, response);
         }
         if (accion.equals("compromiso")) {
            try{
@@ -537,21 +541,39 @@ public class CobranzaController extends HttpServlet {
             int idCliente = Integer.parseInt(request.getParameter("idCliente"));
             int idDeudor = Integer.parseInt(request.getParameter("idDeudor"));
             String identifica= cd.getIdentificacionDeudor(idDeudor);
+            String DirecionesJson= "{\"data\": "+cd.getLcDireccionJSON(identifica)+"}";
+            // String DirecionesJson= cd.getLcDireccionJSON(identifica);
 
-            List<LcDireccion> direcciones = cd.getLcDireccion(identifica);
+            response.getWriter().println(DirecionesJson);
+            /*List<LcDireccion> direcciones = cd.getLcDireccion(identifica);
             request.setAttribute("direcciones", direcciones);
 
-            request.getRequestDispatcher("sistema/gestion/table_direccion.jsp").forward(request, response);
+            request.getRequestDispatcher("sistema/gestion/table_direccion.jsp").forward(request, response);*/
         }
         if (accion.equals("listar_telefono")) {
             int idCliente = Integer.parseInt(request.getParameter("idCliente"));
             int idDeudor = Integer.parseInt(request.getParameter("idDeudor"));
             
-            List<LcTelefonos> telefonos = cd.getLcTelefono(cd.getIdentificacionDeudor(idDeudor));
-            request.setAttribute("telefonos", telefonos);
-
-            request.getRequestDispatcher("sistema/gestion/table_telefono.jsp").forward(request, response);
+            String telefonosJSON = "{\"data\": "+cd.getLcTelefonoJSON(cd.getIdentificacionDeudor(idDeudor))+"}";
+            //request.setAttribute("telefonos", telefonos);
+                response.getWriter().println(telefonosJSON);
+            //request.getRequestDispatcher("sistema/gestion/table_telefono.jsp").forward(request, response);
         }
+        if (accion.equals("DetalleCompras")) {
+            int idCliente = Integer.parseInt(request.getParameter("idCliente"));
+            int idDeudor = Integer.parseInt(request.getParameter("idDeudor"));
+            String DetalleComprasJSON = "{\"data\": "+cd.getDetallesComprasJSON(idCliente,idDeudor)+"}";
+            response.getWriter().println(DetalleComprasJSON);
+        }
+        
+        if (accion.equals("DetalleCuotas")) {
+            int idCliente = Integer.parseInt(request.getParameter("idCliente"));
+            int idDeudor = Integer.parseInt(request.getParameter("idDeudor"));
+            String DetalleCuotasJSON = "{\"data\": "+cd.getDetallesCuotasComprasJSON(idCliente,idDeudor)+"}";
+            response.getWriter().println(DetalleCuotasJSON);
+        }
+        
+        
          if(accion.equals("deudor")){
             try {
                 int idDeudor = Integer.parseInt(request.getParameter("idDeudor"));
@@ -755,6 +777,102 @@ public class CobranzaController extends HttpServlet {
            
            response.getWriter().println(TablaReferencias);
          }
+         
+        if(accion.equals("GestionCliente")){
+        int  idCliente=Integer.parseInt(request.getParameter("idCliente"));
+        int  idDeudor=Integer.parseInt(request.getParameter("idDeudor"));  
+         
+         String cobranzas = "{\"ClienteDeudor\": "+cd.getGestionCliente(idCliente,idDeudor)+"}";
+         
+         //request.setAttribute("cobranzas", cobranzas);
+          response.getWriter().println(cobranzas);
+          
+         
+//         List<LcTransacciones> transaccion = cd.getTransaccionesId(idCliente,idDeudor);
+//         BigDecimal totalPagar=BigDecimal.ZERO;
+//          BigDecimal valorPagado =BigDecimal.ZERO;
+//           BigDecimal ValorSaldo=BigDecimal.ZERO;
+//         if(!transaccion.isEmpty()){
+//         
+//         totalPagar =transaccion.get(0).getTotalVencidos();
+//             try {
+//                 valorPagado=rs.getValorRecaudado(EmpresaID, idCliente, idDeudor);
+//             } catch (SQLException ex) {
+//                 Logger.getLogger(CobranzaController.class.getName()).log(Level.SEVERE, null, ex);
+//             }
+//         ValorSaldo=(totalPagar).subtract(valorPagado);
+//         
+//         
+//         
+//         }
+//          // request.setAttribute("totalPagar2", totalPagar);
+//           request.setAttribute("valorPagado2", valorPagado);
+//           request.setAttribute("ValorSaldo2", ValorSaldo);
+//         
+//         request.setAttribute("transaccion", transaccion);
+//      //   int idcliente = cobranzas.get(0).getLcClientes().getIdCliente();
+//         List<LcTipoGestion> gestiones = cd.getLcTipoGestion(idCliente);
+//         request.setAttribute("gestiones", gestiones);
+//         String identifica= cd.getIdentificacionDeudor(idDeudor);// aqui
+//         
+        // List<LcDireccion> direcciones = cd.getLcDireccion(identifica);
+//         request.setAttribute("direcciones", direcciones);
+//         
+//         List<LcTelefonos> telefonos = cd.getLcTelefono(cd.getIdentificacionDeudor(idDeudor));
+//         request.setAttribute("telefonos", telefonos);
+//         
+//         List<LcCiudad> ciudades = cd.getLcCiudad();
+//         request.setAttribute("ciudades", ciudades);
+//         
+//         List<LcNotas> notas = cd.getLcNotas(idCliente,idDeudor);
+//         request.setAttribute("notas", notas);
+//         
+//         String detArticulos = null,detalleArt = null,footTotal=null;
+//            try {
+//               // detArticulos = cd.getArticulos2(idCliente,idDeudor);
+//                detArticulos = cd.getArticulos2(idCliente,idDeudor);
+//                String separo[]=detArticulos.split("&");
+//                 detalleArt=separo[0];
+//                 footTotal=separo[1];
+//            } catch (SQLException ex) {
+//                Logger.getLogger(CobranzaController.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//         request.setAttribute("detArticulos", detalleArt);
+//         request.setAttribute("detTotal", footTotal);
+//         String detCuotas = null,detalleCuota = null,footCuota=null;
+//            try {
+//                //detCuotas = cd.getCuotas2(idcliente, idDeudor);
+//                detCuotas = cd.getCuotas2(idCliente, idDeudor);
+//                String separo[]=detCuotas.split("&");
+//                detalleCuota=separo[0];
+//                footCuota=separo[1];
+//            } catch (SQLException ex) {
+//                Logger.getLogger(CobranzaController.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//         request.setAttribute("detCuotas", detalleCuota);
+//         request.setAttribute("detTotalCuota", footCuota);
+//           String TablaGestiones="";
+//            try {
+//                 TablaGestiones=cd.getGestiones(idCliente, idDeudor);
+//            } catch (SQLException ex) {
+//                Logger.getLogger(CobranzaController.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//         
+//         
+     //    List<LcGestiones> GestionTRX = cd.getGestionesTRX(idCliente,idDeudor);
+//         request.setAttribute("GestionTRX", TablaGestiones);
+//         
+//         
+//         
+         
+         
+         //request.getRequestDispatcher("sistema/gestion/frm_gestion_cobranzas.jsp").forward(request, response);
+        }
+         
+         
+         
+         
+         
         
     }
     public  String cadenaTabla(int deudor){

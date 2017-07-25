@@ -1,5 +1,5 @@
 package com.laticobsa.modelo;
-// Generated 09-jul-2017 23:23:34 by Hibernate Tools 4.3.1
+// Generated 22-jul-2017 13:48:47 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
