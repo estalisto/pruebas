@@ -957,7 +957,7 @@ function consulta_filtro_cartera(){
            document.getElementById("tabla_div").innerHTML = "";
            document.getElementById("tabla_div").innerHTML = htmlTable+response.toString()+"</tbody></table>";
            datatableok();
-               
+            $('#det_filtro').modal('hide');   
             }      
         }
     });

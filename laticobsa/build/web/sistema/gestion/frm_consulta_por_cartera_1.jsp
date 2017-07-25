@@ -38,6 +38,9 @@ border: 2px solid #CB8B07;
  textarea {
 	resize: none;
                 } 
+ table td {
+    bgcolor: #E0ECF8;
+}
 </style>
 
 <body>
@@ -62,13 +65,13 @@ border: 2px solid #CB8B07;
                   </c:forEach> 
                 </select>
              </div>                                             
-             <div class="col-sm-1">                        
+             <!--div class="col-sm-1">                        
                 <button id="btnbuscar" type="submit" class="btn btn-primary btn-sm fa fa-search"> BUSCAR</button>                       
-             </div>
+             </div-->
              <div class="col-sm-1">                        
                 <a href="#det_filtro" onclick="getTiposGestiones();"  data-toggle="modal" class="btn btn-primary  btn-sm fa fa-filter">  FILTRO  </a>
              </div>
-             <div class="col-sm-5">                        
+             <div class="col-sm-6">                        
              </div>
              <div class="col-sm-2"> 
                  <center><img id="id_loader" src="resources/dist/img/loader.gif" class="img-circle" alt="User Image" width="35" height="35"  style="display: none"></center>
@@ -90,7 +93,8 @@ border: 2px solid #CB8B07;
         <input  type="text" class="form-control input-sm hidden" id="IdFechaComp">
         <input  type="text" class="form-control input-sm hidden" id="IdUltima">
         <input  type="text" class="form-control input-sm hidden" id="IdResultado">  
-        <input  type="text" class="form-control input-sm " id="input_query" >
+        <input  type="text" class="form-control input-sm hidden" id="input_query" >
+         <input  type="text" class="form-control input-sm hidden" id="idNotas" value="0" >
       </div> 
       <div class="panel panel-default well-lg margin"  style="overflow-x: auto">
           <div id="tabla_div">
@@ -422,11 +426,11 @@ border: 2px solid #CB8B07;
                                                         <h3 class="box-title">Desglose de Artículos</h3>
                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                                     </div>
-                                                    <div class="box-body" style="overflow-y:scroll;">
-                                                        <table id="detalle_articulos" class="table table-bordered table-hover">
+                                                    <div id="TablaCompras" class="box-body" style="overflow-y:scroll;">
+                                                        <table id="detalle_articulos" class="table table-striped table-bordered dt-responsive nowrap table-hover" cellspacing="0" width="100%"> 
                                                             <thead>
                                                                 <tr>
-                                                                    <th>Referencia de Artículo</th>
+                                                                    <th>Referencia de Compras/Artículo</th>
                                                                     <th>Descripción</th>
                                                                     <th>Valor Articulo</th>                                                                    
                                                                     <th>Fecha de Compra</th>															  
@@ -458,10 +462,10 @@ border: 2px solid #CB8B07;
                                                         <h3 class="box-title">Detalle Cuotas</h3>
                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                                     </div> 
-                                                    <div class="box-body" style="overflow-y:scroll;">
-                                                        <table id="detalle_cuotas" class="table table-bordered table-hover">
+                                                    <div id="TablaDetalleCuotas" class="box-body" style="overflow-y:scroll;">
+                                                        <table id="detalle_cuotas" class="table table-striped table-bordered dt-responsive nowrap table-hover" cellspacing="0" width="100%"> 
                                                             <thead>
-                                                                <tr>
+                                                                <tr bgcolor="#FBF5EF">
                                                                     <th>Artículo</th>
                                                                     <th>NºCuota</th>
                                                                     <th>Interés</th>
@@ -472,6 +476,9 @@ border: 2px solid #CB8B07;
                                                                     <th>Valor Cuota</th>
                                                                     <th>Total</th>
                                                                     <th>Fecha max Pago</th>
+                                                                    <th>Fecha Compra</th>
+                                                                    <th>Pagos Realizados</th>
+                                                                    <th>Fecha Pagos Realizados</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -504,18 +511,15 @@ border: 2px solid #CB8B07;
                             <div class="col-lg-5">
                                 <div id="table_direccion" class="form-group">                                
                                     <dt>Dirección: </dt>
-                                    <div  class="box table-responsive" >
-                                        <table id="idAllDireccions" class=" table-striped table-bordered dt-responsive table-condensed nowrap table-hover" cellspacing="0" width="100%">
-                                           
+                                    <div id="TablaDirecciones" class="box table-responsive" >
+                                        <table id="idAllDireccions" class=" table-striped table-bordered dt-responsive table-condensed nowrap table-hover" cellspacing="0" width="100%">                                           
                                             <thead>
                                                 <tr  bgcolor="#FBF5EF" width="100%">
-                                                    <th >Tipo</th>
-                                                    <th class="sorting_asc" tabindex="0" aria-controls="idAllDireccions" rowspan="1" colspan="1" style="width: 767px;" aria-label="Dirección: activate to sort column descending" aria-sort="ascending">Dirección</th>
+                                                    <th class="col-sm-2">Tipo</th>
+                                                    <th class="col-sm-6">Dirección</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                   
-                                                
+                                            <tbody>                                                
                                             </tbody>
                                         </table>
                                     </div>                                       
@@ -523,9 +527,9 @@ border: 2px solid #CB8B07;
                             </div>
                             </div>
                             <div id="pagetelefono">  
-                            <div id="table_telefono" class="col-lg-3">        
+                            <div  class="col-lg-3">        
                                 <dt>Telefonos: </dt>
-                                <div  class="box table-responsive">  
+                                <div id="table_telefono" class="box table-responsive">  
                                     <table id="idAllTelefonos" class="table table-striped table-bordered dt-responsive nowrap table-hover" cellspacing="0" width="100%">
                                         <thead>
                                             <tr  bgcolor="#FBF5EF">
@@ -535,12 +539,6 @@ border: 2px solid #CB8B07;
                                             </tr>
                                         </thead>
                                         <tbody>
-                                                          
-                                                <tr bgcolor="#E0ECF8" >
-                                                    <td>1</td>                    
-                                                    <td>09999999</td>
-                                                    <td><a  href="#" ><span class="glyphicon glyphicon-phone-alt" aria-hidden="true"></span></a></td>
-                                                </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -644,7 +642,7 @@ border: 2px solid #CB8B07;
                                 <div id="pagetable">  
                                     <div id="transaccion_table"  class="box table-responsive"  >
                                        
-                                            <table id="allTrxGestiones" class="table table-striped table-bordered dt-responsive nowrap table-hover" cellspacing="0" width="100%">
+                                            <table id="allTrxGestiones" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
                                                 <thead>
                                                     <tr  bgcolor="#FBF5EF">
                                                         
@@ -683,6 +681,8 @@ $('#datetimepicker12').datetimepicker({   format:'Y-m-d' });
 $('#datetimepicker13').datetimepicker({   format:'Y-m-d' }); 
 $('#datetimepicker14').datetimepicker({   format:'Y-m-d' }); 
 $('#datetimepicker15').datetimepicker({   format:'Y-m-d' }); 
+$('#datepicker').datetimepicker({   format:'Y-m-d' }); 
+$('#datepicker2').datetimepicker({   format:'Y-m-d' }); 
 $('#monto').validCampoFranz('0123456789.');
 $('#monto1').validCampoFranz('0123456789.');
 $('#pagos').validCampoFranz('0123456789.');
@@ -698,74 +698,7 @@ $('#dia_mora1').validCampoFranz('0123456789');
 $('#tTelefono').validCampoFranz('0123456789');
 $('#newTelefono').validCampoFranz('0123456789');
 $('#new_telefono_ref').validCampoFranz('0123456789'); 
-$('#nombre_ref').validCampoFranz('abcdefghijklmnñopqrstuvwxyzáéíóúüABCDEFGHIJKLMNÑOPQRSTUVWXYZÁÉÍÓÚÜ '); 
-
-$('#detalle_articulos').DataTable({
-                    "paging": false,
-                    "lengthChange": false,
-                    "searching": false,
-                    "ordering": true,
-                    "info": true,
-                    "autoWidth": false
-                });
-$('#detalle_cuotas').DataTable({
-    "paging": true,
-    "lengthChange": false,
-    "searching": false,
-    "ordering": true,
-    "info": false,
-    "autoWidth": false
-});
-$('#datepicker').datetimepicker({   format:'Y-m-d' }); 
-$('#datepicker2').datetimepicker({   format:'Y-m-d' }); 
-$('#idAllTelefonos').DataTable( {
-                     scrollY:        110,
-                    scrollX:        false,
-                    scrollCollapse: false,
-                    paging:         false,
-                    info: false,
-                    searching: false,
-                    columnDefs: [ {
-                        orderable: true,
-
-                        targets:   1
-                    } ],
-                    order: [[ 1, 'desc' ]]
-                } ); 
-$('#idAllDireccions').DataTable({
-                   scrollY:        110,
-                    scrollX:        false,
-                    scrollCollapse: false,
-                    paging:         false,
-                    info: false,
-                    searching: false,
-                    columnDefs: [ {
-                        orderable: true,
-
-                        targets:   1
-                    } ],
-                    order: [[ 1, 'desc' ]]
-                } );
-
-$('#allTrxGestiones').DataTable( {
-                    scrollY:        200,
-                    scrollX:        false,
-                    scrollCollapse: false,
-                    paging:         false,
-                    info: false,
-                    searching: false,
-                    columnDefs: [ {
-                        orderable: true,
-
-                        targets:   4
-                    } ],
-                    select: {
-                        style:    'os',
-                        selector: 'td:first-child'
-                    },
-                    order: [[ 4, 'desc' ]]
-                } );
-
+$('#nombre_ref').validCampoFranz('abcdefghijklmnñopqrstuvwxyzáéíóúüABCDEFGHIJKLMNÑOPQRSTUVWXYZÁÉÍÓÚÜ ');
 
 });           
 </script>

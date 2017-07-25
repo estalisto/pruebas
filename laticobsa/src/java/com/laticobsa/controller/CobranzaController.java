@@ -447,21 +447,25 @@ public class CobranzaController extends HttpServlet {
             int idCliente = Integer.parseInt(request.getParameter("idCliente"));
             int idDeudor = Integer.parseInt(request.getParameter("idDeudor"));
            // List<LcGestiones> GestionTRX = cd.getGestionesTRX(idCliente, idDeudor);
+            
+            String GestionesJSON= "{\"data\": "+cd.getGestionesJSON(idCliente, idDeudor)+"}";
+            response.getWriter().println(GestionesJSON);
+            /*
             String TablaGestiones="";
             try {
                  TablaGestiones=cd.getGestiones(idCliente, idDeudor);
             } catch (SQLException ex) {
                 Logger.getLogger(CobranzaController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }*/
          
          
          //List<LcGestiones> GestionTRX = cd.getGestionesTRX(idCliente,idDeudor);
-         request.setAttribute("GestionTRX", TablaGestiones);
+        // request.setAttribute("GestionTRX", TablaGestiones);
             
             
           //  request.setAttribute("GestionTRX", GestionTRX);
 
-            request.getRequestDispatcher("sistema/gestion/transacciones_pendientes.jsp").forward(request, response);
+           // request.getRequestDispatcher("sistema/gestion/transacciones_pendientes.jsp").forward(request, response);
         }
         if (accion.equals("compromiso")) {
            try{
@@ -537,7 +541,9 @@ public class CobranzaController extends HttpServlet {
             int idCliente = Integer.parseInt(request.getParameter("idCliente"));
             int idDeudor = Integer.parseInt(request.getParameter("idDeudor"));
             String identifica= cd.getIdentificacionDeudor(idDeudor);
-            String DirecionesJson= "{\"DireccionesDeudor\": "+cd.getLcDireccionJSON(identifica)+"}";
+            String DirecionesJson= "{\"data\": "+cd.getLcDireccionJSON(identifica)+"}";
+            // String DirecionesJson= cd.getLcDireccionJSON(identifica);
+
             response.getWriter().println(DirecionesJson);
             /*List<LcDireccion> direcciones = cd.getLcDireccion(identifica);
             request.setAttribute("direcciones", direcciones);
@@ -548,11 +554,26 @@ public class CobranzaController extends HttpServlet {
             int idCliente = Integer.parseInt(request.getParameter("idCliente"));
             int idDeudor = Integer.parseInt(request.getParameter("idDeudor"));
             
-            List<LcTelefonos> telefonos = cd.getLcTelefono(cd.getIdentificacionDeudor(idDeudor));
-            request.setAttribute("telefonos", telefonos);
-
-            request.getRequestDispatcher("sistema/gestion/table_telefono.jsp").forward(request, response);
+            String telefonosJSON = "{\"data\": "+cd.getLcTelefonoJSON(cd.getIdentificacionDeudor(idDeudor))+"}";
+            //request.setAttribute("telefonos", telefonos);
+                response.getWriter().println(telefonosJSON);
+            //request.getRequestDispatcher("sistema/gestion/table_telefono.jsp").forward(request, response);
         }
+        if (accion.equals("DetalleCompras")) {
+            int idCliente = Integer.parseInt(request.getParameter("idCliente"));
+            int idDeudor = Integer.parseInt(request.getParameter("idDeudor"));
+            String DetalleComprasJSON = "{\"data\": "+cd.getDetallesComprasJSON(idCliente,idDeudor)+"}";
+            response.getWriter().println(DetalleComprasJSON);
+        }
+        
+        if (accion.equals("DetalleCuotas")) {
+            int idCliente = Integer.parseInt(request.getParameter("idCliente"));
+            int idDeudor = Integer.parseInt(request.getParameter("idDeudor"));
+            String DetalleCuotasJSON = "{\"data\": "+cd.getDetallesCuotasComprasJSON(idCliente,idDeudor)+"}";
+            response.getWriter().println(DetalleCuotasJSON);
+        }
+        
+        
          if(accion.equals("deudor")){
             try {
                 int idDeudor = Integer.parseInt(request.getParameter("idDeudor"));
