@@ -348,7 +348,7 @@ public class ConsultaxCartera extends HttpServlet {
           int idclienteok;
             idclienteok = cd.getIdCliente(EmpresaID, SucursalID, EmpleadoID);
             
-            String DatosTiposGestion="{\"tipo_gestion\": ["+ cd.getTiposGestion(idclienteok)+"]}";//  getTiposGestion
+            String DatosTiposGestion="{\"tipo_gestion\": "+ cd.getTiposGestion(idclienteok)+"}";//  getTiposGestion
             System.out.println("json: "+DatosTiposGestion);
              response.getWriter().println(DatosTiposGestion);
         }
@@ -379,12 +379,15 @@ public class ConsultaxCartera extends HttpServlet {
                  int cartera = Integer.parseInt(request.getParameter("cartera")); 
                  String QueryConsulta =request.getParameter("sqlQuery");
                  String NuevosDatos="";
+                 int secuancia;
                  QueryConsulta = QueryConsulta.replaceAll("IDClienteConsulta", Integer.toString(cartera));
                  QueryConsulta = QueryConsulta.replaceAll("IDEmpleadoConsulta", Integer.toString(EmpleadoID));
                  
             try {
                 sesion.setAttribute("SSqlDatosDeudor",QueryConsulta); 
                 NuevosDatos=cd.getDatosCarteras2(QueryConsulta);
+                
+                
             } catch (SQLException ex) {
                 Logger.getLogger(ConsultaxCartera.class.getName()).log(Level.SEVERE, null, ex);
                 
@@ -393,6 +396,20 @@ public class ConsultaxCartera extends HttpServlet {
              
                  
                  
+         }
+         if(accion.equals("consulta_secuencia")){
+             int cartera = Integer.parseInt(request.getParameter("cartera")); 
+                 String QueryConsulta =request.getParameter("sqlQuery");
+                 //String NuevosDatos="";
+                 int secuancia;
+                QueryConsulta = QueryConsulta.replaceAll("IDClienteConsulta", Integer.toString(cartera));
+                QueryConsulta = QueryConsulta.replaceAll("IDEmpleadoConsulta", Integer.toString(EmpleadoID));
+                QueryConsulta = QueryConsulta.replaceAll("'", "''");
+                
+                secuancia=cd.seq_query(QueryConsulta);
+                System.out.println(secuancia+"Query: "+QueryConsulta);
+                response.getWriter().println(secuancia);
+         
          }
         
     }

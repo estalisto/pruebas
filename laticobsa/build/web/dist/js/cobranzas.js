@@ -36,6 +36,7 @@ function Sgtedeudor(stridDeudor, stridCliente) {
 function Sgtedeudor2() {
     var idDeudor = document.getElementById("id_deudor").value;
     var idCliente = document.getElementById("idcliente").value;
+    var secQuery = document.getElementById("secuencia_query").value;
 
               
     var accion = "deudor";
@@ -43,6 +44,7 @@ function Sgtedeudor2() {
     var parametros = {
         "idCliente": idCliente,
         "idDeudor": idDeudor,
+        "secQuery": secQuery,
         "accion": accion
 
     };
@@ -101,10 +103,12 @@ function Antdeudor(stridDeudor, stridCliente) {
 function Antdeudor2() {
     var idDeudor = document.getElementById("id_deudor").value;
     var idCliente = document.getElementById("idcliente").value;
+    var secQuery = document.getElementById("secuencia_query").value;
     var accion = "anterior";
     $('#img_cargando').css("display", "block");
     var parametros = {
         "idCliente": idCliente,
+        "secQuery":secQuery,
         "idDeudor": idDeudor,
         "accion": accion
 
@@ -1360,6 +1364,9 @@ var idCliente = stridCliente;
 var idDeudor= stride;
 var accion="GestionCliente";
 hidden_cartera_cliente('true');
+document.getElementById("siguiente").disabled = false; 
+document.getElementById("anterior").disabled = false; 
+
 
   $.getJSON("cobranzas", {"accion" : accion,"idCliente":idCliente,"idDeudor":idDeudor}, function(result){
          console.log(result);

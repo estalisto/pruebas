@@ -578,7 +578,18 @@ public class CobranzaController extends HttpServlet {
             try {
                 int idDeudor = Integer.parseInt(request.getParameter("idDeudor"));
                 int idCliente = Integer.parseInt(request.getParameter("idCliente"));
-                int opcion=2;
+                int secuencia_query = Integer.parseInt(request.getParameter("secQuery"));
+                int opcion=2; 
+                
+                if(true){
+                int iddeusorSig;
+                iddeusorSig=cd.getSiguiente(secuencia_query, idDeudor);                
+                response.getWriter().println(iddeusorSig);
+                 
+                }else{
+                
+                
+                
                  String sqlquery="";   
                   List<String> sgte;
                  sqlquery = sesion.getAttribute("SSqlDatosDeudor").toString();
@@ -628,16 +639,28 @@ public class CobranzaController extends HttpServlet {
                         }
                     }
                 }
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(CobranzaController.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
          }
         if(accion.equals("anterior")){
             try {
                 int idDeudor = Integer.parseInt(request.getParameter("idDeudor"));
                 int idCliente = Integer.parseInt(request.getParameter("idCliente"));
+                int secuencia_query = Integer.parseInt(request.getParameter("secQuery"));
                 int opcion=2;
                // List<String> sgte= cd.getDatosCarterasSiguienteAnterior(idCliente,EmpleadoID, opcion);
+                if(true){
+                int iddeusorSig;
+                iddeusorSig=cd.getAnteiror(secuencia_query, idDeudor);                
+                response.getWriter().println(iddeusorSig);
+                 
+                }else{
+                
+                
+                
                  List<String> sgte;
                   String sqlquery="";   
                  sqlquery = sesion.getAttribute("SSqlDatosDeudor").toString();
@@ -675,6 +698,7 @@ public class CobranzaController extends HttpServlet {
                     }
                     
                 }
+              }
             } catch (SQLException ex) {
                 Logger.getLogger(CobranzaController.class.getName()).log(Level.SEVERE, null, ex);
             }

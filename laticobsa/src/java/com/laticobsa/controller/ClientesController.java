@@ -144,7 +144,7 @@ public class ClientesController extends HttpServlet {
                             extensioon,
                             celular,
                             //fecha_reg, "A", null, null, null, null,null));
-                            fecha_reg, "A",  null, null, null,null,null));
+                            fecha_reg, "A",  null, null, null,null,null,null));
 
                 response.getWriter().println("Cliente Ingresado Correctamente");
             }

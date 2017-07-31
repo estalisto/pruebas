@@ -94,6 +94,7 @@ border: 2px solid #CB8B07;
         <input  type="text" class="form-control input-sm hidden" id="IdUltima">
         <input  type="text" class="form-control input-sm hidden" id="IdResultado">  
         <input  type="text" class="form-control input-sm hidden" id="input_query" >
+        <input  type="text" class="form-control input-sm hidden" id="secuencia_query" >
          <input  type="text" class="form-control input-sm hidden" id="idNotas" value="0" >
       </div> 
       <div class="panel panel-default well-lg margin"  style="overflow-x: auto">
@@ -577,7 +578,8 @@ border: 2px solid #CB8B07;
                                                 <dt style="color:#F5A9A9" id="contador_notas">500</dt>
                                             </div>                            
                                         </div>
-						<textarea maxlength="500" id="txtnota" class="form-control input-sm " rows="3" onkeyup="ValidarNota2()"  placeholder="NOTAS" style="overflow-y:scroll; background-color:#FDF9DB;  font-size:18px; font-type:Arial" value="0">00000</textarea>
+						<textarea maxlength="500" id="txtnota" class="form-control input-sm " rows="2" onkeyup="ValidarNota2()"  placeholder="NOTAS" style="overflow-y:scroll; background-color:#FDF9DB;  font-size:14px; font-type:Arial" value="0"></textarea>
+						<textarea maxlength="500" id="txtnotaAdmin" class="form-control input-sm " rows="1" onkeyup="ValidarNota2()"  placeholder="NOTAS ADMINISTRADOR" style="overflow-y:scroll; background-color:#FDF9DB;  font-size:14px; font-type:Arial" value="0" readonly></textarea>
                                         </div>
 
 

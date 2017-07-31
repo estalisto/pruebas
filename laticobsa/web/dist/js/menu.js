@@ -215,6 +215,19 @@ function listar_documentos()
  
 }
 
+function documentos_generados()
+{
+     jQuery("#page-wrapper").html("<br/><br/><center><img alt='cargando' src='dist/img/hourglass.gif' /><center>"); 
+     jQuery("#page-wrapper").load("sistema/terrenos/frm_documentos_generados.jsp",{},function(){ });
+ 
+}
+function tipos_documentos()
+{
+     jQuery("#page-wrapper").html("<br/><br/><center><img alt='cargando' src='dist/img/hourglass.gif' /><center>"); 
+     jQuery("#page-wrapper").load("documentos?accion=listar",{},function(){ });
+ 
+}
+
 function MsgSalidaModal(title,msg,btname){
 var title=title;
 var msg=msg;

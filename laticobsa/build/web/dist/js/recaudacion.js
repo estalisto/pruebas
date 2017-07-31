@@ -5,17 +5,14 @@
  */
 function BuscarCuota() {
     var cartera = $('#cartera').val();
-    var oficial = $('#oficial').val();
     var tipo = $('#t_identificacion').val();
     var ide = $('#identificacion').val();
     var nombres = $('#nombres').val();
     var accion = "cuota";
 
-    if (oficial === "") {
-        oficial = 0;
+
         var parametros = {
             "cartera": cartera,
-            "oficial": oficial,
             "tipo": tipo,
             "ide": ide,
             "nombres": nombres,
@@ -53,7 +50,9 @@ function BuscarCuota() {
                             </thead> "
                             + response +
                             "</table> \n\
-                                </div>";
+                                <div class='modal-footer'>\n\
+                            <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>\n\
+                             </div></div>";
                     cadena += "</div> \n\
                                     </div> \n\
                                 </div> ";
@@ -64,60 +63,161 @@ function BuscarCuota() {
                 }
             }
         });
-    }
-        if (oficial !== "") {
-        var parametros = {
-        "cartera": cartera,
-                "oficial": oficial,
-                "tipo": tipo,
-                "ide": ide,
-                "nombres": nombres,
-                "accion": accion
-        };
-        $.ajax({
-        data: parametros,
-                url: 'recaudacion',
-                type: 'GET',
-                beforeSend: function () {
-                },
-                success: function (response) {
-
-                if (response) {
-
-                var cadena = "";
-                        cadena += "<div class='modal-dialog modal-lg' role='document'> \n\
-                            <div class='modal-content'> \n\
-                            <br><div class='box box-danger'> \n\
-                            <div class='box-header with-border bg-yellow'> \n\
-                            <h3 class='box-title'>Detalle Cuotas</h3> \n\
-                            </div>  \n\
-                            <div class='box-body' style='overflow-y:scroll;'> \n\
-                            <table id='detalle_cuotas' class='table table-bordered table-hover'> \n\
-                            <thead> \n\
-                            <tr> \n\
-                                    <th class='hidden'>idCuota</th> \n\
-                                    <th>Artículo</th> \n\
-                                    <th>Cuota</th> \n\
-                                    <th>Interés</th> \n\
-                                    <th>Capital </th> \n\
-                                    <th>Mora Generada</th> \n\
-                                    <th>Agregar</th> \n\
-                                </tr> \n\
-                            </thead> "
-                        + response +
-                        "</table> \n\
-                                </div>";
-                        cadena += "</div> \n\
-                                    </div> \n\
-                                </div> ";
-                        document.getElementById("detalle_cuota").innerHTML = '';
-                        document.getElementById("detalle_cuota").innerHTML += cadena;
-                }
-                }
-        });
-}
+    
+//        if (oficial !== "") {
+//        var parametros = {
+//        "cartera": cartera,
+//                "oficial": oficial,
+//                "tipo": tipo,
+//                "ide": ide,
+//                "nombres": nombres,
+//                "accion": accion
+//        };
+//        $.ajax({
+//        data: parametros,
+//                url: 'recaudacion',
+//                type: 'GET',
+//                beforeSend: function () {
+//                },
+//                success: function (response) {
+//
+//                if (response) {
+//
+//                var cadena = "";
+//                        cadena += "<div class='modal-dialog modal-lg' role='document'> \n\
+//                            <div class='modal-content'> \n\
+//                            <br><div class='box box-danger'> \n\
+//                            <div class='box-header with-border bg-yellow'> \n\
+//                            <h3 class='box-title'>Detalle Cuotas</h3> \n\
+//                            </div>  \n\
+//                            <div class='box-body' style='overflow-y:scroll;'> \n\
+//                            <table id='detalle_cuotas' class='table table-bordered table-hover'> \n\
+//                            <thead> \n\
+//                            <tr> \n\
+//                                    <th class='hidden'>idCuota</th> \n\
+//                                    <th>Artículo</th> \n\
+//                                    <th>Cuota</th> \n\
+//                                    <th>Interés</th> \n\
+//                                    <th>Capital </th> \n\
+//                                    <th>Mora Generada</th> \n\
+//                                    <th>Agregar</th> \n\
+//                                </tr> \n\
+//                            </thead> "
+//                        + response +
+//                        "</table> \n\
+//                                </div>";
+//                        cadena += "</div> \n\
+//                                    </div> \n\
+//                                </div> ";
+//                        document.getElementById("detalle_cuota").innerHTML = '';
+//                        document.getElementById("detalle_cuota").innerHTML += cadena;
+//                }
+//                }
+//        });
+//}
 }
 function Buscarecaudo() {
+    var ide=$('#cedula').val();
+    var cartera=$('#nomb_cartera').val();
+    var nombre_completo=$('#nom_completos').val();
+    var accion = "BuscarDeudores";
+    
+    if(cartera!==""){
+        $('#id_message_carter').css("display", "none");
+        if((ide==="")&&(nombre_completo==="")){
+            //MsgSalidaModalA("Debe ingresar una identificacion o Nombre del deudor");
+            $('#id_message').css("display", "block");
+        }else{
+            $('#id_message').css("display", "none");
+            if(ide!==""){
+               document.getElementById("nom_completos").disabled = true;
+               $('#id_loader').css("display", "block");
+                var parametros = {
+                            "ide": ide,
+                            "cartera": cartera,
+                            "accion": accion
+                        };
+                        $.ajax({
+                            data: parametros,
+                            url: 'recaudacion',
+                            type: 'GET',
+                            beforeSend: function () {
+                            },
+                            success: function (response) {
+
+                                if (response) {
+                                    document.getElementById("tableDE").innerHTML = "";
+                                    document.getElementById("tableDE").innerHTML = response;
+                                    $('#id_loader').css("display", "none");
+                                } else {
+                                    MsgSalidaModalA("No existe Deudor con esa Identificación");
+                                    document.getElementById("nom_completos").disabled = false;
+                                    $('#id_loader').css("display", "none");
+                                }
+                            }
+                        });
+            }//else{MsgSalidaModalA("Debe ingresar una identificación");}
+            if(nombre_completo!==""){
+               document.getElementById("cedula").disabled = true;
+               $('#id_loader').css("display", "block");
+               var parametros = {
+                            "nombre_completo": nombre_completo,
+                            "cartera": cartera,
+                            "accion": accion
+                        };
+                        $.ajax({
+                            data: parametros,
+                            url: 'recaudacion',
+                            type: 'GET',
+                            beforeSend: function () {
+                            },
+                            success: function (response) {
+
+                                if (response) {
+                                    document.getElementById("tableDE").innerHTML = "";
+                                    document.getElementById("tableDE").innerHTML = response;
+                                    $('#id_loader').css("display", "none");
+                                } else {
+                                    MsgSalidaModalA("No existe Deudor con esa Identificación");
+                                    $('#id_loader').css("display", "none");
+                                }
+                            }
+                        });
+            }//else{MsgSalidaModalA("Debe ingresar minimo 20 caracteres para iniciar la búsqueda");}
+        }
+    }else{$('#id_message_carter').css("display", "block");
+       // MsgSalidaModalA("Debe Seleccionar la Cartera");
+    }
+}
+function ConsultaDeudor(cont){
+    var identificacion = $('#IDentify_'+cont).val();
+    var nombreDeudor = $('#NomDeudor_'+cont).val();
+    var tipCartera = $('#TipCartera_'+cont).val();
+    var ClientCartera = $('#ClientCartera_'+cont).val();
+    var IdCliente = $('#idCliente_'+cont).val();
+    var TipIde = $('#TipIde_'+cont).val();
+    var idDeudor=$('#IdeDeudor_'+cont).val();
+    var x = document.getElementById("t_identificacion");
+    x.value = "";
+    x.value = parseInt(TipIde);
+    var i = document.getElementById("identificacion");
+    i.value = "";
+    i.value = identificacion;
+    var n = document.getElementById("nombres");
+    n.value = "";
+    n.value = nombreDeudor;
+    var t = document.getElementById("cartera");
+    t.value = "";
+    t.value = parseInt(IdCliente);
+    var y = document.getElementById("tip_cartera");
+    y.value = "";
+    y.value = tipCartera;
+    var d = document.getElementById("idDeudor");
+    d.value = "";
+    d.value = parseInt(idDeudor);
+    document.getElementById("busc_cuota").disabled = false;
+}
+function Buscarecaudo2() {
     var cartera = $('#cartera').val();
     var oficial = $('#oficial').val();
     var tipo = $('#t_identificacion').val();
@@ -128,6 +228,7 @@ function Buscarecaudo() {
     if ((oficial === "") && (nombres === "")) {
         oficial = 0;
         nombres = "N";
+        
         if (cartera !== "") {
             if (tipo !== "") {
                 if (ide !== "") {
@@ -348,13 +449,16 @@ function txNombres() {
 }
 $(document).ready(function () {
     $("#nombres").keyup(function () {
+        var cartera = $('#cartera').val();
+        if (cartera !== "") {
+            $.get("recaudacion?accion=autocomplete&cartera="+cartera, {company: $(this).val()}, function (data) {
+                $("datalist").empty();
+                $("datalist").html(data);
 
-        $.get("recaudacion?accion=autocomplete", {company: $(this).val()}, function (data) {
-            $("datalist").empty();
-            $("datalist").html(data);
-
-        });
-
+            });
+        } else {
+            MsgSalidaModalA("Debe seleccionar la cartera del cliente");
+        }
     });
 });
 function Recaudacion(stridCuota) {
@@ -423,10 +527,10 @@ function Actualizar_saldo(strsaldo, strcont) {
         document.getElementById("saldo_" + cont).disabled = true;
         var x = document.getElementById("saldo_" + cont);
         x.value = "";
-        x.value = total_saldo;
-        if(parseFloat(total_saldo) < 0){
+        x.value = Number(total_saldo).toFixed(2);
+        if(parseFloat(Number(total_saldo).toFixed(2)) < 0){
         document.getElementById("saldo_" + cont).style.color = "#f00";
-        }
+        }else{document.getElementById("saldo_" + cont).style.color = "#00a65a";}
         }
         Suma_totales();
 }
@@ -558,8 +662,9 @@ if(PagoTarjCred===""){
     PagoTarjCred=0;
 }
 
-var tttotal = parseInt(PagoEfectivo)+parseInt(PagoCheque)+parseInt(PagoTarjCred);
-if(tttotal!==parseFloat(valorecaudacion)){
+var tttotal = Number(PagoEfectivo)+Number(PagoCheque)+Number(PagoTarjCred);
+alert(tttotal);
+if(Number(tttotal).toFixed(2)!==Number(valorecaudacion).toFixed(2)){
     MsgSalidaModalA("Los valores registrados en la FORMA DE PAGO deben ser igual al Total a Cancelar....");
     return true;  
 }
@@ -611,11 +716,11 @@ var parametros = {
                             }
                         }
                         Guardar_FormaPago(parseInt(response));
-                          var nom_deudor=$("#nombres").val();
+                        var nom_deudor=$("#nombres").val();
                         var identificacion=$("#identificacion").val();                        
                         var idRecaudacion=parseInt(response);
                         //window.open("reportes?idRecaudacion="+idRecaudacion+"&identificacion="+identificacion+"&nom_deudor="+nom_deudor, "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=700,height=1000");
-                        window.open("reportes?idRecaudacion="+idRecaudacion+"&identificacion="+identificacion+"&nom_deudor="+nom_deudor);
+                        window.open("reportes?accion=visualizarGrd&idRecaudacion="+idRecaudacion+"&identificacion="+identificacion+"&nom_deudor="+nom_deudor);
 
                     }
                 }
@@ -679,7 +784,8 @@ function Guardar_FormaPago(stridRecaudacion){
     var num_cuenta = $('#cuenta').val();    
     var accion="Formapago";
     var valorecaudacion = $('#pago').val();
-      if((totalpago !== "")&&(totalpago2 !== "")&&(totalpago3 !== "")){
+     
+    if((totalpago !== "")&&(totalpago2 !== "")&&(totalpago3 !== "")){
 
 
         var suma = Number($('#Valor').val()) + Number($('#Valor2').val()) +Number($('#totalpago').val());
@@ -710,20 +816,21 @@ function Guardar_FormaPago(stridRecaudacion){
                 success: function (response) {
 
                 if (response) {
+                   
                     MsgSalidaModalM(response);
+                    nuevo_pago();
                 }
             }
         });
         }
         
     }
-
     if((totalpago === "")&&(totalpago2 !== "")&&(totalpago3 === "")){
         formaPago = 0; formaPago3 = 0;
         institucion2 = 0;
         totalpago = "0"; totalpago3 = "0";
         num_cuenta = "";
-        if(Number(totalpago2).toFixed(2) === valorecaudacion){
+        if(Number(totalpago2).toFixed(2) === Number(valorecaudacion).toFixed(2)){
         var parametros = {
         "totalpago": totalpago,
         "formaPago": formaPago,
@@ -749,20 +856,23 @@ function Guardar_FormaPago(stridRecaudacion){
                 success: function (response) {
 
                 if (response) {
+                    
                     MsgSalidaModalA(response);
+                    nuevo_pago();
                 }
             }
         });
         }
 
     }
-
     if((totalpago === "")&&(totalpago2 === "")&&(totalpago3 !== "")){
+        
         formaPago2 = 0; formaPago = 0;
         institucion = 0; 
         totalpago2 = "0"; totalpago = "0";
         num_tarjeta = "";
-        if(Number(totalpago3).toFixed(2) === valorecaudacion){
+        if(Number(totalpago3).toFixed(2) === Number(valorecaudacion).toFixed(2)){
+            
             var parametros = {
                 "totalpago": totalpago,
                 "formaPago": formaPago,
@@ -789,6 +899,7 @@ function Guardar_FormaPago(stridRecaudacion){
 
                 if (response) {
                     MsgSalidaModalM(response);
+                    nuevo_pago();
                 }
             }
         });
@@ -797,14 +908,13 @@ function Guardar_FormaPago(stridRecaudacion){
     }
 //        }else{alert("Debe ingresar un numero de Tarjeta Credito");}
 //    }else{alert("Debe ingresar el nombre de la Institucion Financiera");}
-    
     if((totalpago !== "")&&(totalpago2 === "")&&(totalpago3 === "")){
         formaPago2 = 0; formaPago3 = 0;
         institucion = 0; institucion2 = 0;
         totalpago2 = "0"; totalpago3 = "0";
         num_tarjeta = ""; num_cuenta = "";
        // alert("Efectivo");
-        if(Number(totalpago).toFixed(2) === valorecaudacion){
+        if(Number(totalpago).toFixed(2) === Number(valorecaudacion).toFixed(2)){
             var parametros = {
                 "totalpago": totalpago,
                 "formaPago": formaPago,
@@ -828,7 +938,9 @@ function Guardar_FormaPago(stridRecaudacion){
                 success: function (response) {
 
                     if (response) {
+                        
                         MsgSalidaModalM(response);
+                        nuevo_pago();
                     }
                 }
             });
@@ -867,7 +979,9 @@ function Guardar_FormaPago(stridRecaudacion){
                     success: function (response) {
 
                     if (response) {
+                        
                         MsgSalidaModalM(response);
+                        nuevo_pago();
                     }
                 }
             });
@@ -907,7 +1021,9 @@ function Guardar_FormaPago(stridRecaudacion){
                 success: function (response) {
 
                 if (response) {
+                    
                     MsgSalidaModalA(response);
+                    nuevo_pago();
                 }
             }
         });}else{MsgSalidaModalA("Valor debe ser igual al total de pago");}
@@ -946,7 +1062,9 @@ function Guardar_FormaPago(stridRecaudacion){
                 success: function (response) {
 
                 if (response) {
+                    
                     MsgSalidaModalA(response);
+                    nuevo_pago();
                 }
             }
         });
@@ -956,10 +1074,12 @@ function Guardar_FormaPago(stridRecaudacion){
   
 
 }
-
+function nuevo_pago() {
+    jQuery("#page-wrapper").html("<br/><br/><center><img alt='cargando' src='dist/img/hourglass.gif' /><center>");
+    jQuery("#page-wrapper").load("recaudacion?accion=listar1", {}, function () { });
+}
 function EliminaFila(strIdCuota){
     var cuota = strIdCuota;
-    //alert(cuota);
      $("#fila_" + cuota).remove();
      Suma_totales();
 }

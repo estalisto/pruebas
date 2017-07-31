@@ -37,6 +37,7 @@ import org.hibernate.Transaction;
 //import org.json.simple.JSONObject;
 
 import com.laticobsa.modelo.LcClienteResultado;
+import com.laticobsa.modelo.LcRecaudaciones;
 import java.math.MathContext;
 import java.text.SimpleDateFormat;
 import java.util.logging.Level;
@@ -1206,9 +1207,15 @@ String color;
             Conexion conexion=new Conexion();
             PreparedStatement pst;
             ResultSet rs;
-            String valor = "";          
+            String valor = "";  
+            String orderby = "ORDER BY";
+            if(!query.toUpperCase().contains(orderby)){
+                query=query+" ORDER BY s.id_datos_deudor";
+                
+            }
             String SQL="";               
-            SQL=query+" limit 1000";             
+            SQL=query+" limit 1000";  
+            System.out.println("NUeva Consulta: "+query);
             String contenidoTabla="";
             String id_datos_deudor;
             String identificacion;
@@ -1479,28 +1486,31 @@ String color;
     
     public String getTiposGestion(int IDCliente){
         JSONObject json = new JSONObject();
+        JSONArray itemSelectedJson = new JSONArray(); 
         SessionFactory sesion = HibernateUtil.getSessionFactory();
         Session session;
         session = sesion.openSession();
         Transaction tx= session.beginTransaction();
         // hacemos la transaccion     
-        Query q = session.createQuery("from LcTipoGestion  E WHERE E.idCliente=:IDCliente and E.estado= :estado");
-        q.setParameter("IDCliente",IDCliente);
+//        Query q = session.createQuery("from LcTipoGestion  E WHERE E.idCliente=:IDCliente and E.estado= :estado");
+        Query q = session.createQuery("from LcTipoGestion  E WHERE  E.estado= :estado");
+        //q.setParameter("IDCliente",IDCliente);
         q.setParameter("estado","A");
         List<LcTipoGestion> lista=q.list(); 
             for(LcTipoGestion datos:lista )
             {
                System.out.print("Datos: "+datos.getIdCliente());
+               json = new JSONObject();
                json.put("idTipoGestion",datos.getIdTipoGestion());
                json.put("nombreTipoGestion", datos.getNombreTipoGestion());
-               
+               itemSelectedJson.add(json);
                
             }
             
             tx.commit();
             session.close();
 
-         return  json.toString();
+         return  itemSelectedJson.toString();
       
     }
     public String getTiposResultados(int idcliente){
@@ -1556,7 +1566,7 @@ String color;
              json.put("NumCuenta",datos.getNumCuenta());
              json.put("TotalDeuda",datos.getTotalVencidos());
              json.put("TotalVencido",datos.getTotalVencidos());
-             json.put("Pago",datos.getUltimoPago());
+             json.put("Pago",getUltimoPago(idCliente, idDeudor));
             try {
                 valorPagado=rs.getValorRecaudado(datos.getIdEmpresa(),idCliente, idDeudor);
             } catch (SQLException ex) {
@@ -1622,7 +1632,7 @@ String color;
         {
             // System.out.println("ok: "+mrol.getIdTelefono()+", "+mrol.getTelefono());
             // System.out.println("ok: "+mrol.getIdTelefono()+", "+mrol.getLcTiposTelefono().getNombreTipoTlf());
-              json = new JSONObject();
+             json = new JSONObject();
              json.put("TipoTelefono",mrol.getLcTiposTelefono().getNombreTipoTlf());
              json.put("Telefono",mrol.getTelefono());
              json.put("Llamar","<a  href='#' ><span class='glyphicon glyphicon-phone-alt' aria-hidden='true'></span></a>");
@@ -1807,7 +1817,87 @@ String color;
 
          return  itemSelectedJson.toString();
     }
+    public BigDecimal getUltimoPago(int idCliente,int idDeudor){
+        BigDecimal UltimoPago=BigDecimal.ZERO;
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        Query q = session.createQuery("from LcRecaudaciones  E WHERE  E.lcDatosDeudores.idDatosDeudor = :idDeudor  and   E.idCliente= :idCliente and  E.estado= :estado order by E.fechaRegistro DESC");       
+        q.setParameter("idCliente",idCliente);
+        q.setParameter("idDeudor",idDeudor);
+        q.setParameter("estado","A");
+        List<LcRecaudaciones> lista=q.list();
+         for(LcRecaudaciones datos:lista )
+        {
+            UltimoPago=UltimoPago.add(datos.getValorRecaudado());
+            
+        }
+          tx.commit();
+        session.close();
+
+         return  UltimoPago;
+    }
     
+     public int seq_query(String str_query) {
+        try{
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        String orderby = "ORDER BY";
+            if(!str_query.toUpperCase().contains(orderby)){
+                str_query=str_query+" ORDER BY s.id_datos_deudor";
+                
+            }
+        
+        Query query = session.createSQLQuery( "select ejecuta_sql('"+str_query+"')" );
+        int secuencia = ((Integer) query.uniqueResult());   
+        tx.commit();  
+        session.close();
+        return secuencia;
+        } catch (Exception e) {
+            System.out.println("Error Laticobsa: Al consultar la funcion ejecuta_sql");
+            e.printStackTrace();
+            return 0;
+        }
+    }
+     
+      public int getSiguiente(int secuencia, int idDeudor) {
+        try{
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        Query query = session.createSQLQuery( "select fnc_siguiente("+secuencia+","+idDeudor+")");
+        int idDeudorSig = ((Integer) query.uniqueResult());   
+        tx.commit();  
+        session.close();
+        return idDeudorSig;
+        } catch (Exception e) {
+            System.out.println("Error Laticobsa: Al consultar la funcion fnc_siguiente");
+            e.printStackTrace();
+            return 0;
+        }
+    }
+       public int getAnteiror(int secuencia, int idDeudor) {
+      
+       try{
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        Query query = session.createSQLQuery( "select fnc_anterior("+secuencia+","+idDeudor+")");
+        int idDeudorAnt = ((Integer) query.uniqueResult());   
+        tx.commit();  
+        session.close();
+        return idDeudorAnt;
+        } catch (Exception e) {
+            System.out.println("Error Laticobsa: Al consultar la funcion fnc_anterior");
+            e.printStackTrace();
+            return 0;
+        }
+    }
     
     /*
     

@@ -93,6 +93,10 @@
         <servlet-name>DocumentosController</servlet-name>
         <servlet-class>com.laticobsa.controller.DocumentosController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CuadreCajaController</servlet-name>
+        <servlet-class>com.laticobsa.controller.CuadreCajaController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -184,6 +188,10 @@
     <servlet-mapping>
         <servlet-name>DocumentosController</servlet-name>
         <url-pattern>/documentos</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CuadreCajaController</servlet-name>
+        <url-pattern>/cuadrecaja</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

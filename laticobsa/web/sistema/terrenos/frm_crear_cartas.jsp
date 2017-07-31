@@ -26,7 +26,7 @@
 
         <div class="box box-danger">
             <div class="box-header with-border bg-yellow"   >
-              <h3 class="box-title" >Plantillas</h3>
+              <h3 class="box-title" >Crear Plantillas de Documentos</h3>
             </div>
               <form name="form" action="empleados" method="get" class="well">
                 

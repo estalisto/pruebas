@@ -1,5 +1,5 @@
 package com.laticobsa.modelo;
-// Generated 22-jul-2017 13:48:47 by Hibernate Tools 4.3.1
+// Generated 31-jul-2017 17:40:44 by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -24,6 +24,7 @@ public class LcRecaudaciones  implements java.io.Serializable {
      private Date fechaActualizado;
      private String estado;
      private String descripcionCarga;
+     private String origen;
      private Set lcFormapagoRecaudacions = new HashSet(0);
      private Set lcDetRecaudacioneses = new HashSet(0);
 
@@ -34,7 +35,7 @@ public class LcRecaudaciones  implements java.io.Serializable {
     public LcRecaudaciones(int idRecaudacion) {
         this.idRecaudacion = idRecaudacion;
     }
-    public LcRecaudaciones(int idRecaudacion, LcDatosDeudores lcDatosDeudores, Integer idEmpresa, Integer idAgencia, Integer idCliente, Integer idEmpleado, BigDecimal valorRecaudado, Date fechaRegistro, Date fechaActualizado, String estado, String descripcionCarga, Set lcFormapagoRecaudacions, Set lcDetRecaudacioneses) {
+    public LcRecaudaciones(int idRecaudacion, LcDatosDeudores lcDatosDeudores, Integer idEmpresa, Integer idAgencia, Integer idCliente, Integer idEmpleado, BigDecimal valorRecaudado, Date fechaRegistro, Date fechaActualizado, String estado, String descripcionCarga, String origen, Set lcFormapagoRecaudacions, Set lcDetRecaudacioneses) {
        this.idRecaudacion = idRecaudacion;
        this.lcDatosDeudores = lcDatosDeudores;
        this.idEmpresa = idEmpresa;
@@ -46,6 +47,7 @@ public class LcRecaudaciones  implements java.io.Serializable {
        this.fechaActualizado = fechaActualizado;
        this.estado = estado;
        this.descripcionCarga = descripcionCarga;
+       this.origen = origen;
        this.lcFormapagoRecaudacions = lcFormapagoRecaudacions;
        this.lcDetRecaudacioneses = lcDetRecaudacioneses;
     }
@@ -126,6 +128,13 @@ public class LcRecaudaciones  implements java.io.Serializable {
     
     public void setDescripcionCarga(String descripcionCarga) {
         this.descripcionCarga = descripcionCarga;
+    }
+    public String getOrigen() {
+        return this.origen;
+    }
+    
+    public void setOrigen(String origen) {
+        this.origen = origen;
     }
     public Set getLcFormapagoRecaudacions() {
         return this.lcFormapagoRecaudacions;

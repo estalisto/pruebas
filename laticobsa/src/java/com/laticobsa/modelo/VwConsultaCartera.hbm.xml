@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 22-jul-2017 13:49:09 by Hibernate Tools 4.3.1 -->
+<!-- Generated 31-jul-2017 17:41:12 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="com.laticobsa.modelo.VwConsultaCartera" table="vw_consulta_cartera" schema="public" optimistic-lock="version">
         <composite-id name="id" class="com.laticobsa.modelo.VwConsultaCarteraId">
@@ -35,8 +35,8 @@
             <key-property name="saldo" type="big_decimal">
                 <column name="saldo" precision="131089" scale="0" />
             </key-property>
-            <key-property name="valorCompro" type="java.lang.Integer">
-                <column name="valor_compro" />
+            <key-property name="valorCompro" type="big_decimal">
+                <column name="valor_compro" precision="131089" scale="0" />
             </key-property>
             <key-property name="fechaComp" type="string">
                 <column name="fecha_comp" />
