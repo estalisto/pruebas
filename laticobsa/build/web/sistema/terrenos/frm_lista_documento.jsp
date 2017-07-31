@@ -12,9 +12,12 @@
     "http://www.w3.org/TR/html4/loose.dtd">
 
 
-    <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css">
+</head>
 <div> 
       <section class="content">
           <a href="#" onclick="frm_crear_cartas()" class="btn btn-success"  >Agregar +</a>
@@ -22,7 +25,7 @@
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Mis Documentos</h3>
+              <h3 class="box-title">Tipos de Documentos</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body" style="overflow-x:scroll;">
@@ -48,9 +51,10 @@
                           <td><a  href="usuarios?accion=editar" ><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
                               <a href="usuarios?accion=eliminar"> <span  class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
                               <a href="usuarios?accion=ver"> <span  class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
-                          </td>                 
+                          </td> 
+                        </tr>                 
                     </c:forEach>                           
-                        </tr>   
+                          
                 </tbody>
               </table>
             </div>
@@ -64,22 +68,17 @@
       </div>
       <!-- /.row -->
     </section>
-   
-      
+     
       
       
   </div>
 <script src="dist/js/documento.js"></script>   
 <script>
   $(function () {
-    $("#example1").DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": true,
-      "ordering": true,
-      "info": false,
-      "autoWidth": false
-    });
+       $('#example').DataTable({
+           
+       )};
+    $("#example1").DataTable();
   });
 </script>
 </body>

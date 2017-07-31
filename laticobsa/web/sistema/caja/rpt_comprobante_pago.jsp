@@ -40,7 +40,7 @@ parameters.put("nombre_sesion", nombre_sesion);
 parameters.put("idRecaudacion", idRecaudacion); 
 
 /*Enviamos la ruta del reporte, los parámetros y la conexión(objeto Connection)*/ 
-byte[] bytes = JasperRunManager.runReportToPdf(reportFile.getPath(), parameters, conexion.getconexion2()); 
+byte[] bytes = JasperRunManager.runReportToPdf(reportFile.getPath(), parameters, conexion.getconexion()); 
 /*Indicamos que la respuesta va a ser en formato PDF*/ response.setContentType("application/pdf");
 
 response.setContentLength(bytes.length); 

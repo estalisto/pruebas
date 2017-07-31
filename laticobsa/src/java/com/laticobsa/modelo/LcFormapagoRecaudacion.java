@@ -1,5 +1,5 @@
 package com.laticobsa.modelo;
-// Generated 22-jul-2017 13:48:47 by Hibernate Tools 4.3.1
+// Generated 31-jul-2017 17:40:44 by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -13,7 +13,7 @@ public class LcFormapagoRecaudacion  implements java.io.Serializable {
 
      private int idFormpago;
      private LcRecaudaciones lcRecaudaciones;
-     private Integer tipoFormaPago;
+     private LcTipoFormaPago lcTipoFormaPago;
      private BigDecimal totalRecaudado;
      private Integer idEntidadFinanciera;
      private String numCheque;
@@ -30,10 +30,10 @@ public class LcFormapagoRecaudacion  implements java.io.Serializable {
     public LcFormapagoRecaudacion(int idFormpago) {
         this.idFormpago = idFormpago;
     }
-    public LcFormapagoRecaudacion(int idFormpago, LcRecaudaciones lcRecaudaciones, Integer tipoFormaPago, BigDecimal totalRecaudado, Integer idEntidadFinanciera, String numCheque, String numTarjetaCred, Date fechaCobro, Date fechaRegistro, Date fechaActualizado, String estado) {
+    public LcFormapagoRecaudacion(int idFormpago, LcRecaudaciones lcRecaudaciones, LcTipoFormaPago lcTipoFormaPago, BigDecimal totalRecaudado, Integer idEntidadFinanciera, String numCheque, String numTarjetaCred, Date fechaCobro, Date fechaRegistro, Date fechaActualizado, String estado) {
        this.idFormpago = idFormpago;
        this.lcRecaudaciones = lcRecaudaciones;
-       this.tipoFormaPago = tipoFormaPago;
+       this.lcTipoFormaPago = lcTipoFormaPago;
        this.totalRecaudado = totalRecaudado;
        this.idEntidadFinanciera = idEntidadFinanciera;
        this.numCheque = numCheque;
@@ -58,12 +58,12 @@ public class LcFormapagoRecaudacion  implements java.io.Serializable {
     public void setLcRecaudaciones(LcRecaudaciones lcRecaudaciones) {
         this.lcRecaudaciones = lcRecaudaciones;
     }
-    public Integer getTipoFormaPago() {
-        return this.tipoFormaPago;
+    public LcTipoFormaPago getLcTipoFormaPago() {
+        return this.lcTipoFormaPago;
     }
     
-    public void setTipoFormaPago(Integer tipoFormaPago) {
-        this.tipoFormaPago = tipoFormaPago;
+    public void setLcTipoFormaPago(LcTipoFormaPago lcTipoFormaPago) {
+        this.lcTipoFormaPago = lcTipoFormaPago;
     }
     public BigDecimal getTotalRecaudado() {
         return this.totalRecaudado;

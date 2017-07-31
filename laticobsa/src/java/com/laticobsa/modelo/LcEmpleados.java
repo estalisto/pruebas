@@ -1,5 +1,5 @@
 package com.laticobsa.modelo;
-// Generated 22-jul-2017 13:48:47 by Hibernate Tools 4.3.1
+// Generated 31-jul-2017 17:40:44 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -44,7 +44,6 @@ public class LcEmpleados  implements java.io.Serializable {
 
     public LcEmpleados(int idEmpleado) {
         this.idEmpleado = idEmpleado;
-
     }
     public LcEmpleados(int idEmpleado, LcEmpresa lcEmpresa) {
         this.idEmpleado = idEmpleado;

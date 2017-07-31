@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="638b086d-c13e-444a-8350-6b4d1e0e2e9b">
 	<property name="ireport.zoom" value="1.3310000000000004"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="16"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="nom_cliente" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -30,103 +30,103 @@ and r.id_recaudacion=$P{idRecaudacion}]]>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
-	<title>
-		<band height="146" splitType="Stretch">
+	<pageHeader>
+		<band height="156">
 			<rectangle>
-				<reportElement x="428" y="2" width="122" height="19" uuid="120778b5-ad29-4520-8fb3-8651285f8c0c"/>
+				<reportElement x="424" y="11" width="122" height="19" uuid="120778b5-ad29-4520-8fb3-8651285f8c0c"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="162" y="47" width="266" height="20" uuid="05c95b12-9c67-4469-be5d-2dab708a3788"/>
+				<reportElement x="158" y="56" width="266" height="20" uuid="05c95b12-9c67-4469-be5d-2dab708a3788"/>
 				<textElement>
 					<font fontName="Arial Black" size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[COMPROBANTE DE PAGO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="431" y="2" width="68" height="20" uuid="e1555735-4465-4db8-9188-7059a2f9e318"/>
+				<reportElement x="427" y="11" width="68" height="20" uuid="e1555735-4465-4db8-9188-7059a2f9e318"/>
 				<textElement>
 					<font size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Nº# 000 -]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="389" y="121" width="67" height="20" uuid="fa6293f6-8a70-4548-b3ff-0ad6a3fff0c7"/>
+				<reportElement x="385" y="130" width="67" height="20" uuid="fa6293f6-8a70-4548-b3ff-0ad6a3fff0c7"/>
 				<textElement verticalAlignment="Middle"/>
 				<text><![CDATA[Recaudador:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="12" y="82" width="136" height="20" uuid="27718bfa-754a-4aeb-b661-2580fd91ab75"/>
+				<reportElement x="8" y="91" width="136" height="20" uuid="27718bfa-754a-4aeb-b661-2580fd91ab75"/>
 				<text><![CDATA[Identificación::]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="12" y="102" width="136" height="20" uuid="ea890546-58bc-46f7-84bf-0b6810c695f3"/>
+				<reportElement x="8" y="111" width="136" height="20" uuid="ea890546-58bc-46f7-84bf-0b6810c695f3"/>
 				<text><![CDATA[Nombre Completo:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="12" y="122" width="136" height="20" uuid="599a3952-618c-430a-ab4a-ab50e14ed815"/>
+				<reportElement x="8" y="131" width="136" height="20" uuid="599a3952-618c-430a-ab4a-ab50e14ed815"/>
 				<text><![CDATA[Fecha y hora de Emisión:]]></text>
 			</staticText>
 			<line>
-				<reportElement x="12" y="142" width="532" height="1" uuid="a86e483e-f3e7-42c6-b2ec-ad3493ac312b"/>
+				<reportElement x="8" y="151" width="532" height="1" uuid="a86e483e-f3e7-42c6-b2ec-ad3493ac312b"/>
 			</line>
 			<staticText>
-				<reportElement x="448" y="122" width="87" height="20" uuid="a3817e1a-83b6-4b24-a408-bc2bb8d9fb4d"/>
+				<reportElement x="444" y="131" width="87" height="20" uuid="a3817e1a-83b6-4b24-a408-bc2bb8d9fb4d"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Luis de la Torre]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="4" y="2" width="166" height="20" forecolor="#990000" uuid="8fda2d75-922b-4fc0-8019-6ef77dcc7c40"/>
+				<reportElement x="0" y="11" width="166" height="20" forecolor="#990000" uuid="8fda2d75-922b-4fc0-8019-6ef77dcc7c40"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial Black" size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[LATICOBSA S.A.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="5" y="16" width="166" height="20" uuid="41c7fa5e-3bb7-4be7-bce5-d11736577790"/>
+				<reportElement x="1" y="25" width="166" height="20" uuid="41c7fa5e-3bb7-4be7-bce5-d11736577790"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="false"/>
 				</textElement>
 				<text><![CDATA[RUC:0921243064001]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="5" y="27" width="199" height="20" uuid="fb05fb46-a8ae-452f-8f42-c9058d4121fc"/>
+				<reportElement x="1" y="36" width="199" height="20" uuid="fb05fb46-a8ae-452f-8f42-c9058d4121fc"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="false"/>
 				</textElement>
 				<text><![CDATA[AGENCIA CENTRO - PANAMA Y ROCA]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="148" y="102" width="241" height="20" uuid="a42e2fa8-001e-4fb6-8813-16e425da2713"/>
+				<reportElement x="144" y="111" width="241" height="20" uuid="a42e2fa8-001e-4fb6-8813-16e425da2713"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{nom_cliente}.toString()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="148" y="82" width="241" height="20" uuid="f0b104e0-dba5-4130-bc3c-f9135e513006"/>
+				<reportElement x="144" y="91" width="241" height="20" uuid="f0b104e0-dba5-4130-bc3c-f9135e513006"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{identificacion}.toString()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="499" y="2" width="51" height="20" uuid="9d78cb81-e443-4989-bf51-244c85f231e4"/>
+				<reportElement x="495" y="11" width="51" height="20" uuid="9d78cb81-e443-4989-bf51-244c85f231e4"/>
 				<textElement verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{idRecaudacion}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="148" y="121" width="241" height="20" uuid="932d2758-2c89-4c62-bd09-a849c6995ada"/>
+				<reportElement x="144" y="130" width="241" height="20" uuid="932d2758-2c89-4c62-bd09-a849c6995ada"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{fecha_trx}.toString()]]></textFieldExpression>
 			</textField>
 		</band>
-	</title>
+	</pageHeader>
 	<columnHeader>
 		<band height="25" splitType="Stretch">
 			<rectangle>

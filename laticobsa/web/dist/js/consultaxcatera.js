@@ -245,11 +245,11 @@ function orderDiasMora(){
     if(orden_dia==="0" || orden_dia===""){
        document.getElementById("IdDiasMora").value="1"; //ascendente    Menor a Mayor      
      orden_dia=document.getElementById("IdDiasMora").value;
-     order_by = " ORDER BY s.dias_mora ASC";
+     order_by = " ORDER BY s.dias_mora ASC, s.id_datos_deudor ";
     }else{
          document.getElementById("IdDiasMora").value="0";   //descendente    Mayor a Menor  
     orden_dia=document.getElementById("IdDiasMora").value;
-    order_by = " ORDER BY s.dias_mora DESC";
+    order_by = " ORDER BY s.dias_mora DESC, s.id_datos_deudor ";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("DiasMoraID").disabled="true";
@@ -298,11 +298,11 @@ function orderFchGestion(){
     if(orden_Fecha==="0" || orden_Fecha===""){
        document.getElementById("IdFechaUlt").value="1"; //ascendente    Menor a Mayor      
      orden_Fecha=document.getElementById("IdFechaUlt").value;
-      order_by = " ORDER BY s.fech_ultima_gestion ASC";
+      order_by = " ORDER BY s.fech_ultima_gestion ASC, s.id_datos_deudor ";
     }else{
          document.getElementById("IdFechaUlt").value="0";   //descendente    Mayor a Menor  
     orden_Fecha=document.getElementById("IdFechaUlt").value;
-     order_by = " ORDER BY s.fech_ultima_gestion DESC";
+     order_by = " ORDER BY s.fech_ultima_gestion DESC, s.id_datos_deudor";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("FechaID").disabled="true";
@@ -349,11 +349,11 @@ function orderTotalVenc(){
     if(orden_total==="0" || orden_total===""){
        document.getElementById("IdTotalVenc").value="1"; //ascendente    Menor a Mayor      
      orden_total=document.getElementById("IdTotalVenc").value;
-      order_by = " ORDER BY s.total_vencidos ASC";
+      order_by = " ORDER BY s.total_vencidos ASC, s.id_datos_deudor ";
     }else{
          document.getElementById("IdTotalVenc").value="0";   //descendente    Mayor a Menor  
     orden_total=document.getElementById("IdTotalVenc").value;
-     order_by = " ORDER BY s.total_vencidos DESC";
+     order_by = " ORDER BY s.total_vencidos DESC, s.id_datos_deudor ";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("TotalID").disabled="true";
@@ -397,11 +397,11 @@ function orderIdent(){
     if(orden_IDE==="0" || orden_IDE===""){
        document.getElementById("IdIdentificacion").value="1"; //ascendente    Menor a Mayor      
      orden_IDE=document.getElementById("IdIdentificacion").value;
-     order_by = " ORDER BY s.identificacion ASC";
+     order_by = " ORDER BY s.identificacion ASC, s.id_datos_deudor ";
     }else{
          document.getElementById("IdIdentificacion").value="0";   //descendente    Mayor a Menor  
     orden_IDE=document.getElementById("IdIdentificacion").value;
-    order_by = " ORDER BY s.identificacion DESC";
+    order_by = " ORDER BY s.identificacion DESC, s.id_datos_deudor ";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("IdentificacionID").disabled="true";
@@ -446,11 +446,11 @@ function orderNombre(){
     if(orden_Nombre==="0" || orden_Nombre===""){
        document.getElementById("IdNombres").value="1"; //ascendente    Menor a Mayor      
      orden_Nombre=document.getElementById("IdNombres").value;
-      order_by = " ORDER BY s.nombres_completo ASC";
+      order_by = " ORDER BY s.nombres_completo ASC, s.id_datos_deudor ";
     }else{
          document.getElementById("IdNombres").value="0";   //descendente    Mayor a Menor  
     orden_Nombre=document.getElementById("IdNombres").value;
-     order_by = " ORDER BY s.nombres_completo DESC";
+     order_by = " ORDER BY s.nombres_completo DESC, s.id_datos_deudor ";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("NombresID").disabled="true";
@@ -496,11 +496,11 @@ function orderPagos(){
     if(orden_Pago==="0" || orden_Pago===""){
        document.getElementById("IdPagos").value="1"; //ascendente    Menor a Mayor      
      orden_Pago=document.getElementById("IdPagos").value;
-     order_by = " ORDER BY s.pagos ASC";
+     order_by = " ORDER BY s.pagos ASC, s.id_datos_deudor ";
     }else{
          document.getElementById("IdPagos").value="0";   //descendente    Mayor a Menor  
     orden_Pago=document.getElementById("IdPagos").value;
-    order_by = " ORDER BY s.pagos DESC";
+    order_by = " ORDER BY s.pagos DESC, s.id_datos_deudor ";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("PagosID").disabled="true";
@@ -547,11 +547,11 @@ function orderSaldo(){
     if(orden_Saldo==="0" || orden_Saldo===""){
        document.getElementById("IdSaldo").value="1"; //ascendente    Menor a Mayor      
      orden_Saldo=document.getElementById("IdSaldo").value;
-     order_by = " ORDER BY s.saldo ASC";
+     order_by = " ORDER BY s.saldo ASC, s.id_datos_deudor ";
     }else{
          document.getElementById("IdSaldo").value="0";   //descendente    Mayor a Menor  
     orden_Saldo=document.getElementById("IdSaldo").value;
-    order_by = " ORDER BY s.saldo DESC";
+    order_by = " ORDER BY s.saldo DESC, s.id_datos_deudor ";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("SaldosID").disabled="true";
@@ -598,11 +598,11 @@ function orderValorComp(){
     if(orden_ValorComp==="0" || orden_ValorComp===""){
        document.getElementById("IdValorComp").value="1"; //ascendente    Menor a Mayor      
      orden_ValorComp=document.getElementById("IdValorComp").value;
-     order_by = " ORDER BY s.valor_compro ASC";
+     order_by = " ORDER BY s.valor_compro ASC, s.id_datos_deudor ";
     }else{
          document.getElementById("IdValorComp").value="0";   //descendente    Mayor a Menor  
     orden_ValorComp=document.getElementById("IdValorComp").value;
-    order_by = " ORDER BY s.valor_compro DESC";
+    order_by = " ORDER BY s.valor_compro DESC, s.id_datos_deudor ";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("ValorCompID").disabled="true";
@@ -648,11 +648,11 @@ function orderFechaComp(){
     if(orden_FechaComp==="0" || orden_FechaComp===""){
        document.getElementById("IdFechaComp").value="1"; //ascendente    Menor a Mayor      
        orden_FechaComp=document.getElementById("IdFechaComp").value;
-        order_by = " ORDER BY s.fecha_comp ASC";
+        order_by = " ORDER BY s.fecha_comp ASC, s.id_datos_deudor ";
     }else{
          document.getElementById("IdFechaComp").value="0";   //descendente    Mayor a Menor  
         orden_FechaComp=document.getElementById("IdFechaComp").value;
-         order_by = " ORDER BY s.fecha_comp DESC";
+         order_by = " ORDER BY s.fecha_comp DESC, s.id_datos_deudor ";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("FechaCompID").disabled="true";
@@ -698,11 +698,11 @@ function orderUltima(){
     if(orden_Ultima==="0" || orden_Ultima===""){
        document.getElementById("IdUltima").value="1"; //ascendente    Menor a Mayor      
        orden_Ultima=document.getElementById("IdUltima").value;
-       order_by = " ORDER BY s.ultima_gestion ASC";
+       order_by = " ORDER BY s.ultima_gestion ASC, s.id_datos_deudor ";
     }else{
          document.getElementById("IdUltima").value="0";   //descendente    Mayor a Menor  
          orden_Ultima=document.getElementById("IdUltima").value;
-         order_by = " ORDER BY s.ultima_gestion DESC";
+         order_by = " ORDER BY s.ultima_gestion DESC, s.id_datos_deudor ";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("UltimaID").disabled="true";
@@ -746,11 +746,11 @@ function orderResultado(){
     if(orden_Resultado==="0" || orden_Resultado===""){
        document.getElementById("IdResultado").value="1"; //ascendente    Menor a Mayor      
      orden_Resultado=document.getElementById("IdResultado").value;
-        order_by = " ORDER BY s.resultado_gestion ASC";
+        order_by = " ORDER BY s.resultado_gestion ASC, s.id_datos_deudor ";
     }else{
          document.getElementById("IdResultado").value="0";   //descendente    Mayor a Menor  
     orden_Resultado=document.getElementById("IdResultado").value;
-       order_by = " ORDER BY s.resultado_gestion DESC";
+       order_by = " ORDER BY s.resultado_gestion DESC, s.id_datos_deudor ";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("ResultadoID").disabled="true";
@@ -795,11 +795,11 @@ function orderFechaUltPagos(){
     if(orden_FechaUltPagos==="0" || orden_FechaUltPagos===""){
       document.getElementById("IdFecUltPagos").value="1"; //ascendente    Menor a Mayor      
      orden_FechaUltPagos=document.getElementById("IdFecUltPagos").value;
-      order_by = " ORDER BY s.fecha_ult_pagos ASC";
+      order_by = " ORDER BY s.fecha_ult_pagos ASC, s.id_datos_deudor ";
     }else{
          document.getElementById("IdFecUltPagos").value="0";   //descendente    Mayor a Menor  
     orden_FechaUltPagos=document.getElementById("IdFecUltPagos").value;
-     order_by = " ORDER BY s.fecha_ult_pagos DESC";
+     order_by = " ORDER BY s.fecha_ult_pagos DESC, s.id_datos_deudor ";
     }
     $('#id_loader').css("display", "block");
     document.getElementById("FecUltPagosID").disabled="true";
@@ -856,7 +856,7 @@ function consulta_filtro_cartera(){
     var cartera = $("#cartera").val();
     var accion = "nuevaConsulta";
     var order_by=$('#order_by').val();
-    var sqlQuery=" select * from vw_consulta_cartera s  where s.id_cliente=IDClienteConsulta and s.id_empleado=IDEmpleadoConsulta ";
+    var sqlQuery=" select * from vw_consulta_cartera s  where s.id_cliente=IDClienteConsulta and s.id_empleado=IDEmpleadoConsulta and s.estado != 'E'";
     
     //
    var fmontos="";
@@ -962,6 +962,8 @@ function consulta_filtro_cartera(){
         }
     });
     
+   consulta_sec(sqlQuery,cartera);
+    
  // alert(sqlQuery);
 }
 
@@ -991,7 +993,7 @@ function consulta_query(sqlQuery,cartera){
             }      
         }
     });
-    
+     consulta_sec(sqlQuery,cartera);
 }
 
 
@@ -1056,7 +1058,12 @@ $("#gestion").append($("<option>",{value:"0",text:"Seleccione Tipo Gestión"}));
           $.each(result.tipo_gestion, function(key, val){             
           // $("#tgestion").append('<option id="' + val.idTipoGestion + '">' + val.nombreTipoGestion +'</option>');
            $("#tgestion").append($("<option>",{value:val.idTipoGestion,text:val.nombreTipoGestion}));
-           $("#gestion").append($("<option>",{value:val.idTipoGestion,text:val.nombreTipoGestion}));
+           var valor_select = val.nombreTipoGestion;
+          // alert(valor_select);
+           if(valor_select === "LLAMADA CLIENTE"){
+               
+               $("#gestion").append($("<option>",{value:val.idTipoGestion,text:val.nombreTipoGestion}));
+            }
           });
     });
     
@@ -1120,3 +1127,25 @@ function datatableok(){
                     "autoWidth": true
                   }); 
         }
+        
+function consulta_sec(sqlQuery,cartera){
+    var accion="consulta_secuencia";
+     var parametros = {
+        "sqlQuery":sqlQuery,
+        "cartera":cartera,
+        "accion": accion
+    };
+        $.ajax({
+        data: parametros,
+        url: 'consultacartera',
+        type: 'GET',
+        beforeSend: function () {
+        },
+        success: function (response) {
+             document.getElementById("secuencia_query").value = "";   
+             document.getElementById("secuencia_query").value = response.toString(); 
+             
+        }
+    });
+    
+}

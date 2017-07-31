@@ -1,5 +1,5 @@
 package com.laticobsa.modelo;
-// Generated 22-jul-2017 13:48:47 by Hibernate Tools 4.3.1
+// Generated 31-jul-2017 17:40:44 by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -20,7 +20,7 @@ public class VwConsultaCarteraId  implements java.io.Serializable {
      private BigDecimal pagos;
      private String fechaUltPagos;
      private BigDecimal saldo;
-     private Integer valorCompro;
+     private BigDecimal valorCompro;
      private String fechaComp;
      private String fechUltimaGestion;
      private String ultimaGestion;
@@ -30,7 +30,7 @@ public class VwConsultaCarteraId  implements java.io.Serializable {
     public VwConsultaCarteraId() {
     }
 
-    public VwConsultaCarteraId(Integer idEmpleado, Integer idDatosDeudor, Integer idCliente, String identificacion, String nombresCompleto, Integer diasMora, BigDecimal totalVencidos, BigDecimal pagos, String fechaUltPagos, BigDecimal saldo, Integer valorCompro, String fechaComp, String fechUltimaGestion, String ultimaGestion, String resultadoGestion, String estado) {
+    public VwConsultaCarteraId(Integer idEmpleado, Integer idDatosDeudor, Integer idCliente, String identificacion, String nombresCompleto, Integer diasMora, BigDecimal totalVencidos, BigDecimal pagos, String fechaUltPagos, BigDecimal saldo, BigDecimal valorCompro, String fechaComp, String fechUltimaGestion, String ultimaGestion, String resultadoGestion, String estado) {
        this.idEmpleado = idEmpleado;
        this.idDatosDeudor = idDatosDeudor;
        this.idCliente = idCliente;
@@ -119,11 +119,11 @@ public class VwConsultaCarteraId  implements java.io.Serializable {
     public void setSaldo(BigDecimal saldo) {
         this.saldo = saldo;
     }
-    public Integer getValorCompro() {
+    public BigDecimal getValorCompro() {
         return this.valorCompro;
     }
     
-    public void setValorCompro(Integer valorCompro) {
+    public void setValorCompro(BigDecimal valorCompro) {
         this.valorCompro = valorCompro;
     }
     public String getFechaComp() {
