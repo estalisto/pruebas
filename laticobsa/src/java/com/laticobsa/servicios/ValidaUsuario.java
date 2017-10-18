@@ -233,5 +233,15 @@ public class ValidaUsuario {
         return false;
             
     }
-    
+    public void GuardarAudSesiones(int IDusuario,String Ip,String hostname,String descripcion) throws SQLException{
+             Conexion conexion=new Conexion();
+            PreparedStatement pst;
+            ResultSet rs;
+        pst = conexion.getconexion().prepareCall("SELECT fnc_aud_sesion("+IDusuario+",'"+Ip+"','"+hostname+"','"+descripcion+"');");   
+        //connBD.createStatement();
+        rs = pst.executeQuery();       
+        rs.close();    
+        pst.close();
+        conexion.cierraConexion();
+    }
 }

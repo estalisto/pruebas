@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 09-jul-2017 23:23:36 by Hibernate Tools 4.3.1 -->
+<!-- Generated 30-ago-2017 1:41:38 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="com.laticobsa.modelo.VwConsultaCartera" table="vw_consulta_cartera" schema="public" optimistic-lock="version">
         <composite-id name="id" class="com.laticobsa.modelo.VwConsultaCarteraId">
@@ -27,7 +27,7 @@
                 <column name="total_vencidos" precision="10" />
             </key-property>
             <key-property name="pagos" type="big_decimal">
-                <column name="pagos" precision="10" />
+                <column name="pagos" precision="131089" scale="0" />
             </key-property>
             <key-property name="fechaUltPagos" type="string">
                 <column name="fecha_ult_pagos" />
@@ -35,8 +35,8 @@
             <key-property name="saldo" type="big_decimal">
                 <column name="saldo" precision="131089" scale="0" />
             </key-property>
-            <key-property name="valorCompro" type="java.lang.Integer">
-                <column name="valor_compro" />
+            <key-property name="valorCompro" type="big_decimal">
+                <column name="valor_compro" precision="131089" scale="0" />
             </key-property>
             <key-property name="fechaComp" type="string">
                 <column name="fecha_comp" />

@@ -1,5 +1,5 @@
 package com.laticobsa.modelo;
-// Generated 09-jul-2017 23:23:34 by Hibernate Tools 4.3.1
+// Generated 30-ago-2017 1:41:34 by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;

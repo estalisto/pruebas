@@ -93,6 +93,34 @@
         <servlet-name>DocumentosController</servlet-name>
         <servlet-class>com.laticobsa.controller.DocumentosController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CuadreCajaController</servlet-name>
+        <servlet-class>com.laticobsa.controller.CuadreCajaController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>NuevoPagoController</servlet-name>
+        <servlet-class>com.laticobsa.controller.NuevoPagoController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AsignacionCarteraController</servlet-name>
+        <servlet-class>com.laticobsa.controller.AsignacionCarteraController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MisReportes</servlet-name>
+        <servlet-class>com.laticobsa.controller.MisReportes</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GenerarDocumentos</servlet-name>
+        <servlet-class>com.laticobsa.controller.GenerarDocumentos</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RecepcionDocumentoController</servlet-name>
+        <servlet-class>com.laticobsa.controller.RecepcionDocumentoController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ConsultaClienteController</servlet-name>
+        <servlet-class>com.laticobsa.controller.ConsultaClienteController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -184,6 +212,34 @@
     <servlet-mapping>
         <servlet-name>DocumentosController</servlet-name>
         <url-pattern>/documentos</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CuadreCajaController</servlet-name>
+        <url-pattern>/cuadrecaja</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>NuevoPagoController</servlet-name>
+        <url-pattern>/nuevopago</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AsignacionCarteraController</servlet-name>
+        <url-pattern>/asignacioncartera</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MisReportes</servlet-name>
+        <url-pattern>/misreportes</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GenerarDocumentos</servlet-name>
+        <url-pattern>/generardocumentos</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RecepcionDocumentoController</servlet-name>
+        <url-pattern>/recepcion</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ConsultaClienteController</servlet-name>
+        <url-pattern>/consultacliente</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -1,5 +1,5 @@
 package com.laticobsa.modelo;
-// Generated 09-jul-2017 23:23:34 by Hibernate Tools 4.3.1
+// Generated 30-ago-2017 1:41:34 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -13,11 +13,12 @@ public class LcTipoResultado  implements java.io.Serializable {
 
 
      private int idTipoResultado;
-     private LcTipoGestion lcTipoGestion;
+     private Integer idTipoGestion;
      private String nombreTipoResultado;
      private String observacion;
      private Date fechaRegistro;
      private String estado;
+     private Set lcClienteResultados = new HashSet(0);
      private Set lcGestioneses = new HashSet(0);
 
     public LcTipoResultado() {
@@ -27,13 +28,14 @@ public class LcTipoResultado  implements java.io.Serializable {
     public LcTipoResultado(int idTipoResultado) {
         this.idTipoResultado = idTipoResultado;
     }
-    public LcTipoResultado(int idTipoResultado, LcTipoGestion lcTipoGestion, String nombreTipoResultado, String observacion, Date fechaRegistro, String estado, Set lcGestioneses) {
+    public LcTipoResultado(int idTipoResultado, Integer idTipoGestion, String nombreTipoResultado, String observacion, Date fechaRegistro, String estado, Set lcClienteResultados, Set lcGestioneses) {
        this.idTipoResultado = idTipoResultado;
-       this.lcTipoGestion = lcTipoGestion;
+       this.idTipoGestion = idTipoGestion;
        this.nombreTipoResultado = nombreTipoResultado;
        this.observacion = observacion;
        this.fechaRegistro = fechaRegistro;
        this.estado = estado;
+       this.lcClienteResultados = lcClienteResultados;
        this.lcGestioneses = lcGestioneses;
     }
    
@@ -44,12 +46,12 @@ public class LcTipoResultado  implements java.io.Serializable {
     public void setIdTipoResultado(int idTipoResultado) {
         this.idTipoResultado = idTipoResultado;
     }
-    public LcTipoGestion getLcTipoGestion() {
-        return this.lcTipoGestion;
+    public Integer getIdTipoGestion() {
+        return this.idTipoGestion;
     }
     
-    public void setLcTipoGestion(LcTipoGestion lcTipoGestion) {
-        this.lcTipoGestion = lcTipoGestion;
+    public void setIdTipoGestion(Integer idTipoGestion) {
+        this.idTipoGestion = idTipoGestion;
     }
     public String getNombreTipoResultado() {
         return this.nombreTipoResultado;
@@ -78,6 +80,13 @@ public class LcTipoResultado  implements java.io.Serializable {
     
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+    public Set getLcClienteResultados() {
+        return this.lcClienteResultados;
+    }
+    
+    public void setLcClienteResultados(Set lcClienteResultados) {
+        this.lcClienteResultados = lcClienteResultados;
     }
     public Set getLcGestioneses() {
         return this.lcGestioneses;

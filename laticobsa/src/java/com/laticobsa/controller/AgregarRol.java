@@ -7,9 +7,13 @@ package com.laticobsa.controller;
 
 import com.laticobsa.modelo.LcEmpresa;
 import com.laticobsa.servicios.EmpresaServicios;
+import com.laticobsa.utils.ArchivoLog;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -36,8 +40,10 @@ public class AgregarRol extends HttpServlet {
        response.setContentType("text/html;charset=UTF-8");
        EmpresaServicios es =new EmpresaServicios();
        PrintWriter out = response.getWriter();
+       ArchivoLog grb = new ArchivoLog();
        HttpSession sesion = request.getSession(true);
        String id_empresas;    
+       try{
        id_empresas = sesion.getAttribute("Sstrempresa").toString();
        int EmpresaID= Integer.parseInt(id_empresas);
        int accesoROLES= Integer.parseInt(sesion.getAttribute("NivelAccesoRolID").toString());
@@ -49,6 +55,10 @@ public class AgregarRol extends HttpServlet {
        request.setAttribute("empresas", empresas); 
      
        request.getRequestDispatcher("sistema/roles/rol.jsp").forward(request, response);
+       } catch (Exception ex) {
+                try{grb.grabaLog("AgregarRol_Agregar roles  Error Java: "+ex.getMessage());}catch(IOException e){}
+                Logger.getLogger(AgregarRol.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

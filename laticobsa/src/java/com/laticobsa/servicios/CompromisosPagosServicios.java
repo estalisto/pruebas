@@ -118,7 +118,8 @@ public List<LcCompromisosPago> getLcCompromisosPago(Date fechaCompromiso, int ID
                     + "from lc_transacciones t, lc_compromisos_pago c ,lc_datos_deudores d\n"
                     + "where t.id_deudor=c.id_deudor and t.id_empleado = " + IDEmpleado + "\n"
                     + "and c.id_deudor=d.id_datos_deudor\n"
-                    + "and c.fecha_compromiso >='" + result + "'  order by c.fecha_compromiso";
+                    + "and c.id_cliente=t.id_cliente\n" +
+"and c.estado='A' and c.fecha_compromiso >='" + result + "' and t.estado!='E' order by c.fecha_compromiso";
             
             String contenido = "<tbody>",footer="";
             String id_compromiso, fecha_registro, nombre_deudor, fecha_compromiso, valor_compromiso;
@@ -154,15 +155,7 @@ public List<LcCompromisosPago> getLcCompromisosPago(Date fechaCompromiso, int ID
                                   
                                     "</tfoot>";
             
-          /*  footer="</tbody><tfoot> \n" +
-
-"<th> Total Compromiso: </th>  \n" +
-"<th><strong>$ "+suma+"</strong></th>\n" +
-"<th></th>\n" +
-"<th></th>\n" +
-"<th></th> \n" +
-"<th></th> \n" +
-"</tfoot>";*/   
+ 
             
                 rs.close();
                 pst.close();

@@ -216,7 +216,7 @@ public class EmpleadosController extends HttpServlet {
                             fecha_nac, email, telefono,
                             celular, dir_domicilio, profesion.toUpperCase(),
                             jefe_directo, observacion.toUpperCase(),
-                            fecha_reg, fecha_reg, "A", null, null, null,null));
+                            fecha_reg, fecha_reg, "A", null, null, null,null,null));
                     
                         response.getWriter().println("Nuevo Empleado Registrado");
                     

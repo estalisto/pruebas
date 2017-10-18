@@ -57,13 +57,13 @@
                     
                     </div>
                              <div id="not_found" class="form-group has-error" style="display: none"> <!--hidden-->
-                                <span class="help-block">Empleado Ya posee un Usuario Asignado</span>
+                                <span class="help-block text-danger">Empleado Ya posee un Usuario Asignado</span>
                              </div>
                             <div id="found" class="form-group has-success" style="display: none"> <!--hidden-->
-                                <span class="help-block">Empleado listo para crear Usuario</span>
+                                <span class="help-block text-danger">Empleado listo para crear Usuario</span>
                             </div>
                             <div id="nada" class="form-group has-warning" style="display: none"> <!--hidden-->
-                                <span class="help-block">Empleado listo para crear Usuario</span>
+                                <span class="help-block text-danger">Empleado listo para crear Usuario</span>
                             </div> <span id="id_msg"></span>
                 </div>
 

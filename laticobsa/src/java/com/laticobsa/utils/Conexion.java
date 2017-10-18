@@ -50,11 +50,15 @@ public class Conexion {
         Connection cn=null;
         try{
             Class.forName("org.postgresql.Driver");
-            cn=DriverManager.getConnection(url2,"postgres","sebas2008");
+            cn=DriverManager.getConnection(url2,"sgranda","sgranda");
         }catch(ClassNotFoundException | SQLException ex){
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
         return cn;
+    }
+
+    public Connection getConexion() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     

@@ -167,5 +167,131 @@ public class DashcboardOk {
         return cadena;
     
     } 
-     
+    public String ObtenerGestionmeses(int empleado) throws SQLException{
+        String cadena="";
+        pst = conexion.getconexion().prepareCall("SELECT fnc_consulta_grafico("+empleado+");");    
+        //connBD.createStatement();
+        rs = pst.executeQuery();
+        while( rs.next() )    //Mientras haya una sig. tupla
+            {
+            
+            cadena=cadena+rs.getString("fnc_consulta_grafico");
+            //System.out.println(cadena);
+        }
+        
+         rs.close();    
+         pst.close();
+         conexion.cierraConexion();
+        return cadena;
+    
+    } 
+    
+    public String ObtenerGestionmesesHist(String empleado) throws SQLException{
+        String cadena="";
+        pst = conexion.getconexion().prepareStatement("SELECT fnc_ConsultaGestiones("+empleado+");");    
+        rs = pst.executeQuery();
+        while( rs.next() )   
+         {            
+            cadena=cadena+rs.getString("fnc_ConsultaGestiones");
+         }
+         
+         rs.close();    
+         pst.close();
+         conexion.cierraConexion();
+        return cadena;
+      
+    
+    } 
+    
+    
+    public String ObtenerEmpleadosActual() throws SQLException{
+        String cadena="";
+        pst = conexion.getconexion().prepareStatement("select '['''||a.usuario||''','||a.gestiones||'],' campo1\n" +
+"from (\n" +
+"select * from (\n" +
+"	select distinct (u.usuario)as usuario,(count(g.id_empleado))as gestiones from public.lc_gestiones g,public.lc_clientes c,public.lc_empleados e,lc_usuarios u\n" +
+"	where g.id_empleado= e.id_empleado and g.id_cliente= c.id_cliente and e.id_empleado=u.id_empleado and u.id_rol=62\n" +
+"	and g.fecha_transaccion BETWEEN to_date(extract (year  from (select date_trunc('month',current_date)))||'-'||\n" +
+"	extract (month  from (select date_trunc('month',current_date) ))||'-'||\n" +
+"	extract (day  from (select date_trunc('month',current_date))),'YYYY-MM-DD') AND \n" +
+"	to_date(extract (year  from (select date_trunc('month',current_date) +'1month' ::interval  -'1sec' ::interval ))||'-'||\n" +
+"	extract (month  from (select date_trunc('month',current_date)+'1month' ::interval  -'1sec' ::interval )) ||'-'||\n" +
+"	extract (day  from (select date_trunc('month',current_date)+'1month' ::interval  -'1sec' ::interval )),'YYYY-MM-DD' ) group by u.usuario,g.id_empleado\n" +
+") gestiones\n" +
+")a");    
+        //connBD.createStatement();
+        rs = pst.executeQuery();       
+        while( rs.next() )    //Mientras haya una sig. tupla
+            {
+            
+            cadena=cadena+rs.getString("campo1");
+            //System.out.println(cadena);
+        }
+        
+         rs.close();    
+         pst.close();
+         conexion.cierraConexion();
+        return cadena;
+    
+    } 
+    public String ObtenerEmpleadosActualAdmin(int rol) throws SQLException{
+        String cadena="";
+        pst = conexion.getconexion().prepareStatement("select '['''||a.usuario||''','||a.gestiones||'],' campo1\n" +
+"from (\n" +
+"select * from (\n" +
+"	select distinct (u.usuario)as usuario,(count(g.id_empleado))as gestiones from public.lc_gestiones g,public.lc_clientes c,public.lc_empleados e,lc_usuarios u\n" +
+"	where g.id_empleado= e.id_empleado and g.id_cliente= c.id_cliente and e.id_empleado=u.id_empleado and u.id_rol=62\n" +
+"	and g.fecha_transaccion BETWEEN to_date(extract (year  from (select date_trunc('month',current_date)))||'-'||\n" +
+"	extract (month  from (select date_trunc('month',current_date) ))||'-'||\n" +
+"	extract (day  from (select date_trunc('month',current_date))),'YYYY-MM-DD') AND \n" +
+"	to_date(extract (year  from (select date_trunc('month',current_date) +'1month' ::interval  -'1sec' ::interval ))||'-'||\n" +
+"	extract (month  from (select date_trunc('month',current_date)+'1month' ::interval  -'1sec' ::interval )) ||'-'||\n" +
+"	extract (day  from (select date_trunc('month',current_date)+'1month' ::interval  -'1sec' ::interval )),'YYYY-MM-DD' ) group by u.usuario,g.id_empleado\n" +
+") gestiones\n" +
+")a");    
+        //connBD.createStatement();
+        rs = pst.executeQuery();       
+        while( rs.next() )    //Mientras haya una sig. tupla
+            {
+            
+            cadena=cadena+rs.getString("campo1");
+            //System.out.println(cadena);
+        }
+        
+         rs.close();    
+         pst.close();
+         conexion.cierraConexion();
+        return cadena;
+    
+    } 
+    public String ObtenerEmpleadosxcartera(int empleado,int rol) throws SQLException{
+        String cadena="";
+        pst = conexion.getconexion().prepareStatement("select '['''||a.usuario||''','||a.gestiones||'],' campo1\n" +
+"from (\n" +
+"select * from (\n" +
+"	select distinct (c.razon_social)as usuario,(count(g.id_empleado))as gestiones from public.lc_gestiones g,public.lc_clientes c,public.lc_empleados e,lc_usuarios u\n" +
+"	where g.id_empleado= e.id_empleado and g.id_cliente= c.id_cliente and e.id_empleado=u.id_empleado and u.id_rol="+rol+" and g.id_empleado="+empleado+"\n" +
+"	and g.fecha_transaccion BETWEEN to_date(extract (year  from (select date_trunc('month',current_date)))||'-'||\n" +
+"	extract (month  from (select date_trunc('month',current_date) ))||'-'||\n" +
+"	extract (day  from (select date_trunc('month',current_date))),'YYYY-MM-DD') AND \n" +
+"	to_date(extract (year  from (select date_trunc('month',current_date) +'1month' ::interval  -'1sec' ::interval ))||'-'||\n" +
+"	extract (month  from (select date_trunc('month',current_date)+'1month' ::interval  -'1sec' ::interval )) ||'-'||\n" +
+"	extract (day  from (select date_trunc('month',current_date)+'1month' ::interval  -'1sec' ::interval )),'YYYY-MM-DD' ) group by c.razon_social\n" +
+") gestiones\n" +
+")a");    
+        //connBD.createStatement();
+        rs = pst.executeQuery();       
+        while( rs.next() )    //Mientras haya una sig. tupla
+            {
+            
+            cadena=cadena+rs.getString("campo1");
+            //System.out.println(cadena);
+        }
+        
+         rs.close();    
+         pst.close();
+         conexion.cierraConexion();
+        return cadena;
+    
+    } 
 }

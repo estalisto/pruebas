@@ -14,7 +14,7 @@
 <html>
   <head>      
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<link rel="stylesheet" href="dist/css/jquery.datetimepicker.css">   
+<!--link rel="stylesheet" href="dist/css/jquery.datetimepicker.css"-->   
        
   </head>
     <body>
@@ -82,8 +82,8 @@
   
   
   <!-- /.content-wrapper 
-<script src="bootstrap/js/bootstrap-datetimepicker.min.js"></script>-->
-<script src="dist/js/jquery.datetimepicker.full.js"></script>
+<script src="bootstrap/js/bootstrap-datetimepicker.min.js"></script>
+<script src="dist/js/jquery.datetimepicker.full.js"></script>-->
 <script src="dist/js/compromiso_pagos.js"></script> 
 <script src="dist/js/cobranzas.js"></script>
 

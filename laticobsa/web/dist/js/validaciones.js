@@ -127,14 +127,19 @@ if(identificacion.length<1){
                               console.log("respuesta: "+response);
                               var respuest=response.toString();
                                 console.log("valor: "+respuest);
-                              if(respuest==1){
+                                
+                              if(parseInt(respuest)===1){
                                 document.getElementById("id_msg").innerHTML="Identificación no se encuentra asociada a ningun empleado";  
-                              }else  if(respuest==2){
-                               document.getElementById("id_msg").innerHTML="Existen mas de un empleado con la misma identificación";    
-                              }else  if(respuest==3){
+                                document.getElementById("id_msg").style.color="red";
+                              }else  if(parseInt(respuest)===2){
+                               document.getElementById("id_msg").innerHTML="Existen más de un empleado con la misma identificación";    
+                               document.getElementById("id_msg").style.color="red";
+                              }else  if(parseInt(respuest)===3){
                                  document.getElementById("id_msg").innerHTML="Identificacion ya se encuentra asociada a un USUARIO";  
-                              }else  if(respuest==4){
-                                 document.getElementById("id_msg").innerHTML="Listo para crear el usuario";  
+                                 document.getElementById("id_msg").style.color="red";
+                              }else  if(parseInt(respuest)===4){
+                                 document.getElementById("id_msg").innerHTML="Listo para crear el usuario";
+                                 document.getElementById("id_msg").style.color="green";
                                        ComboEmpresa(identificacion);   
                                         document.getElementById("sel_cedula").disabled = true;
                                        document.getElementById("empresa").disabled = false;
@@ -144,6 +149,9 @@ if(identificacion.length<1){
                                        document.getElementById("observaciones").disabled = false;
                                        document.getElementById("btncrearusuario").disabled = false;
                                //  bandera=true;
+                              }else  if(parseInt(respuest)===5){
+                                 document.getElementById("id_msg").innerHTML="Identificacion ya se encuentra asociada a un USUARIO. Debe actualizar la contraseña al Usuario";  
+                                 document.getElementById("id_msg").style.color="red";
                               }
                               /* 
                                if(response){

@@ -103,6 +103,7 @@ function cartera()
 {
         jQuery("#page-wrapper").html("<br/><br/><center><img alt='cargando' src='dist/img/hourglass.gif' /><center>"); 
         jQuery("#page-wrapper").load("cartera?accion=listar",{},function(){ });
+        datatableok();
 }
 
 
@@ -118,7 +119,7 @@ function compropago()
 {
 
      jQuery("#page-wrapper").html("<br/><br/><center><img alt='cargando' src='dist/img/hourglass.gif' /><center>"); 
-        jQuery("#page-wrapper").load("compromisos_pagos?accion=listar",{},function(){ });
+     jQuery("#page-wrapper").load("compromisos_pagos?accion=listar",{},function(){ });
  
 }
 
@@ -131,14 +132,19 @@ function recaudacion()
 {
 
      jQuery("#page-wrapper").html("<br/><br/><center><img alt='cargando' src='dist/img/hourglass.gif' /><center>"); 
-        jQuery("#page-wrapper").load("recaudacion?accion=listar",{},function(){ });
+     jQuery("#page-wrapper").load("recaudacion?accion=listar",{},function(){ });
  
 }
 
 function consulcarteras()
 {       
      jQuery("#page-wrapper").html("<br/><br/><center><img alt='cargando' src='dist/img/hourglass.gif' /><center>"); 
+    
      jQuery("#page-wrapper").load("consultacartera?accion=listar",{},function(){});
+    //console.log('consultaMisClientes'); 
+    //consultaMisClientes();
+ //alert("consultaMisClientes");
+    
  
 }
 
@@ -152,7 +158,7 @@ function comprobante_pago()
 function cuadre_caja()
 {
      jQuery("#page-wrapper").html("<br/><br/><center><img alt='cargando' src='dist/img/hourglass.gif' /><center>"); 
-        jQuery("#page-wrapper").load("recaudacion?accion=CuadreCaja",{},function(){ });
+     jQuery("#page-wrapper").load("cuadrecaja?accion=listar",{},function(){ });
  
 }
 
@@ -203,11 +209,46 @@ function proceso_asignar()
 function generar_cartas()
 {
      jQuery("#page-wrapper").html("<br/><br/><center><img alt='cargando' src='dist/img/hourglass.gif' /><center>"); 
-        jQuery("#page-wrapper").load("sistema/terrenos/frm_generar_cartas.jsp",{},function(){ });
+     jQuery("#page-wrapper").load("sistema/terrenos/frm_consulta_cartera.jsp",{},function(){ });
  
 }
 
 function listar_documentos()
+{
+     jQuery("#page-wrapper").html("<br/><br/><center><img alt='cargando' src='dist/img/hourglass.gif' /><center>"); 
+     jQuery("#page-wrapper").load("documentos?accion=listar",{},function(){ });
+ 
+}
+function asignacion_cartera()
+{
+     jQuery("#page-wrapper").html("<br/><br/><center><img alt='cargando' src='dist/img/hourglass.gif' /><center>"); 
+     jQuery("#page-wrapper").load("asignacioncartera?accion=listar",{},function(){ });
+     console.clear();
+ 
+}
+
+function recepcion_documento()
+{
+     jQuery("#page-wrapper").html("<br/><br/><center><img alt='cargando' src='dist/img/hourglass.gif' /><center>"); 
+     jQuery("#page-wrapper").load("recepcion?accion=listar",{},function(){ });
+}
+
+function consulta_cliente()
+{
+     jQuery("#page-wrapper").html("<br/><br/><center><img alt='cargando' src='dist/img/hourglass.gif' /><center>"); 
+        jQuery("#page-wrapper").load("consultacliente?accion=listar",{},function(){ });
+ 
+}
+
+
+
+function documentos_generados()
+{
+     jQuery("#page-wrapper").html("<br/><br/><center><img alt='cargando' src='dist/img/hourglass.gif' /><center>"); 
+     jQuery("#page-wrapper").load("sistema/terrenos/frm_documentos_generados.jsp",{},function(){ });
+ 
+}
+function tipos_documentos()
 {
      jQuery("#page-wrapper").html("<br/><br/><center><img alt='cargando' src='dist/img/hourglass.gif' /><center>"); 
      jQuery("#page-wrapper").load("documentos?accion=listar",{},function(){ });

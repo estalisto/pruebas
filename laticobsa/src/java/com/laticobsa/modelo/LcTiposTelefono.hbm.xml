@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 09-jul-2017 23:23:36 by Hibernate Tools 4.3.1 -->
+<!-- Generated 30-ago-2017 1:41:38 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="com.laticobsa.modelo.LcTiposTelefono" table="lc_tipos_telefono" schema="public" optimistic-lock="version">
         <id name="idTipoTlf" type="int">

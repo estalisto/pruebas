@@ -183,15 +183,19 @@ public class UsuariosControllers extends HttpServlet {
                   empresa_nom = dato.getLcEmpresa().getIdEmpresa();
                      int id_empleado = dato.getIdEmpleado();
                      ArrayList<LcUsuarios> user = us.getDatoFind(id_empleado, empresa_nom);
+                     ArrayList<LcUsuarios> userExp = us.getDatoFindExp(id_empleado, empresa_nom);
                     if (!user.isEmpty()) {
                         // out.println("3");
                           response.getWriter().println("3");
                           
-                    }else {
+                    }else if (!userExp.isEmpty()) {
+                            response.getWriter().println("5");
+                    }else{
                        // out.println("3");
                          response.getWriter().println("4");
                     }
                     
+                        
                   
              }
              
@@ -390,6 +394,12 @@ public class UsuariosControllers extends HttpServlet {
            
             comboRolesEmpresa+="</select>";
             response.getWriter().println(comboRolesEmpresa);
+        }
+        if (accion.equals("ConsultaALLUsuarios")) {
+
+           String Usuarios="";
+           Usuarios="{\"data\": "+ us.getConsultaUsuariosEmpresa(EmpresaID)+"}";
+           response.getWriter().println(Usuarios);
         }
         
         

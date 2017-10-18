@@ -15,7 +15,6 @@
                   response.sendRedirect("login.jsp");
               //out.print("<script>location.replace('login.jsp');<script>");
               return;
-
         }else {
         Sidentificacion = sesion.getAttribute("SstrUsuarioRol").toString();
         id_empresa = sesion.getAttribute("Sstrempresa").toString();
@@ -77,9 +76,11 @@
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
-  <link href="dist/css/bootstrap-datepicker.css" rel="stylesheet" /> 
-  <link href="plugins/datepicker/bootstrap-datepicker.css" rel="stylesheet" /> 
-    
+  <!--link href="dist/css/bootstrap-datepicker.css" rel="stylesheet" /
+  <link href="plugins/datepicker/bootstrap-datepicker.css" rel="stylesheet" /> --> 
+    <link rel="stylesheet" href="dist/css/jquery.datetimepicker.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -94,7 +95,6 @@
 -moz-border-radius: 12px 12px 12px 12px;
 -webkit-border-radius: 12px 12px 12px 12px;
 border: 0px groove #000000;
-
      }
 </style>
 <body class="hold-transition skin-yellow sidebar-mini">
@@ -233,7 +233,6 @@ border: 0px groove #000000;
            //rol = session.getAttribute("strUsuarioRol"); 
            // valida usuario -> rol-> modulos
            RolID =  Integer.parseInt(Sidentificacion);//Admin
-
            EmpresaID= Integer.parseInt(id_empresa);
            ModulosRoles mr = new ModulosRoles();
             List<LcModuloRol> modulos = mr.getLcModulosRoles(RolID,EmpresaID);
@@ -280,35 +279,89 @@ border: 0px groove #000000;
   <div class="content-wrapper">
       <div id="page-wrapper" > 
           <br>
-          <form class="well">
-                <div class="row">
-              
-                  <div class="col-lg-4">
-                    <div class="thumbnail">  
-                        <!--label>
-                             Compromisos de Pago
-                        </label-->
-                              <div id="piechart"></div>
-                       
-                      </div>
+          
+                   
+               <%
+                        if (RolEmpleado.toUpperCase().equals("OPERADOR")){
+                            %>
+                            <form class="well">
+                                <!--div class="row">
 
-                  </div>
-                  <div class="col-lg-4">
-                    <div class="thumbnail">
-                     
-                            <div id="piechart2"></div>
-                 
-                      </div>
-                  </div>
-                  <div class="col-lg-4">
-                    <div class="thumbnail">
-                        
-                            <div id="columnchart_material"></div>
-               
-                      </div>
-                  </div>
-                </div>
-           </form>          
+                                  <div class="col-lg-4">
+                                    <div class="thumbnail">  
+
+                                              <div id="piechart"></div>
+
+                                      </div>
+
+                                  </div>
+                                  <div class="col-lg-4">
+                                    <div class="thumbnail">
+
+                                            <div id="piechart2"></div>
+
+                                      </div>
+                                  </div>
+                                  <div class="col-lg-4">
+                                    <div class="thumbnail">
+
+                                            <div id="columnchart_material"></div>
+
+                                      </div>
+                                  </div>
+                                </div-->
+
+
+                              <div class="row">  
+                                    <div class="col-lg-4">
+                                                  <!--div class="row">
+
+                                                      <div class="col-lg-6">
+                                                        <div class="form-group">
+                                                           <label for="sel1">Periodo:</label>
+                                                           <select class="form-control" id="sel1">
+                                                             <option>All</option>
+                                                             <option>Enero</option>
+                                                             <option>Febrero</option>
+                                                             <option>Marzo</option>
+                                                             <option>Abril</option>
+                                                             <option>Mayo</option>
+                                                             <option>Junio</option>
+                                                             <option>Julio</option>
+                                                             <option>Agosto</option>
+                                                             <option>Septiembre</option>
+                                                             <option>Octubre</option>
+                                                             <option>Noviembre</option>
+                                                             <option>Diciembre</option>
+                                                           </select>
+                                                         </div>
+                                                      </div>
+                                                  </div
+
+                                                <div class="thumbnail">
+
+
+                                                        <div id="container2" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                                        <button class="btn btn-default">Reporte</button>
+                                                  </div>-->
+                                                  <div class="thumbnail">
+
+
+                                                        <div id="container3" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                                        <!--button class="btn btn-default">Reporte</button-->
+                                                  </div>
+                                      </div>
+                                </div>
+           
+          
+                        </form> 
+
+                            <%
+
+                          }
+                        %>
+                  
+                         
       </div>
          
       
@@ -352,6 +405,7 @@ border: 0px groove #000000;
 <script src="plugins/fastclick/fastclick.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/app.min.js"></script>
+
 <script src="dist/js/menu.js"></script>
 
 <!-- AdminLTE for demo purposes -->
@@ -361,48 +415,45 @@ border: 0px groove #000000;
 <!--script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script-->
 <script type="text/javascript" src="plugins/gstatic/graficos.js"></script>
 <script src="dist/plugins/jquery.maskedinput.min.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        <%DashcboardOk gfc=new DashcboardOk();%>
+
+<script src="dist/js/jquery.datetimepicker.full.js"></script>
+
+
+<script src="dist/code/highcharts.js"></script>
+<script src="dist/code/modules/exporting.js"></script>
+
+<%DashcboardOk gfc=new DashcboardOk();%>
+    <!--script type="text/javascript">
+        
       google.charts.load('current', {'packages':['corechart','bar']});
       google.charts.setOnLoadCallback(drawChart);
       google.charts.setOnLoadCallback(drawChart2);
-
-
       function drawChart() {
-
         var data = google.visualization.arrayToDataTable([
           ['Meses', 'Compromisos de Pago'],           
               <%=gfc.ObtenerCompromisosPagos()%>
            ]);
-
         var options = {
            title: 'Compromisos de Pagos'
         };
-
         var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-
         chart.draw(data, options);
       }
       function drawChart2() {
-
         var data = google.visualization.arrayToDataTable([
           ['Task', 'Hours per Day'],
           ['Work',     5],         
           ['Sleep',    9]
         ]);
-
         var options = {
           title: 'My Daily Activities'
         };
-
         var chart2 = new google.visualization.PieChart(document.getElementById('piechart2'));
-
         chart2.draw(data, options);
       }
     
      
       google.charts.setOnLoadCallback(drawChart3);
-
       function drawChart3() {
         var data = google.visualization.arrayToDataTable([
           ['','Gestiones'],           
@@ -419,12 +470,77 @@ border: 0px groove #000000;
             
           }
         };
-
         var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
-
         chart.draw(data, google.charts.Bar.convertOptions(options));
       }
-    </script>
+    </script-->
+    
+<script type="text/javascript">
+
+   /* Highcharts.chart('container2', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Gestiones Realizadas'
+        },
+        subtitle: {
+            text: 'Seis ultimos Periodos'
+        },
+        xAxis: {
+            categories: [
+                'Jan',
+                'Feb',
+                'Mar',
+                'Apr',
+                'May'
+
+            ],
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Transacciones (u)'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} U</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: 'Pvillota',
+            data: [20, 56, 0, 129.2, 144.0]
+
+        }, {
+            name: 'eharo',
+            data: [83.6, 78.8, 98.5, 93.4, 106.0]
+
+        }, {
+            name: 'London',
+            data: [48.9, 38.8, 39.3, 41.4, 1]
+
+        }, {
+            name: 'Berlin',
+            data: [42.4, 2, 34.5, 39.7, 52.6]
+
+        }]
+    });*/
+   
+       
+       <%=gfc.ObtenerGestionmesesHist(IdEmpleado)%>
+
+</script>    
+    
 </body>
 </html>
-

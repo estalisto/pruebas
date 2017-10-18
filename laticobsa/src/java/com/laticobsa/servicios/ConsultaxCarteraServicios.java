@@ -35,10 +35,14 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 //import org.json.simple.JSONObject;
-import com.google.gson.Gson;
+
+import com.laticobsa.modelo.LcClienteResultado;
+import com.laticobsa.modelo.LcRecaudaciones;
+import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
 
 /**
@@ -46,6 +50,8 @@ import org.json.simple.JSONValue;
  * @author ViewSoft
  */
 public class ConsultaxCarteraServicios {
+    
+
          public List<LcDatosDeudores> getLcDatosDeudores(int empresa, int agencia,int empleado){
          
         SessionFactory sesion = HibernateUtil.getSessionFactory();
@@ -114,8 +120,33 @@ public class ConsultaxCarteraServicios {
             session.close();
         return number; 
        
+        } 
+        
+        public String getIdCliente2(int empresa, int agencia,int empleado)
+        {
+            
+            String valor = "";
+         try{      
+            Conexion conexion=new Conexion();
+            PreparedStatement pst;
+            ResultSet rs;
+            pst = conexion.getconexion().prepareStatement("select fnc_consulta_clientes("+empresa+","+agencia+","+empleado+");");
+            rs = pst.executeQuery();
+            while(rs.next())    //Mientras haya una sig. tupla
+            {
+                valor=rs.getString(1);
+            }
+            rs.close();
+            pst.close();
+            conexion.cierraConexion();
+            
+            }catch (SQLException ex) {
+                System.err.println( ex.getMessage() );
+             } 
+            return valor;
         }
-
+        
+     
          
 public List<LcDatosDeudores> getLcDatosposicion(int empresa, int agencia,int posicion, int IDEmpleado){
          
@@ -288,7 +319,7 @@ public List<LcDatosDeudores> getLcDeudorId(int id,int idDeudor){
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcEmpresa().getRazonSocial());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcTipoCredito().getIdTipocredito());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcTipoCredito().getDescripcion());
-             System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcEstatus().getIdEstatus());
+             System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcEstatus().getIdEstatus()+mrol.getNombresCompleto());
              System.out.println("ok: "+mrol.getIdDatosDeudor()+", "+mrol.getLcEstatus().getDescripcion());
              System.out.println("Ciudad: "+mrol.getLcCiudad().getIdCiudad()+mrol.getLcCiudad().getCiudad());
             
@@ -1194,14 +1225,23 @@ String color;
             
     }
     
+ 
+    
+    
      public String getDatosCarteras2(String query)throws SQLException{
     
             Conexion conexion=new Conexion();
             PreparedStatement pst;
             ResultSet rs;
-            String valor = "";          
+            String valor = "";  
+            String orderby = "ORDER BY";
+            if(!query.toUpperCase().contains(orderby)){
+                query=query+" ORDER BY s.id_datos_deudor";
+                
+            }
             String SQL="";               
-            SQL=query;             
+            SQL=query+" limit 1000";  
+            System.out.println("NUeva Consulta: "+query);
             String contenidoTabla="";
             String id_datos_deudor;
             String identificacion;
@@ -1250,7 +1290,7 @@ String color;
 // contenidoTabla=contenidoTabla+"<tr onclick='cobranzas2("+id_cliente+","+id_datos_deudor+");'>"+
 
  
-  contenidoTabla=contenidoTabla+"<tr  bgcolor=\"#E0ECF8\" onclick=\"cobranzas2("+id_cliente+","+id_datos_deudor+");\"  >\n" +
+  contenidoTabla=contenidoTabla+"<tr  bgcolor=\"#E0ECF8\" onclick=\"GestionCliente("+id_cliente+","+id_datos_deudor+");\"  >\n" +
 "                                                                    <td class=\"hidden\"><h6><p "+color+" >"+id_datos_deudor+"</p></h6></td>\n" +
 "                                                                    <td><h6><p "+color+" >"+identificacion+"</p> </h6></td>\n" +
 "                                                                    <td><h6><p "+color+" >"+nombres_completo+"</p></h6></td>\n" +
@@ -1472,31 +1512,34 @@ String color;
     
     public String getTiposGestion(int IDCliente){
         JSONObject json = new JSONObject();
+        JSONArray itemSelectedJson = new JSONArray(); 
         SessionFactory sesion = HibernateUtil.getSessionFactory();
         Session session;
         session = sesion.openSession();
         Transaction tx= session.beginTransaction();
         // hacemos la transaccion     
-        Query q = session.createQuery("from LcTipoGestion  E WHERE E.idCliente=:IDCliente and E.estado= :estado");
-        q.setParameter("IDCliente",IDCliente);
+//        Query q = session.createQuery("from LcTipoGestion  E WHERE E.idCliente=:IDCliente and E.estado= :estado");
+        Query q = session.createQuery("from LcTipoGestion  E WHERE  E.estado= :estado");
+        //q.setParameter("IDCliente",IDCliente);
         q.setParameter("estado","A");
         List<LcTipoGestion> lista=q.list(); 
             for(LcTipoGestion datos:lista )
             {
                System.out.print("Datos: "+datos.getIdCliente());
+               json = new JSONObject();
                json.put("idTipoGestion",datos.getIdTipoGestion());
                json.put("nombreTipoGestion", datos.getNombreTipoGestion());
-               
+               itemSelectedJson.add(json);
                
             }
             
             tx.commit();
             session.close();
 
-         return  json.toString();
+         return  itemSelectedJson.toString();
       
     }
-    public String getTiposResultados(int IdTipoGestion){
+    public String getTiposResultados(int idcliente){
         JSONObject json = new JSONObject();
         JSONArray itemSelectedJson = new JSONArray();
 
@@ -1505,22 +1548,529 @@ String color;
         session = sesion.openSession();
         Transaction tx= session.beginTransaction();
         // hacemos la transaccion     
-        Query q = session.createQuery("from LcTipoResultado  E WHERE E.lcTipoGestion.idTipoGestion=:IdTipoGestion and E.estado= :estado");
-        q.setParameter("IdTipoGestion",IdTipoGestion);
+        Query q = session.createQuery("from LcClienteResultado  E WHERE E.lcClientes.idCliente=:idcliente and E.estado= :estado");
+        q.setParameter("idcliente",idcliente);
         q.setParameter("estado","A");
-        List<LcTipoResultado> lista=q.list(); 
+        List<LcClienteResultado> lista=q.list(); 
     
-            for(LcTipoResultado datos:lista )
-            { 
-               json = new JSONObject();
-               json.put("idTipoResultado",datos.getIdTipoResultado());
-               json.put("nombreTipoResultado", datos.getNombreTipoResultado());
-               itemSelectedJson.add(json);
-            }
-            tx.commit();
-            session.close();
+        for(LcClienteResultado datos:lista )
+        { 
+           json = new JSONObject();
+           json.put("idTipoResultado",datos.getLcTipoResultado().getIdTipoResultado());
+           json.put("nombreTipoResultado", datos.getLcTipoResultado().getNombreTipoResultado());
+           itemSelectedJson.add(json);
+        }
+        tx.commit();
+        session.close();
 
          return  itemSelectedJson.toString();
       
     }
+    public String getMisTiposResultados(){
+         String valor = "";
+         try{      
+            Conexion conexion=new Conexion();
+            PreparedStatement pst;
+            ResultSet rs;
+            pst = conexion.getconexion().prepareStatement("select fnc_consulta_tipos_resultados();");
+            rs = pst.executeQuery();
+            while(rs.next())    //Mientras haya una sig. tupla
+            {
+                valor=rs.getString(1);
+            }
+            rs.close();
+            pst.close();
+            conexion.cierraConexion();
+            
+            }catch (SQLException ex) {
+                System.err.println( ex.getMessage() );
+             } 
+            return valor;      
+    }
+    
+     public String getConsultaCartera(String query){
+         String valor = "";
+         try{      
+            Conexion conexion=new Conexion();
+            PreparedStatement pst;
+            ResultSet rs;
+            pst = conexion.getconexion().prepareStatement("select fnc_consulta_cartera('"+query+"');");
+            rs = pst.executeQuery();
+            while(rs.next())    //Mientras haya una sig. tupla
+            {
+                valor=rs.getString(1);
+            }
+            rs.close();
+            pst.close();
+            conexion.cierraConexion();
+            
+            }catch (SQLException ex) {
+                System.err.println( ex.getMessage() );
+             } 
+            return valor;      
+    }
+    
+    public String getGestionCliente(int idCliente,int idDeudor){
+        RecaudacionServicios rs = new RecaudacionServicios();
+        JSONObject json = new JSONObject();
+        JSONArray itemSelectedJson = new JSONArray();   
+        BigDecimal tsaldo=BigDecimal.ZERO;
+        BigDecimal valorPagado =BigDecimal.ZERO;
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        Query q = session.createQuery("from LcTransacciones  E WHERE E.lcClientes.idCliente= :idCliente and E.lcDatosDeudores.idDatosDeudor=:idDeudor");
+        q.setParameter("idCliente",idCliente);
+        q.setParameter("idDeudor",idDeudor);
+        List<LcTransacciones> lista=q.list();
+         for(LcTransacciones datos:lista )
+        {
+             json = new JSONObject();
+             json.put("IdDeudor",idDeudor);
+             json.put("Identificacion",datos.getLcDatosDeudores().getIdentificacion());
+             json.put("NombresCompletos",datos.getLcDatosDeudores().getNombresCompleto());
+             json.put("IdCliente",datos.getLcClientes().getIdCliente());
+             json.put("RazonSocialCliente",datos.getLcClientes().getRazonSocial());
+             json.put("NumCuenta",datos.getNumCuenta());
+             json.put("TotalDeuda",datos.getMontoAsignado());
+             json.put("TotalVencido",datos.getTotalVencidos().add(datos.getInteresMora()).add(datos.getInteresCapital()).add(datos.getInteresOtros()).add(datos.getInteresAdicional()));
+             json.put("Pago",getUltimoPago(idCliente, idDeudor));
+            try {
+                valorPagado=rs.getValorRecaudado(datos.getIdEmpresa(),idCliente, idDeudor);
+            } catch (SQLException ex) {
+                Logger.getLogger(ConsultaxCarteraServicios.class.getName()).log(Level.SEVERE, null, ex);
+               
+            }
+             tsaldo=datos.getTotalVencidos().add(datos.getInteresMora()).add(datos.getInteresCapital()).add(datos.getInteresOtros()).add(datos.getInteresAdicional()).subtract(valorPagado);
+             json.put("Saldo",tsaldo);
+             json.put("Notas",getLcNotas2(idCliente,idDeudor));
+             json.put("IDNotas",getLcNotasID(idCliente,idDeudor));             
+             json.put("DiasMora",datos.getDiasMora());
+             json.put("IDCiudad",datos.getLcDatosDeudores().getLcCiudad().getIdCiudad());
+             json.put("Ciudad",datos.getLcDatosDeudores().getLcCiudad().getCiudad()); 
+             json.put("IDTransaccion",datos.getIdTransaccion()); 
+            
+             
+             itemSelectedJson.add(json);
+            
+        }
+        tx.commit();
+        session.close();
+        return  itemSelectedJson.toString();
+    }
+    
+    public String getLcDireccionJSON(String ide){
+        JSONObject json = new JSONObject();
+        JSONArray itemSelectedJson = new JSONArray(); 
+        String tablaDireccion="";
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        Query q = session.createQuery("from LcDireccion  E WHERE E.identificacionDeudor= :identificacionDeudor");      
+        q.setParameter("identificacionDeudor",ide);
+        List<LcDireccion> lista=q.list();
+       
+         for(LcDireccion mrol:lista )
+        {
+             json = new JSONObject();
+             json.put("TipoDireccion",mrol.getLcTiposDireccion().getNombreTipoDireccion());
+             json.put("Direccion",mrol.getDireccionCompleta());
+             itemSelectedJson.add(json);
+           // tablaDireccion+="<tr bgcolor='#E0ECF8' width='100%'><td class='col-sm-2'>"+mrol.getLcTiposDireccion().getNombreTipoDireccion()+"</td><td class='col-sm-6'>"+mrol.getDireccionCompleta()+"</td></tr>";
+             
+        }
+        tx.commit();
+        session.close();
+           // return  tablaDireccion;
+        return  itemSelectedJson.toString();
+    }
+    public String  getLcTelefonoJSON(String ide){
+        JSONObject json = new JSONObject();
+        JSONArray itemSelectedJson = new JSONArray();  
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        Query q = session.createQuery("from LcTelefonos  E WHERE E.identificacionDeudor= :identificacionDeudor");
+        q.setParameter("identificacionDeudor",ide);
+        List<LcTelefonos> lista=q.list();
+
+         for(LcTelefonos mrol:lista )
+        {
+            // System.out.println("ok: "+mrol.getIdTelefono()+", "+mrol.getTelefono());
+            // System.out.println("ok: "+mrol.getIdTelefono()+", "+mrol.getLcTiposTelefono().getNombreTipoTlf());
+             json = new JSONObject();
+             json.put("TipoTelefono",mrol.getLcTiposTelefono().getNombreTipoTlf());
+             json.put("Telefono",mrol.getTelefono());
+             json.put("Llamar","<a  href='#' ><span class='glyphicon glyphicon-phone-alt' aria-hidden='true'></span></a>");
+             itemSelectedJson.add(json);
+             
+        }
+        tx.commit();
+        session.close();
+        return  itemSelectedJson.toString();
+    }
+    
+    public String getGestionesJSON(int idCliente,int idDeudor){
+        JSONObject json = new JSONObject();
+        JSONArray itemSelectedJson = new JSONArray();  
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String FechaGestion="";
+           
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        Query q = session.createQuery("from LcGestiones  E WHERE  E.lcDatosDeudores.idDatosDeudor = :idDeudor  and   E.lcClientes.idCliente= :idCliente and  E.estado= :estado order by E.fechaTransaccion desc");
+        
+        q.setParameter("idCliente",idCliente);
+        q.setParameter("idDeudor",idDeudor);
+        q.setParameter("estado","A");
+        List<LcGestiones> lista=q.list();
+         for(LcGestiones mrol:lista )
+        {
+             FechaGestion = dateFormatter.format(mrol.getFechaTransaccion());
+            // System.out.println("ok: "+mrol.getLcClientes().getRazonSocial()+" "+ mrol.getLcDatosDeudores().getNombres()+" "+mrol.getLcTipoGestion().getNombreTipoGestion()+" "+ mrol.getLcTipoResultado().getNombreTipoResultado()+""+mrol.getLcEmpleados().getNombres()+""+mrol.getLcEmpleados().getApellidos());
+              json = new JSONObject();
+             json.put("TipoGestion",mrol.getLcTipoGestion().getNombreTipoGestion());
+             json.put("Gestion",mrol.getLcTipoResultado().getNombreTipoResultado());
+             json.put("Descripcion",mrol.getObservacion());
+             json.put("Oficial", getNombreUsuario(mrol.getLcEmpleados().getIdEmpleado()).toUpperCase());
+             json.put("fecha",FechaGestion);
+             itemSelectedJson.add(json);
+        }
+          tx.commit();
+        session.close();
+
+         return  itemSelectedJson.toString();
+    }
+    public String getNombreUsuario(int id_empleado){
+    
+       SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        Query q = session.createQuery("select E.usuario from LcUsuarios  E WHERE  E.lcEmpleados.idEmpleado = :id_empleado");
+        
+        q.setParameter("id_empleado",id_empleado);
+        String  NombreUsuario="";
+        NombreUsuario = (String) q.uniqueResult();
+        
+        tx.commit();
+        session.close();
+
+         return  NombreUsuario;
+    
+    
+    
+    }
+     public String getLcNotas2(int idCliente,int idDeudor){
+        String misnotas=""; 
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        ArrayList<LcNotas> arreglo = new ArrayList<LcNotas>();
+        Query q = session.createQuery("from LcNotas  E WHERE E.idCliente= :idCliente and E.idDeudor= :idDeudor and E.estado= :estado");
+        q.setParameter("idCliente",idCliente);
+        q.setParameter("idDeudor",idDeudor);
+        q.setParameter("estado","A");
+        List<LcNotas> lista=q.list();
+         for(LcNotas notas:lista )
+        {
+            /* System.out.println("ok: "+mrol.getIdNota());
+             System.out.println("ok: "+mrol.getIdNota()+", "+mrol.getIdDeudor());
+             System.out.println("ok: "+mrol.getIdNota()+", "+mrol.getIdCliente());*/
+             misnotas+= notas.getObservacion();
+        }
+        tx.commit();
+        session.close();
+         return misnotas;
+    }
+      public String getLcNotasAdm(int idCliente,int idDeudor){
+        String misnotas=""; 
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        ArrayList<LcNotas> arreglo = new ArrayList<LcNotas>();
+        Query q = session.createQuery("from LcNotas  E WHERE E.idCliente= :idCliente and E.idDeudor= :idDeudor and E.estado= :estado");
+        q.setParameter("idCliente",idCliente);
+        q.setParameter("idDeudor",idDeudor);
+        q.setParameter("estado","A");
+        List<LcNotas> lista=q.list();
+         for(LcNotas notas:lista )
+        {
+            
+            // misnotas+= notas.getNotaAdministrador();
+        }
+        tx.commit();
+        session.close();
+         return misnotas;
+    }
+      public int getLcNotasID(int idCliente,int idDeudor){
+        int id_notas = 0; 
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        ArrayList<LcNotas> arreglo = new ArrayList<LcNotas>();
+        Query q = session.createQuery("from LcNotas  E WHERE E.idCliente= :idCliente and E.idDeudor= :idDeudor and E.estado= :estado");
+        q.setParameter("idCliente",idCliente);
+        q.setParameter("idDeudor",idDeudor);
+        q.setParameter("estado","A");
+        List<LcNotas> lista=q.list();
+         for(LcNotas notas:lista )
+        {
+            /* System.out.println("ok: "+mrol.getIdNota());
+             System.out.println("ok: "+mrol.getIdNota()+", "+mrol.getIdDeudor());
+             System.out.println("ok: "+mrol.getIdNota()+", "+mrol.getIdCliente());*/
+             id_notas= notas.getIdNota();
+        }
+        tx.commit();
+        session.close();
+         return id_notas;
+    }
+    public String getDetallesComprasJSON(int idCliente,int idDeudor){
+        JSONObject json = new JSONObject();
+        JSONArray itemSelectedJson = new JSONArray();  
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String FechaCompra=""; 
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        Query q = session.createQuery("from LcArticulo  E WHERE  E.lcDatosDeudores.idDatosDeudor = :idDeudor  and   E.idCliente= :idCliente and  E.estado= :estado order by E.fechaRegistro");       
+        q.setParameter("idCliente",idCliente);
+        q.setParameter("idDeudor",idDeudor);
+        q.setParameter("estado","A");
+        List<LcArticulo> lista=q.list();
+         for(LcArticulo mrol:lista )
+        {
+            
+             FechaCompra = dateFormatter.format(mrol.getFechaCompra());
+             json = new JSONObject();
+             json.put("ReferenciaCompra",mrol.getReferencia());
+             json.put("Descripcion",mrol.getNombreArticulo());
+             json.put("ValorCompra",mrol.getValorArticulo());
+             json.put("Fecha", FechaCompra);
+             itemSelectedJson.add(json);
+        }
+          tx.commit();
+        session.close();
+
+         return  itemSelectedJson.toString();
+    }
+    
+    public String getClientes(int empresa)
+        {
+            JSONObject json = new JSONObject();
+            JSONArray itemSelectedJson = new JSONArray();  
+            SessionFactory sesion = HibernateUtil.getSessionFactory();
+            Session session;
+            session = sesion.openSession();
+            Transaction tx= session.beginTransaction();
+            Query q = session.createQuery("from LcClientes  E WHERE E.lcEmpresa.idEmpresa= :empresa and  E.estado= :estado");  
+            q.setParameter("empresa",empresa);
+            q.setParameter("estado","A");
+            List<LcClientes> lista=q.list();
+             for(LcClientes datos:lista )
+            {
+
+              
+                 json = new JSONObject();
+                 json.put("id_cliente",datos.getIdCliente());
+                 json.put("razon_social",datos.getRazonSocial());
+                 itemSelectedJson.add(json);
+            }
+              tx.commit();
+            session.close();
+
+         return  itemSelectedJson.toString();
+        }
+    
+     public String getDetallesComprasSTRING(int idCliente,int idDeudor){
+       
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String FechaCompra="", Tabla=""; 
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        Query q = session.createQuery("from LcArticulo  E WHERE  E.lcDatosDeudores.idDatosDeudor = :idDeudor  and   E.idCliente= :idCliente and  E.estado= :estado order by E.fechaRegistro");       
+        q.setParameter("idCliente",idCliente);
+        q.setParameter("idDeudor",idDeudor);
+        q.setParameter("estado","A");
+        List<LcArticulo> lista=q.list();
+         for(LcArticulo mrol:lista )
+        {
+            
+            // System.out.println("ok: "+mrol.getNombreArticulo()+" "+ mrol.getReferencia()+" "+mrol.getFechaCompra()+""+mrol.getValorArticulo());
+             FechaCompra = dateFormatter.format(mrol.getFechaCompra());
+            // System.out.println("ok: "+mrol.getLcClientes().getRazonSocial()+" "+ mrol.getLcDatosDeudores().getNombres()+" "+mrol.getLcTipoGestion().getNombreTipoGestion()+" "+ mrol.getLcTipoResultado().getNombreTipoResultado()+""+mrol.getLcEmpleados().getNombres()+""+mrol.getLcEmpleados().getApellidos());
+             /*json = new JSONObject();
+             json.put("ReferenciaCompra",mrol.getReferencia());
+             json.put("Descripcion",mrol.getNombreArticulo());
+             json.put("ValorCompra",mrol.getValorArticulo());
+             json.put("Fecha", FechaCompra);
+             itemSelectedJson.add(json);*/
+             
+             Tabla=Tabla+"<tr><td>"+mrol.getReferencia()+"</td><td>"+mrol.getNombreArticulo()+"</td><td>"+mrol.getValorArticulo()+"</td><td>"+FechaCompra+"</td></tr>";
+             
+        }
+        tx.commit();
+        session.close();
+
+         return  Tabla;
+    }
+    public String getDetallesCuotasComprasJSON(int idCliente,int idDeudor){
+        JSONObject json = new JSONObject();
+        JSONArray itemSelectedJson = new JSONArray();  
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String FechaCompra="",FechaMaxPago=""; 
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+       Query q = session.createQuery("from LcCuotas  E WHERE  E.lcDatosDeudores.idDatosDeudor = :idDeudor  and   E.idCliente= :idCliente and  E.estado= :estado order by E.fechaMaxPago DESC");       
+        q.setParameter("idCliente",idCliente);
+        q.setParameter("idDeudor",idDeudor);
+        q.setParameter("estado","A");
+        List<LcCuotas> lista=q.list();
+         for(LcCuotas mrol:lista )
+        {
+            
+            // System.out.println("ok: "+mrol.getNombreArticulo()+" "+ mrol.getReferencia()+" "+mrol.getFechaCompra()+""+mrol.getValorArticulo());
+             FechaCompra = dateFormatter.format(mrol.getFechaRegistro());
+             FechaMaxPago = dateFormatter.format(mrol.getFechaMaxPago());
+            // System.out.println("ok: "+mrol.getLcClientes().getRazonSocial()+" "+ mrol.getLcDatosDeudores().getNombres()+" "+mrol.getLcTipoGestion().getNombreTipoGestion()+" "+ mrol.getLcTipoResultado().getNombreTipoResultado()+""+mrol.getLcEmpleados().getNombres()+""+mrol.getLcEmpleados().getApellidos());
+             json = new JSONObject();
+             json.put("ReferenciaCompra",mrol.getLcArticulo().getReferencia());
+             json.put("NumCuota",mrol.getNumCuotas());
+             json.put("Interes",mrol.getInteresCuota());
+             json.put("Mora",mrol.getValorMora());
+             json.put("GastosCobranzas",mrol.getGastosCobranzas());
+             json.put("GastosAdicionales",mrol.getGastosAdicional());
+             json.put("OtrosGastos",mrol.getOtrosValores());
+             json.put("ValorCuota",mrol.getValorCuota());
+             json.put("Total",mrol.getValorMora().add(mrol.getInteresCuota()).add(mrol.getValorMora()).add(mrol.getGastosCobranzas()).add(mrol.getGastosAdicional()).add(mrol.getOtrosValores()).add(mrol.getValorCuota()));
+             json.put("FechaMaxPago",FechaMaxPago);
+             json.put("PagosRealizado","0");
+             json.put("FechaPagoRealizado","");
+             json.put("Fecha", FechaCompra);
+             itemSelectedJson.add(json);
+        }
+          tx.commit();
+        session.close();
+
+         return  itemSelectedJson.toString();
+    }
+    public BigDecimal getUltimoPago(int idCliente,int idDeudor){
+        BigDecimal UltimoPago=BigDecimal.ZERO;
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        Query q = session.createQuery("from LcRecaudaciones  E WHERE  E.lcDatosDeudores.idDatosDeudor = :idDeudor  and   E.idCliente= :idCliente and  E.estado= :estado order by E.fechaRegistro DESC");       
+        q.setParameter("idCliente",idCliente);
+        q.setParameter("idDeudor",idDeudor);
+        q.setParameter("estado","A");
+        List<LcRecaudaciones> lista=q.list();
+         for(LcRecaudaciones datos:lista )
+        {
+            UltimoPago=UltimoPago.add(datos.getValorRecaudado());
+            
+        }
+          tx.commit();
+        session.close();
+
+         return  UltimoPago;
+    }
+    
+     public int seq_query(String str_query) {
+        try{
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        String orderby = "ORDER BY";
+            if(!str_query.toUpperCase().contains(orderby)){
+                str_query=str_query+" ORDER BY s.id_datos_deudor";
+                
+            }
+        
+        Query query = session.createSQLQuery( "select ejecuta_sql('"+str_query+"')" );
+        int secuencia = ((Integer) query.uniqueResult());   
+        tx.commit();  
+        session.close();
+        return secuencia;
+        } catch (Exception e) {
+            System.out.println("Error Laticobsa: Al consultar la funcion ejecuta_sql");
+            e.printStackTrace();
+            return 0;
+        }
+    }
+     
+      public int getSiguiente(int secuencia, int idDeudor) {
+        try{
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        Query query = session.createSQLQuery( "select fnc_siguiente("+secuencia+","+idDeudor+")");
+        int idDeudorSig = ((Integer) query.uniqueResult());   
+        tx.commit();  
+        session.close();
+        return idDeudorSig;
+        } catch (Exception e) {
+            System.out.println("Error Laticobsa: Al consultar la funcion fnc_siguiente");
+            e.printStackTrace();
+            return 0;
+        }
+    }
+       public int getAnteiror(int secuencia, int idDeudor) {
+      
+       try{
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx= session.beginTransaction();
+        Query query = session.createSQLQuery( "select fnc_anterior("+secuencia+","+idDeudor+")");
+        int idDeudorAnt = ((Integer) query.uniqueResult());   
+        tx.commit();  
+        session.close();
+        return idDeudorAnt;
+        } catch (Exception e) {
+            System.out.println("Error Laticobsa: Al consultar la funcion fnc_anterior");
+            e.printStackTrace();
+            return 0;
+        }
+    }
+    
+        public String getNuevaConsulta(String Query){
+         String valor = "";
+         try{      
+            Conexion conexion=new Conexion();
+            PreparedStatement pst;
+            ResultSet rs;
+            pst = conexion.getconexion().prepareStatement("select fnc_consulta_cartera('"+Query+"');");
+            rs = pst.executeQuery();
+            while(rs.next())    //Mientras haya una sig. tupla
+            {
+                valor=rs.getString(1);
+            }
+            rs.close();
+            pst.close();
+            conexion.cierraConexion();
+            
+            }catch (SQLException ex) {
+                System.err.println( ex.getMessage() );
+             } 
+            return valor;      
+    }
+       
+
+    
 }

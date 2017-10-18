@@ -1,5 +1,5 @@
 package com.laticobsa.modelo;
-// Generated 09-jul-2017 23:23:34 by Hibernate Tools 4.3.1
+// Generated 30-ago-2017 1:41:34 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -36,6 +36,7 @@ public class LcEmpleados  implements java.io.Serializable {
      private String estado;
      private Set lcUsuarioses = new HashSet(0);
      private Set lcTransaccioneses = new HashSet(0);
+     private Set lcAsignaEmpleadosTmps = new HashSet(0);
      private Set lcRecordatorioses = new HashSet(0);
      private Set lcGestioneses = new HashSet(0);
 
@@ -44,12 +45,12 @@ public class LcEmpleados  implements java.io.Serializable {
 
     public LcEmpleados(int idEmpleado) {
         this.idEmpleado = idEmpleado;
-    }	
+    }
     public LcEmpleados(int idEmpleado, LcEmpresa lcEmpresa) {
         this.idEmpleado = idEmpleado;
         this.lcEmpresa = lcEmpresa;
     }
-    public LcEmpleados(int idEmpleado, LcAgencia lcAgencia, LcCargos lcCargos, LcEmpresa lcEmpresa, LcEstadoCivil lcEstadoCivil, LcGenero lcGenero, LcTiposIdentificacion lcTiposIdentificacion, String identificacion, String nombres, String apellidos, String lugarNacimiento, Date fechaNacimiento, String email, String telefonos, String celular, String direccionDomicilio, String profesion, Integer idJefeInmediato, String observacion, Date fechaCreacion, Date fechaActualizacion, String estado, Set lcUsuarioses, Set lcTransaccioneses, Set lcRecordatorioses, Set lcGestioneses) {
+    public LcEmpleados(int idEmpleado, LcAgencia lcAgencia, LcCargos lcCargos, LcEmpresa lcEmpresa, LcEstadoCivil lcEstadoCivil, LcGenero lcGenero, LcTiposIdentificacion lcTiposIdentificacion, String identificacion, String nombres, String apellidos, String lugarNacimiento, Date fechaNacimiento, String email, String telefonos, String celular, String direccionDomicilio, String profesion, Integer idJefeInmediato, String observacion, Date fechaCreacion, Date fechaActualizacion, String estado, Set lcUsuarioses, Set lcTransaccioneses, Set lcAsignaEmpleadosTmps, Set lcRecordatorioses, Set lcGestioneses) {
        this.idEmpleado = idEmpleado;
        this.lcAgencia = lcAgencia;
        this.lcCargos = lcCargos;
@@ -74,6 +75,7 @@ public class LcEmpleados  implements java.io.Serializable {
        this.estado = estado;
        this.lcUsuarioses = lcUsuarioses;
        this.lcTransaccioneses = lcTransaccioneses;
+       this.lcAsignaEmpleadosTmps = lcAsignaEmpleadosTmps;
        this.lcRecordatorioses = lcRecordatorioses;
        this.lcGestioneses = lcGestioneses;
     }
@@ -245,6 +247,13 @@ public class LcEmpleados  implements java.io.Serializable {
     
     public void setLcTransaccioneses(Set lcTransaccioneses) {
         this.lcTransaccioneses = lcTransaccioneses;
+    }
+    public Set getLcAsignaEmpleadosTmps() {
+        return this.lcAsignaEmpleadosTmps;
+    }
+    
+    public void setLcAsignaEmpleadosTmps(Set lcAsignaEmpleadosTmps) {
+        this.lcAsignaEmpleadosTmps = lcAsignaEmpleadosTmps;
     }
     public Set getLcRecordatorioses() {
         return this.lcRecordatorioses;

@@ -62,9 +62,9 @@ public class ConsultaxCartera extends HttpServlet {
        if(accion.equals("listar"))
         {            
            int idclienteok;
-            idclienteok = cd.getIdCliente(EmpresaID, SucursalID, EmpleadoID);
+           idclienteok = cd.getIdCliente(EmpresaID, SucursalID, EmpleadoID);
            String Tabla="";
-         
+          
            int opcion=0;
            
             
@@ -76,18 +76,17 @@ public class ConsultaxCartera extends HttpServlet {
                     String filtro1 = request.getParameter("orden_dia");
                     String filtro2 = request.getParameter("orden_valor");
                     String filtro3 = request.getParameter("orden_fecha");
-                    if((filtro1==null)&&(filtro2==null)&&(filtro3==null)){
-                Tabla=cd.getDatosCarteras(idclienteok, EmpleadoID, opcion);
-               
-                 request.setAttribute("Tablacartera", Tabla);
-                 SSqlDatosDeudor=cd.getRetornaQuery(idclienteok, EmpleadoID, opcion);
-                 sesion.setAttribute("SSqlDatosDeudor",SSqlDatosDeudor); 
-                 request.getRequestDispatcher("sistema/gestion/frm_consulta_por_cartera.jsp").forward(request, response);
-                    }
+                 if((filtro1==null)&&(filtro2==null)&&(filtro3==null)){
+                     //Tabla=cd.getDatosCarteras(idclienteok, EmpleadoID, opcion);
+                     request.setAttribute("Tablacartera", Tabla);
+                    // SSqlDatosDeudor=cd.getRetornaQuery(idclienteok, EmpleadoID, opcion);
+                     sesion.setAttribute("SSqlDatosDeudor",SSqlDatosDeudor); 
+                    
+                 }
                    if(filtro1!=null){
                        int valorFiltro1 = Integer.parseInt(filtro1);
-                        Tabla=cd.getDatosCarteras(idclienteok, EmpleadoID, valorFiltro1);
-                       request.setAttribute("Tablacartera", Tabla);
+                      // Tabla=cd.getDatosCarteras(idclienteok, EmpleadoID, valorFiltro1);
+                      // request.setAttribute("Tablacartera", Tabla);
                        SSqlDatosDeudor=cd.getRetornaQuery(idclienteok, EmpleadoID, valorFiltro1);
                        sesion.setAttribute("SSqlDatosDeudor",SSqlDatosDeudor); 
                        response.getWriter().println(Tabla);
@@ -108,6 +107,10 @@ public class ConsultaxCartera extends HttpServlet {
                         sesion.setAttribute("SSqlDatosDeudor",SSqlDatosDeudor); 
                         response.getWriter().println(Tabla);
                     }
+                    // request.getRequestDispatcher("sistema/gestion/frm_consulta_por_cartera_1.jsp").forward(request, response);
+                       request.getRequestDispatcher("sistema/gestion/frm_consulta_por_cartera_new.jsp").forward(request, response);
+
+                     
             } catch (SQLException ex) {
                 Logger.getLogger(ConsultaxCartera.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -348,43 +351,99 @@ public class ConsultaxCartera extends HttpServlet {
           int idclienteok;
             idclienteok = cd.getIdCliente(EmpresaID, SucursalID, EmpleadoID);
             
-            String DatosTiposGestion="{\"tipo_gestion\": ["+ cd.getTiposGestion(idclienteok)+"]}";//  getTiposGestion
+            String DatosTiposGestion="{\"tipo_gestion\": "+ cd.getTiposGestion(idclienteok)+"}";//  getTiposGestion
             System.out.println("json: "+DatosTiposGestion);
              response.getWriter().println(DatosTiposGestion);
         }
+        if(accion.equals("MisClientes")){
+         String Clientes = "{\"listaClientes\": "+cd.getIdCliente2(EmpresaID, SucursalID, EmpleadoID)+"}";
+         response.getWriter().println(Clientes);
+        }
+        if(accion.equals("Clientes")){
+         String Clientes = "{\"listaClientes\": "+cd.getClientes(EmpresaID)+"}";
+         response.getWriter().println(Clientes);
+        }
+        
+        if(accion.equals("GuardaClienteSession")){
+            int SSCliente = Integer.parseInt(request.getParameter("IdCliente"));
+            try{
+            sesion.setAttribute("SSCliente",SSCliente); 
+            response.getWriter().println(1);
+            }catch (Exception ex){
+                response.getWriter().println(0);
+            }
+        
+        }
         
         if(accion.equals("TiposResulatdos")){
-         int IdTipoGestion=Integer.parseInt(request.getParameter("IdTipoGestion"));
+         int idcliente;
+       
+         if(!request.getParameter("idcliente").isEmpty()){
+             idcliente=Integer.parseInt(request.getParameter("idcliente"));
+            
+         }else{
+             idcliente = cd.getIdCliente(EmpresaID, SucursalID, EmpleadoID);
+         }
             
          String DatosTiposResultados="";
-         if(cd.getTiposResultados(IdTipoGestion).equals("[]")){
+         DatosTiposResultados=cd.getTiposResultados(idcliente);
+         if(DatosTiposResultados.equals("[]")){
              DatosTiposResultados="{\"tipos_resultado\": []}";
          }else{
-             DatosTiposResultados="{\"tipos_resultado\": "+ cd.getTiposResultados(IdTipoGestion)+"}";//  getTiposGestion
+             DatosTiposResultados="{\"tipos_resultado\": "+ DatosTiposResultados+"}";//  getTiposGestion
   
          }
             System.out.println("json: "+DatosTiposResultados);
              response.getWriter().println(DatosTiposResultados);
         }
-        
+        if(accion.equals("MisTiposResulatdos")){
+         
+            
+         String DatosTiposResultados="";
+         DatosTiposResultados=cd.getMisTiposResultados();
+         if(DatosTiposResultados.equals("[]")){
+             DatosTiposResultados="{\"tipos_resultado\": []}";
+         }else{
+             DatosTiposResultados="{\"tipos_resultado\": "+ DatosTiposResultados+"}";//  getTiposGestion
+  
+         }
+            System.out.println("json: "+DatosTiposResultados);
+             response.getWriter().println(DatosTiposResultados);
+        }
          if(accion.equals("nuevaConsulta")){
-                     int cartera = Integer.parseInt(request.getParameter("cartera")); 
+               
+                    int cartera = Integer.parseInt(request.getParameter("cartera")); 
                  String QueryConsulta =request.getParameter("sqlQuery");
                  String NuevosDatos="";
+             try{
+                     
+                 int secuancia;
                  QueryConsulta = QueryConsulta.replaceAll("IDClienteConsulta", Integer.toString(cartera));
                  QueryConsulta = QueryConsulta.replaceAll("IDEmpleadoConsulta", Integer.toString(EmpleadoID));
+                 QueryConsulta = QueryConsulta.replaceAll("'", "''");
                  
-            try {
-                sesion.setAttribute("SSqlDatosDeudor",QueryConsulta); 
-                NuevosDatos=cd.getDatosCarteras2(QueryConsulta);
-            } catch (SQLException ex) {
-                Logger.getLogger(ConsultaxCartera.class.getName()).log(Level.SEVERE, null, ex);
-                
-            }
+                 sesion.setAttribute("SSqlDatosDeudor",QueryConsulta);
+                 NuevosDatos="{\"data\": "+cd.getNuevaConsulta(QueryConsulta)+"}";
                  response.getWriter().println(NuevosDatos);
-             
+                }catch (Exception ex){
+                       System.out.println("Error Nueva Consulta: "+QueryConsulta);
+                }
                  
                  
+         }
+         if(accion.equals("consulta_secuencia")){
+             int cartera = Integer.parseInt(request.getParameter("cartera")); 
+                 String QueryConsulta =request.getParameter("sqlQuery");
+                 //String NuevosDatos="";
+                 int secuancia;
+                QueryConsulta = QueryConsulta.replaceAll("IDClienteConsulta", Integer.toString(cartera));
+                QueryConsulta = QueryConsulta.replaceAll("IDEmpleadoConsulta", Integer.toString(EmpleadoID));
+                QueryConsulta = QueryConsulta.replaceAll("'", "''");
+                
+                secuancia=cd.seq_query(QueryConsulta);
+                System.out.println(secuancia+"Query: "+QueryConsulta);
+                response.getWriter().println(secuancia);
+         
          }
         
     }

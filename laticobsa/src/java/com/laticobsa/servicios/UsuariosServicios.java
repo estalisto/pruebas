@@ -19,6 +19,8 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -335,4 +337,77 @@ public class UsuariosServicios {
 
         return arreglo;
     }
+    public ArrayList<LcUsuarios> getDatoFindExp(int idEmpleado, int empresa) {
+
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx = session.beginTransaction();
+        // hacemos la transaccion
+        ArrayList<LcUsuarios> arreglo = new ArrayList<LcUsuarios>();
+        Query q = session.createQuery("From LcUsuarios E WHERE E.lcEmpleados.idEmpleado = :idEmpleado  and E.lcEmpresa.idEmpresa= :idEmpresa and E.estado = :estado");
+        q.setParameter("idEmpleado", idEmpleado);
+        //q.setParameter("idRol",idRol);
+        q.setParameter("idEmpresa", empresa);
+        q.setParameter("estado", "E");
+        List<LcUsuarios> lista = q.list();
+        Iterator<LcUsuarios> iter = lista.iterator();
+        tx.commit();
+        session.close();
+        //agrega los datos en la lista
+        while (iter.hasNext()) {
+            LcUsuarios rol = (LcUsuarios) iter.next();
+            arreglo.add(rol);
+        }
+
+        return arreglo;
+    }
+    
+    public String getConsultaUsuariosEmpresa(int empresa) {
+        JSONObject json = new JSONObject();
+        JSONArray itemSelectedJson = new JSONArray(); 
+        String resultado="", estado="", color="";
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        Transaction tx = session.beginTransaction();
+        // hacemos la transaccion
+        ArrayList<LcUsuarios> arreglo = new ArrayList<LcUsuarios>();
+        Query q = session.createQuery("from LcUsuarios E WHERE E.lcEmpresa.idEmpresa= :idEmpresa ORDER BY E.estado ");
+        q.setParameter("idEmpresa", empresa);
+        //q.setParameter("estado", "A");
+        List<LcUsuarios> lista = q.list();
+        for (LcUsuarios datos : lista) {
+            
+            if(datos.getEstado().equals("A")){
+             estado="<p class='text-primary'>ACTIVO</p>";
+            color="text-primary";
+            }
+            if(datos.getEstado().equals("E")){
+            estado="<p class='text-warning'>CAMBIAR CLAVE</p>";
+            color="text-warning";
+            }
+            if(datos.getEstado().equals("I")){
+            estado="<p class='text-danger'>INACTIVO</p>";
+            color="text-danger";
+            }
+            
+            json = new JSONObject();
+            json.put("idUsuario","<p class='"+color+"'>"+datos.getIdUsuario()+"</p>");
+            json.put("empresa","<p class='"+color+"'>"+datos.getLcEmpresa().getRazonSocial()+"</p>");
+            json.put("rol","<p class='"+color+"'>"+datos.getLcRoles().getDescripcion()+"</p>");
+            json.put("identificacion","<p class='"+color+"'>"+datos.getLcEmpleados().getIdentificacion()+"</p>");
+            json.put("usuario","<p class='"+color+"'>"+datos.getUsuario()+"</p>");
+            json.put("fecha_ingreso","<p class='"+color+"'>"+datos.getFechaCreacion()+"</p>");
+            json.put("estado",estado);
+            json.put("accion",  "<a  onclick='ConnsultaDatosID("+datos.getIdUsuario()+")' ><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span></a>\n" +
+                                "<a onclick='deleteusuario("+datos.getIdUsuario()+")'> <span  class='glyphicon glyphicon-trash' aria-hidden='true'></span></a>"  );
+            itemSelectedJson.add(json);
+          }
+    tx.commit();
+    session.close();
+    
+        return itemSelectedJson.toString();
+    }
+    
 }

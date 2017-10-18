@@ -1,5 +1,5 @@
 package com.laticobsa.modelo;
-// Generated 09-jul-2017 23:23:34 by Hibernate Tools 4.3.1
+// Generated 30-ago-2017 1:41:34 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -18,8 +18,6 @@ public class LcTipoGestion  implements java.io.Serializable {
      private String observacion;
      private Date fechaRegistro;
      private String estado;
-     private Set lcTipoResultados = new HashSet(0);
-     private Set lcTipoResultados_1 = new HashSet(0);
      private Set lcGestioneses = new HashSet(0);
 
     public LcTipoGestion() {
@@ -29,15 +27,13 @@ public class LcTipoGestion  implements java.io.Serializable {
     public LcTipoGestion(int idTipoGestion) {
         this.idTipoGestion = idTipoGestion;
     }
-    public LcTipoGestion(int idTipoGestion, String nombreTipoGestion, Integer idCliente, String observacion, Date fechaRegistro, String estado, Set lcTipoResultados, Set lcTipoResultados_1, Set lcGestioneses) {
+    public LcTipoGestion(int idTipoGestion, String nombreTipoGestion, Integer idCliente, String observacion, Date fechaRegistro, String estado, Set lcGestioneses) {
        this.idTipoGestion = idTipoGestion;
        this.nombreTipoGestion = nombreTipoGestion;
        this.idCliente = idCliente;
        this.observacion = observacion;
        this.fechaRegistro = fechaRegistro;
        this.estado = estado;
-       this.lcTipoResultados = lcTipoResultados;
-       this.lcTipoResultados_1 = lcTipoResultados_1;
        this.lcGestioneses = lcGestioneses;
     }
    
@@ -82,20 +78,6 @@ public class LcTipoGestion  implements java.io.Serializable {
     
     public void setEstado(String estado) {
         this.estado = estado;
-    }
-    public Set getLcTipoResultados() {
-        return this.lcTipoResultados;
-    }
-    
-    public void setLcTipoResultados(Set lcTipoResultados) {
-        this.lcTipoResultados = lcTipoResultados;
-    }
-    public Set getLcTipoResultados_1() {
-        return this.lcTipoResultados_1;
-    }
-    
-    public void setLcTipoResultados_1(Set lcTipoResultados_1) {
-        this.lcTipoResultados_1 = lcTipoResultados_1;
     }
     public Set getLcGestioneses() {
         return this.lcGestioneses;

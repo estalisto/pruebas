@@ -5,13 +5,13 @@
  */
 package com.laticobsa.controller;
 
+
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 /**
  *
@@ -31,18 +31,17 @@ public class Reportes extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-       
-        String nom_deudor,identificacion;
+
+        String nom_deudor="",identificacion="", fecha_reg="";
+      
+        
         nom_deudor= request.getParameter("nom_deudor");
         identificacion= request.getParameter("identificacion");
-        int idRecaudacion= Integer.parseInt(request.getParameter("idRecaudacion"));
-        String fecha_trx = "2015-05-12 17:00:00";
-                              
-         request.setAttribute("nom_deudor", nom_deudor);              
-         request.setAttribute("identificacion", identificacion);    
-         request.setAttribute("idRecaudacion", idRecaudacion);
-      //   request.setAttribute("fecha_trx", fecha_trx);    
-        
+        int idRecaudacion= Integer.parseInt(request.getParameter("idRecaudacion"));           
+        request.setAttribute("nom_deudor", nom_deudor);              
+        request.setAttribute("identificacion", identificacion);    
+       request.setAttribute("idRecaudacion", idRecaudacion);
+
         request.getRequestDispatcher("sistema/caja/rpt_comprobante_pago.jsp").forward(request, response);
     }
 

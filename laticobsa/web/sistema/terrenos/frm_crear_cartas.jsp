@@ -16,8 +16,8 @@
 <head>
      
   <!-- Content Wrapper. Contains page content -->
-
-  <div>
+<section>
+  <div >
 
       <br >
       
@@ -26,46 +26,45 @@
 
         <div class="box box-danger">
             <div class="box-header with-border bg-yellow"   >
-              <h3 class="box-title" >Plantillas</h3>
+              <h3 class="box-title" >Crear Plantillas de Documentos</h3>
             </div>
-              <form name="form" action="empleados" method="get" class="well">
+              <form name="form" action="empleados" method="post" class="well" id="data">
                 
                         <!-- Color Picker -->
                         
                         <div class="row form-group">
                             <div class="col-sm-4">
                               <label>Empresa:</label>
-                              <select class="form-control" id="empresa"  required="required">
-                                <option value="">Seleccionar</option>
-                                <option value='EMPR1'>Empresa 1</option>
-                                <option value='EMPR2 '>Empresa 2</option>
-                                <option value='EMPR3'>Empresa 3</option>                             
+                              <select class="form-control" name="empresa" required="required" id="empresa" onchange="Obtener_combos()">
+                              <option value=''>Seleccionar Empresa</option>
+                                <c:forEach items="${empresas}" var="empresa">
+                                 <option value='<c:out value="${empresa.getIdEmpresa()}"/>'><c:out value="${empresa.getRazonSocial()}" /> </option>                         
+                                </c:forEach> 
                               </select>
                             </div>
 
                             <div class="col-sm-4">
-                                <label>Sucursal</label>
-                                <select class="form-control" id="sucursal" required="required" >
-                                  <option value='' >Seleccionar</option>
-                                  <option value='SUC1' >Norte</option>
-                                  <option value='SUC2' >Centro</option>
-                                  <option value='SUC3' >Sur</option>
+                                <label>Sucursal:</label>
+                                <select class="form-control" id="sucursal" name="sucursal" required="required" disabled="true">
+                                 <option value=''>Seleccione sucursal</option>
+                                 <c:forEach items="${agencia}" var="sucursal">
+                                 <option value='<c:out value="${sucursal.getIdAgencia()}"/>'><c:out value="${sucursal.getNombre()}" /> </option>                         
+                                </c:forEach> 
                                 </select>
                             </div>
 
 
                             <div class="col-sm-4">
-                                <label>Cartera: </label>  
-                                <select class="form-control" id="cliente" required="required" >
-                                    <option value='' >Seleccionar</option>
-                                    <option value='CLI1' >DePrati</option>
-                                    <option value='CLI2' >Artefacta</option>
-                                    <option value='CLI3' >Comandato</option>
-                                    <option value='CLI4' >La Ganga</option>
+                                <label>Cliente: </label>  
+                                <select class="form-control" id="cliente" name="cliente" required="required" disabled="true">
+                                    <option value='' >Seleccione cartera</option>
+                                    <c:forEach items="${cartera}" var="cliente">
+                                    <option value='<c:out value="${cliente.getIdCliente()}"/>'><c:out value="${cliente.getRazonSocial()}" /> </option>                         
+                                   </c:forEach> 
                                </select>
                             </div>                               
                         </div>          
-                   
+                   <div id="ingresoDoc">  
                         <div class="form-group">
                             <label>Nombre del Documento</label>
                             <input type="text" class="form-control" id="nombre_documento">
@@ -78,19 +77,30 @@
                             <textarea class="form-control" rows="3" placeholder="Firma" id="firma"></textarea>
                         </div>
                         
-                        <div class="form-group">
+                        <div class="form-group ">
                             <label>[Cedula]</label>
                             <label>[Nombre Cliente]</label>
+                            <label>[valor_total]</label>
                             <label>[Cartera]</label>
                             <label>[Monto]</label>
                             <label>[Ciudad]</label>
+                            <label>[dias_mora]</label>
+                            <label>[nombre_empresa]</label>                            
                             <label>[Observaciones]</label>
                             
                         </div>
                         
                         <div class=" form-group">
-                            <button type="button" class="btn btn-primary" onclick="validaDatos()">Grabar</button>  
+                            <button type="button" class="btn btn-primary" onclick="Guardar_documento()">Guardar</button>  
                           <button type="button" class="btn btn-primary">Salir</button>
+                        </div>
+                        </div>
+                        <div id="datosmodifica">
+                            
+                            <div id="EditarDoc" >
+                            
+                            </div>
+                        
                         </div>
             </form> 
               <!-- /.box-body -->
@@ -99,9 +109,10 @@
         </div>
       
   </div>
-  <!-- /.content-wrapper 
+</section>
+  <!-- /.content-wrapper -->
   
-  <script src="dist/js/plantillas.js">  </script>-->
+  <script src="dist/js/documento.js"></script>
   
   
 </body>

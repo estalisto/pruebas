@@ -7,18 +7,7 @@ function compropago()
 
 $('#datepicker').datetimepicker({   format:'Y-m-d' }); 
 $('#datepicker2').datetimepicker({   format:'Y-m-d' }); 
-// $('#datepicker').datepicker({
-//    weekStart:1,
-//    color: 'red'
-//    });
-//    $('#datepicker2').datepicker({
-//    weekStart:1,
-//    color: 'red'
-//    });
-   /* */
-    
-    
-     $('#buscarCompromisos').click(function(e){
+$('#buscarCompromisos').click(function(e){
         e.preventDefault();
         var fecha_inicio=$("#datepicker").val();
         var fecha_fin=$("#datepicker2").val();
@@ -32,8 +21,8 @@ $('#datepicker2').datetimepicker({   format:'Y-m-d' });
           MsgSalidaModalA("Debe ingresar la Fecha de fin de la consulta");  
           return false;
        }
-     jQuery("#page-wrapper").html("<br/><br/><center><img alt='cargando' src='dist/img/hourglass.gif' /><center>"); 
-     jQuery("#page-wrapper").load("compromisos_pagos?accion=consultar&fecha_inicio="+fecha_inicio+"&fecha_fin="+fecha_fin,{},function(){ });
+jQuery("#page-wrapper").html("<br/><br/><center><img alt='cargando' src='dist/img/hourglass.gif' /><center>"); 
+jQuery("#page-wrapper").load("compromisos_pagos?accion=consultar&fecha_inicio="+fecha_inicio+"&fecha_fin="+fecha_fin,{},function(){ });
       
          
 

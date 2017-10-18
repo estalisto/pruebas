@@ -12,7 +12,9 @@ import com.laticobsa.modelo.LcDetRecaudaciones;
 import com.laticobsa.modelo.LcEmpleados;
 
 import com.laticobsa.modelo.LcFormapagoRecaudacion;
+import com.laticobsa.modelo.LcInstitucion;
 import com.laticobsa.modelo.LcRecaudaciones;
+import com.laticobsa.modelo.LcTipoFormaPago;
 
 import com.laticobsa.modelo.LcTiposIdentificacion;
 import com.laticobsa.servicios.ClientesServicios;
@@ -22,17 +24,22 @@ import com.laticobsa.servicios.EmpresaServicios;
 import com.laticobsa.servicios.PagosServicios;
 import com.laticobsa.servicios.RecaudacionServicios;
 import java.io.IOException;
+import static java.lang.Integer.parseInt;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  *
@@ -73,16 +80,23 @@ public class RecaudacionController extends HttpServlet {
         int SucursalID= Integer.parseInt(id_sucursal);
         
         if(accion.equals("autocomplete")){
-        String nombrs = request.getParameter("company");    
-        ArrayList<LcDatosDeudores> nombres = rs.getLcNombresDeudor(nombrs);
+        try {    
+        String nombrs = request.getParameter("company"); 
+        int cartera= Integer.parseInt(request.getParameter("cartera")); 
+        //ArrayList<LcDatosDeudores> nombres = rs.getLcNombresDeudor(nombrs);
+        
+        List<String> nombres = rs.getNombreAutocomplete(nombrs, cartera);
         String resp="";
         for (int i = 0; i < nombres.size(); i++) {
             
-            resp +="<option value='"+nombres.get(i).getIdentificacion()+"|"+nombres.get(i).getNombresCompleto()+"'>"; 
-           
+            //resp +="<option value='"+nombres.get(i).getIdentificacion()+"|"+nombres.get(i).getNombresCompleto()+"'>"; 
+            resp +="<option value='"+nombres.get(i)+"'>"; 
         }
         System.out.println(resp);
         response.getWriter().println(resp);
+        } catch (SQLException ex) {
+                Logger.getLogger(CobranzaController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
         if (accion.equals("listar")) {
@@ -93,9 +107,29 @@ public class RecaudacionController extends HttpServlet {
         request.setAttribute("clientes", clientes);
         ArrayList<LcTiposIdentificacion> tipIDE = es.getLcEmpTipIDE();
         request.setAttribute("tipIDE", tipIDE);
-        
+        List<LcInstitucion> instituciones = rs.getLcInstituciones();
+        request.setAttribute("instituciones", instituciones);
         //response.getWriter().println(resp);
         request.getRequestDispatcher("sistema/caja/frm_recaudacion.jsp").forward(request, response);
+        }
+        if (accion.equals("BuscarDeudores")) {
+            int cartera = Integer.parseInt(request.getParameter("cartera"));
+            String identificacion = request.getParameter("ide");
+            String nombres = request.getParameter("nombre_completo");
+            String Consulta="";
+            try {
+                    if(identificacion!=null){
+                        Consulta=rs.NuevaBusquedaDeudorIDE(identificacion, cartera);
+                        response.getWriter().println(Consulta);
+                    }
+                    if(nombres!=null){
+                        Consulta=rs.NuevaBusquedaDeudor(nombres, cartera);
+                        //request.setAttribute("stConsulta", Consulta);
+                        response.getWriter().println(Consulta);
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(RecaudacionController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         if (accion.equals("recaudo")) {
         int tipo_identificacion = Integer.parseInt(request.getParameter("tipo"));
@@ -147,19 +181,20 @@ public class RecaudacionController extends HttpServlet {
         }
         if (accion.equals("cuota")) {
         int tipo_identificacion = Integer.parseInt(request.getParameter("tipo"));
-        int oficial = Integer.parseInt(request.getParameter("oficial"));
+        String verifica = request.getParameter("almacen");
         int cartera = Integer.parseInt(request.getParameter("cartera"));
         String identificacion = request.getParameter("ide");
         String nombres = request.getParameter("nombres");
-        if(oficial == 0){
-         List<LcDatosDeudores> lista3 = cd.getLcDatosidentifica(identificacion,EmpresaID,cartera);  
+        List<LcDatosDeudores> lista3 = cd.getLcDatosidentifica(identificacion,EmpresaID,cartera);  
          int deudor = lista3.get(0).getIdDatosDeudor();
          List<LcCuotas> dataCuotas = cd.getCuotas(cartera,deudor);
          //request.setAttribute("dataCuotas", dataCuotas);
-         String resp="";
+         String resp="",cuotaa="";
+         //int cont=Integer.parseInt(request.getParameter("cont"));
          for (int i = 0; i < dataCuotas.size(); i++) {
             
-            resp +="<tbody>";
+            resp +="<tbody><tr id=\"fila2_"+i+"\">";
+            resp +="<input id=\"contcuota\" style=\"display:none\" value=\'"+i+"'\" type=\"text\">";
             resp +="<td class=\"hidden\" value='"+dataCuotas.get(i).getIdCuota()+"'>"+dataCuotas.get(i).getIdCuota();
             resp +="<td value='"+dataCuotas.get(i).getLcArticulo().getReferencia()+"'>"+dataCuotas.get(i).getLcArticulo().getReferencia(); 
             resp +="<td value='"+dataCuotas.get(i).getNumCuotas()+"'>"+dataCuotas.get(i).getNumCuotas(); 
@@ -171,36 +206,36 @@ public class RecaudacionController extends HttpServlet {
              BigDecimal other = dataCuotas.get(i).getOtrosValores();
              BigDecimal mora_acum = ((GstAdic.add(Mora)).add(gcobr)).add(other);
             resp +="<td value='"+mora_acum.setScale(2)+"'>"+mora_acum.setScale(2); 
-            resp +="<td><input id=\"check_active\" onclick=\"Recaudacion("+dataCuotas.get(i).getIdCuota()+")\" name=\"check_active\"  type=\"checkbox\">";
-            resp +="</tbody>";
+            int idCuota=dataCuotas.get(i).getIdCuota();
+            if(verifica!=null){
+             String array[] = verifica.split("&");
+             
+            for(int j=1;j<= array.length;j++){
+                
+                    cuotaa=array[j];
+                if(j>i)
+                {
+                    if((parseInt(cuotaa)==idCuota)&&(!"undefined".equals(cuotaa))){ 
+                        resp +="<td><input id=\"check_active_"+i+"\" class=\"check_"+i+"\" onclick=\"Recaudacion("+dataCuotas.get(i).getIdCuota()+","+i+")\" checked  type=\"checkbox\">";
+                    break; 
+                    }else{
+                        resp +="<td><input id=\"check_active_"+i+"\" class=\"check_"+i+"\" onclick=\"Recaudacion("+dataCuotas.get(i).getIdCuota()+","+i+")\"   type=\"checkbox\">";
+                    }
+                }  else{
+                    if(j<i)
+                {
+                        resp +="<td><input id=\"check_active_"+i+"\" class=\"check_"+i+"\" onclick=\"Recaudacion("+dataCuotas.get(i).getIdCuota()+","+i+")\"   type=\"checkbox\">";
+                }
+                }  
+               
+            }
+         }else{
+            resp +="<td><input id=\"check_active_"+i+"\" class=\"check_"+i+"\" onclick=\"Recaudacion("+dataCuotas.get(i).getIdCuota()+","+i+")\"   type=\"checkbox\">";
+            }
+            resp +="</tr></tbody>";
         }
          response.getWriter().println(resp);
-        }
-        if(oficial != 0){
-         List<LcDatosDeudores> lista4 = cd.getLcDatosidentifica(identificacion,EmpresaID,cartera);  
-         int deudor = lista4.get(0).getIdDatosDeudor();
-         List<LcCuotas> dataCuotas = cd.getCuotas(cartera,deudor);
-         //request.setAttribute("dataCuotas", dataCuotas);
-         String resp="";
-         for (int i = 0; i < dataCuotas.size(); i++) {
-            
-            resp +="<tbody>";
-            resp +="<td class=\"hidden\" value='"+dataCuotas.get(i).getIdCuota()+"'>"+dataCuotas.get(i).getIdCuota(); 
-            resp +="<td value='"+dataCuotas.get(i).getLcArticulo().getReferencia()+"'>"+dataCuotas.get(i).getLcArticulo().getReferencia(); 
-            resp +="<td value='"+dataCuotas.get(i).getNumCuotas()+"'>"+dataCuotas.get(i).getNumCuotas(); 
-            resp +="<td value='"+dataCuotas.get(i).getInteresCuota()+"'>"+dataCuotas.get(i).getInteresCuota(); 
-            resp +="<td value='"+dataCuotas.get(i).getTotalCuotas()+"'>"+dataCuotas.get(i).getTotalCuotas(); 
-             BigDecimal GstAdic = dataCuotas.get(i).getGastosAdicional();
-             BigDecimal Mora= dataCuotas.get(i).getValorMora();
-             BigDecimal gcobr = dataCuotas.get(i).getGastosCobranzas();
-             BigDecimal other = dataCuotas.get(i).getOtrosValores();
-             BigDecimal mora_acum = ((GstAdic.add(Mora)).add(gcobr)).add(other);
-            resp +="<td value='"+mora_acum.setScale(2)+"'>"+mora_acum.setScale(2); 
-            resp +="<td><input id=\"check_active\" onclick=\"Recaudacion("+dataCuotas.get(i).getIdCuota()+")\" name=\"check_active\"  type=\"checkbox\">";
-            resp +="</tbody>";
-        }
-         response.getWriter().println(resp);
-        }
+      
         }
         if (accion.equals("Cambiototal")) {
             String total_cuotas = request.getParameter("checkactive");
@@ -215,6 +250,7 @@ public class RecaudacionController extends HttpServlet {
             List<LcCuotas> dataIDCuotas = rs.getIDCuotas(idCuota);
             
             resp +="<tbody>";
+            resp +="<tr id=\"fila_"+cont+"\">";
             resp +="<td class=\"hidden\"><input  id=\"idcuota"+"_"+cont+"\"  type=\"text\"  value='"+dataIDCuotas.get(0).getIdCuota()+"'>"+dataIDCuotas.get(0).getIdCuota(); 
             resp +="<td class=\"hidden\"><input id=\"idarticulo"+"_"+cont+"\"  type=\"text\"  value='"+dataIDCuotas.get(0).getLcArticulo().getIdArticulo()+"'>"+dataIDCuotas.get(0).getLcArticulo().getIdArticulo();
             resp +="<td  value='"+dataIDCuotas.get(0).getLcArticulo().getNombreArticulo()+"'>"+dataIDCuotas.get(0).getLcArticulo().getReferencia()+" "+dataIDCuotas.get(0).getLcArticulo().getNombreArticulo(); 
@@ -234,18 +270,19 @@ public class RecaudacionController extends HttpServlet {
              BigDecimal saldototal = (sum_total).subtract(sum_total);
             resp +="<td value='"+sum_total+"'>"+sum_total; 
             
-            resp +="<td><input id=\"valor_pagar"+"_"+cont+"\" onkeypress=\"ValidaSoloNumeros()\" onkeyup=\"Actualizar_saldo("+sum_total+","+cont+")\"  name=\"valor\"  type=\"text\" value=\'"+sum_total+"\'>";
+            resp +="<td><b><input id=\"valor_pagar"+"_"+cont+"\"  onkeyup=\"Actualizar_saldo("+sum_total+","+cont+")\" onkeypress=\"return filterFloat(event,this);\" name=\"valor\" style=\"color:#00a65a\" type=\"text\" value=\'"+sum_total+"\'></b>";
             
-            resp +="<td> <input style=\"color:#00a65a\" id=\"saldo"+"_"+cont+"\"  type=\"text\"  value='"+saldototal+"'>";
+            resp +="<td> <input style=\"color:#00a65a\" id=\"saldo"+"_"+cont+"\"  type=\"text\"  value='"+saldototal+"' disabled=\"true\">";
             
-            resp +="<td><a> <span  class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span></a></td>";
+            resp +="<td><a ><span onclick=\"EliminaFila("+cont+")\" class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span></a></td>";
             resp +="</tbody>";
             BigDecimal totalpagar = (sum_total).add(sum_total);
             resp +="<input id=\"valorpagar\" style=\"display:none\" value=\'"+totalpagar+"'\" type=\"text\">";
-            System.out.println(saldototal);
+            resp +="<input id=\"contando\" style=\"display:none\" value=\'"+cont+"'\" type=\"text\">";
             response.getWriter().println(resp);
         }
         if (accion.equals("guardaregistros")) {
+            int EmpleadoID2 = 0;
             int cartera = Integer.parseInt(request.getParameter("cartera"));
             String deu=request.getParameter("idDeudor");
             int idDeudor = Integer.parseInt(deu);
@@ -253,6 +290,13 @@ public class RecaudacionController extends HttpServlet {
             int id_recaudacion = Integer.parseInt(rs.getNext().toString());
             String valor = request.getParameter("valorecaudacion");
             BigDecimal valor_total = new BigDecimal(valor);
+            //int id_empleado=Integer.parseInt(request.getParameter("id_empleado"));
+            
+//            if(EmpleadoID != id_empleado){
+//              EmpleadoID2=Integer.parseInt(request.getParameter("id_empleado"));
+//            }else {
+//             EmpleadoID2=EmpleadoID;
+//            }
             
             rs.addRecaudacion(new LcRecaudaciones
                 (id_recaudacion,
@@ -260,26 +304,11 @@ public class RecaudacionController extends HttpServlet {
                  EmpresaID,
                  SucursalID,      
                  cartera,
-                 EmpleadoID,
+                 EmpleadoID2,
                  valor_total,       
                  fecha_reg,
-                 fecha_reg,"A",null,null,null));
-            /*
-                   this.idRecaudacion = idRecaudacion;
-       this.lcDatosDeudores = lcDatosDeudores;
-       this.idEmpresa = idEmpresa;
-       this.idAgencia = idAgencia;
-       this.idCliente = idCliente;
-       this.idEmpleado = idEmpleado;
-       this.valorRecaudado = valorRecaudado;
-       this.fechaRegistro = fechaRegistro;
-       this.fechaActualizado = fechaActualizado;
-       this.estado = estado;
-       this.lcFormapagoRecaudacions = lcFormapagoRecaudacions;
-       this.lcDetRecaudacioneses = lcDetRecaudacioneses;
-            */
-				 
-				  response.getWriter().println(id_recaudacion);
+                 fecha_reg,"A",null,"WEB",null,null));
+                 response.getWriter().println(id_recaudacion);
 				  }
         if (accion.equals("detalle")) {
             
@@ -335,7 +364,7 @@ public class RecaudacionController extends HttpServlet {
             
             if((formaPago == 1)&&(formaPago2 == 0)&&(formaPago3 == 0)){
                 rs.addFormaPago(new LcFormapagoRecaudacion(id_FormPagrecaudacion,(new LcRecaudaciones(id_recaudacion)),
-                 formaPago,total_pago,
+                 (new LcTipoFormaPago(formaPago)),total_pago,
                  0,       
                  "",
                  "",
@@ -344,24 +373,12 @@ public class RecaudacionController extends HttpServlet {
                  fecha_reg,"A"));
                 
                 
-                /*
-                this.idFormpago = idFormpago;
-       this.lcRecaudaciones = lcRecaudaciones;
-       this.tipoFormaPago = tipoFormaPago;
-       this.totalRecaudado = totalRecaudado;
-       this.idEntidadFinanciera = idEntidadFinanciera;
-       this.numCheque = numCheque;
-       this.numTarjetaCred = numTarjetaCred;
-       this.fechaCobro = fechaCobro;
-       this.fechaRegistro = fechaRegistro;
-       this.fechaActualizado = fechaActualizado;
-       this.estado = estado;
-                */
+              
                 response.getWriter().println("Recaudacion Guardada Exitosamente");
             }
             if((formaPago == 0)&&(formaPago2 == 2)&&(formaPago3 == 0)){
                 rs.addFormaPago(new LcFormapagoRecaudacion(id_FormPagrecaudacion,
-                        (new LcRecaudaciones(id_recaudacion)),formaPago,
+                        (new LcRecaudaciones(id_recaudacion)),(new LcTipoFormaPago(formaPago2)),
                         total_pago2,
                         institucion,
                         "",
@@ -373,7 +390,7 @@ public class RecaudacionController extends HttpServlet {
             }
             if ((formaPago == 0) && (formaPago2 == 0) && (formaPago3 == 3)) {
                 rs.addFormaPago(new LcFormapagoRecaudacion(id_FormPagrecaudacion,
-                        (new LcRecaudaciones(id_recaudacion)),formaPago,
+                        (new LcRecaudaciones(id_recaudacion)),(new LcTipoFormaPago(formaPago3)),
                         total_pago3,
                         institucion2,
                         num_cuenta,
@@ -386,7 +403,7 @@ public class RecaudacionController extends HttpServlet {
             if((formaPago == 1)&&(formaPago2 == 2)&&(formaPago3 == 0)){
                 //if(formaPago == 1){
                     rs.addFormaPago(new LcFormapagoRecaudacion(id_FormPagrecaudacion,
-                            (new LcRecaudaciones(id_recaudacion)),formaPago,
+                            (new LcRecaudaciones(id_recaudacion)),(new LcTipoFormaPago(formaPago)),
                             total_pago,
                             0,
                             "",
@@ -397,7 +414,7 @@ public class RecaudacionController extends HttpServlet {
 //                }
 //                if(formaPago2 == 2){
                     rs.addFormaPago(new LcFormapagoRecaudacion(id_FormPagrecaudacion+1,
-                            (new LcRecaudaciones(id_recaudacion)),formaPago,
+                            (new LcRecaudaciones(id_recaudacion)),(new LcTipoFormaPago(formaPago2)),
                             total_pago2,
                             institucion,
                             "",
@@ -412,7 +429,7 @@ public class RecaudacionController extends HttpServlet {
             if((formaPago == 1)&&(formaPago2 == 0)&&(formaPago3 == 3)){
                 //if(formaPago == 1){
                     rs.addFormaPago(new LcFormapagoRecaudacion(id_FormPagrecaudacion,
-                            (new LcRecaudaciones(id_recaudacion)),formaPago,
+                            (new LcRecaudaciones(id_recaudacion)),(new LcTipoFormaPago(formaPago)),
                             total_pago,
                             0,
                             "",
@@ -423,7 +440,7 @@ public class RecaudacionController extends HttpServlet {
 //                }
 //                if(formaPago3 == 3){
                     rs.addFormaPago(new LcFormapagoRecaudacion(id_FormPagrecaudacion+1,
-                            (new LcRecaudaciones(id_recaudacion)),formaPago,
+                            (new LcRecaudaciones(id_recaudacion)),(new LcTipoFormaPago(formaPago3)),/* NOMBRE DE VARIABLE ESTABA CAMBIADA*/
                             total_pago3,
                             institucion2,
                             num_cuenta,
@@ -438,7 +455,7 @@ public class RecaudacionController extends HttpServlet {
             if((formaPago == 0)&&(formaPago2 == 2)&&(formaPago3 == 3)){
                 //if(formaPago2 == 2){
                     rs.addFormaPago(new LcFormapagoRecaudacion(id_FormPagrecaudacion,
-                            (new LcRecaudaciones(id_recaudacion)),formaPago,
+                            (new LcRecaudaciones(id_recaudacion)),(new LcTipoFormaPago(formaPago2)),
                             total_pago2,
                             institucion,
                             "",
@@ -449,7 +466,7 @@ public class RecaudacionController extends HttpServlet {
 //                }
 //                if(formaPago3 == 3){
                     rs.addFormaPago(new LcFormapagoRecaudacion(id_FormPagrecaudacion+1,
-                            (new LcRecaudaciones(id_recaudacion)),formaPago,
+                            (new LcRecaudaciones(id_recaudacion)),(new LcTipoFormaPago(formaPago3)),
                             total_pago3,
                             institucion2,
                             num_cuenta,
@@ -464,19 +481,76 @@ public class RecaudacionController extends HttpServlet {
             
         }
         if (accion.equals("listar1")) {
-
-            List<LcRecaudaciones> datos = rst.getLcDatosRecaudoActual(EmpresaID, EmpleadoID);
-
-            request.setAttribute("datos", datos);
+      
             request.getRequestDispatcher("sistema/caja/NuevoPago.jsp").forward(request, response);
         }
+         if (accion.equals("ConsultaRecaudaciones")) {
+            String ConsultRecaudaciones="";
+             String fechaInicio = request.getParameter("fechaInicial");
+             String fechaFin = request.getParameter("fechaFinal");
+            
+             if (fechaInicio == ""){
+                ConsultRecaudaciones = "{\"data\": "+rst.getLcRecaudacionesActual(EmpresaID, SucursalID,null,null)+"}";
+              
+             }else{
+               
+                ConsultRecaudaciones = "{\"data\": "+rst.getLcRecaudacionesActual(EmpresaID, SucursalID,fechaInicio,fechaFin)+"}";
+             }
+             response.getWriter().println(ConsultRecaudaciones);
+
+          }
+            if (accion.equals("Comprobar")) {
+           
+              String clave = request.getParameter("clave");
+              String encript=DigestUtils.sha1Hex(clave);
+              /*if((RolID==7)||(RolID==12)||(RolID==8)){
+                List<LcPermisos> permiso = ps.getLcDatosPermisosAdmin(RolID, encript);
+                if(!permiso.isEmpty()){
+                    response.getWriter().println(1);
+                }else{
+                  response.getWriter().println(0);
+              }
+              }else{
+                  response.getWriter().println(2);
+              }*/
+ 
+         }
+         if (accion.equals("ConsultaTotalRecaudaciones")) {
+            BigDecimal sumando = BigDecimal.ZERO; 
+            String fechaInicio = request.getParameter("fechaInicial");
+            String fechaFin = request.getParameter("fechaFinal");
+            
+            if (fechaInicio == ""){
+                sumando = rst.getSumLcRecaudaciones(EmpresaID, EmpleadoID, null, null);              
+            }else{            
+                sumando = rst.getSumLcRecaudaciones(EmpresaID, EmpleadoID, fechaInicio, fechaFin);              
+            } 
+            response.getWriter().println(sumando);
+            
+          }
+         if (accion.equals("ConsultaTotales")) {
+            String totales = "";
+            String fechaInicio = request.getParameter("fechaInicial");
+            String fechaFin = request.getParameter("fechaFinal");
+            
+            if (fechaInicio == ""){
+                totales = rst.getConsultaTotales(EmpresaID,null,null);              
+            }else{            
+                totales = rst.getConsultaTotales(EmpresaID,fechaInicio,fechaFin);               
+            } 
+            response.getWriter().println(totales);
+            
+          }
+         
+        
+        
         
           if (accion.equals("consultaRecaudaciones")) {
              String FechaDesde=request.getParameter("fechaDesde");
              String FechaHasta=request.getParameter("fechaHasta");
              List<LcRecaudaciones> datos = rst.getConsultaLcDatosRecaudaciones(EmpresaID, EmpleadoID,FechaDesde,FechaHasta );
              SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-             
+             BigDecimal sumando = BigDecimal.ZERO;
              String fechaRegistro="";
              String RecaudacionesConsulta="";
              RecaudacionesConsulta=" <div class=\"box-body\" style=\"overflow-x:scroll;\">\n" +
@@ -514,6 +588,12 @@ public class RecaudacionController extends HttpServlet {
                                     "\n" +
                                     "   </table>\n" +
                                     "    </div>";
+             for(int i=0;i<datos.size();i++){
+                sumando=sumando.add(datos.get(i).getValorRecaudado());
+            }
+                String tran= sumando.toString();
+                request.setAttribute("sumando", 0);
+                request.setAttribute("sumando", tran);
              
              //request.setAttribute("datos", datos);
              //request.getRequestDispatcher("sistema/caja/NuevoPago.jsp").forward(request, response);
@@ -526,7 +606,14 @@ public class RecaudacionController extends HttpServlet {
 
             //request.setAttribute("datos", datos);
             request.getRequestDispatcher("sistema/caja/frm_cuadre_caja.jsp").forward(request, response);
-        }  
+        } // 
+        
+           
+        if (accion.equals("consulta_recaudador")) {
+
+             String data="{\"datos\": "+ rst.getConsultaRecaudadores(EmpresaID,SucursalID,EmpleadoID)+"}";
+             response.getWriter().println(data);
+        }
         
         
         }

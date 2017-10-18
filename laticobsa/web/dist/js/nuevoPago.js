@@ -21,6 +21,16 @@ function nuevo_pago() {
     jQuery("#page-wrapper").html("<br/><br/><center><img alt='cargando' src='dist/img/hourglass.gif' /><center>");
     jQuery("#page-wrapper").load("nuevopago?accion=listar", {}, function () { });
 }
+function sumatotal(){
+    var cont=$('&contvalores').val();
+    var suma=0;
+    for(var i=0; i<cont;i++){
+       var valores = $('#fila_'+i).val(); 
+       suma = suma+valores;
+    }
+    var x =document.getElementById("valor_inpt");
+    x.value=suma;
+}
 function elminarPago(data) {
 
     if (confirm("Realmente desea eliminar los datos")) {
@@ -727,27 +737,33 @@ function ActualizarTipoPago() {
         });
     }
 }
-$(function() {
-    $('#datepicker').datepicker({
-    weekStart:1,
-    color: 'red'
-    });
-    $('#datepicker2').datepicker({
-    weekStart:1,
-    color: 'red'
-    });
-});
 
+function generacuadre_caja(){
+    console.log("hola");
+    var valor_efec=$("#valor_efec").val();
+    var valor_ch=$("#valor_ch").val();
+    var valor_tar=$("#valor_tar").val();
+    var valor_inpt=$("#valor_inpt").val();
+   window.open("misreportes?accion=CuadreCaja&valor_efec="+valor_efec+"&valor_ch="+valor_ch+"&valor_tar="+valor_tar+"&valor_inpt="+valor_inpt,"_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=1000,height=500");   
+    
+}
+
+              
 function consultaRecaudaciones(){
     var fechaDesde = document.getElementById('datepicker').value;//$("#datepicker").val;
     var fechaHasta = document.getElementById('datepicker2').value;//$("#datepicker2").val;
     var ValidaFD=0;
     var ValidaFH=0;
     var accion="consultaRecaudaciones";
-     //console.log("Fecha es fechaDesde: "+fechaDesde);
-     //console.log("Fecha es fechaHasta: "+fechaHasta);
     
-     
+   if(fechaDesde===""){
+       MsgSalidaModalA("Fecha Desde: Existe valores vacios para realizar la busqueda");
+       return;
+   }
+   if(fechaHasta===""){
+      MsgSalidaModalA("Fecha Hasta: Existe valores vacios para realizar la busqueda");
+     return;
+   }
      ValidaFD = validaFechaDDMMYYYY("datepicker");
      ValidaFH = validaFechaDDMMYYYY("datepicker2");
    if ((ValidaFD>=3) &&(ValidaFD>=4)){
@@ -756,20 +772,114 @@ function consultaRecaudaciones(){
    if ((ValidaFH>=3) &&(ValidaFH>=3)){
       return; 
    }
-   // console.log("Fecha es fechaDesde>>: "+fechaDesde);
-    // console.log("Fecha es fechaHasta>>: "+fechaHasta);
      if(compare_dates(fechaDesde, fechaHasta) ){
            
              MsgSalidaModalA("La <strong>FECHA DESDE</strong> tiene que ser mayor  a <strong>FECHA HASTA</strong>");
           return;  
      }
-  //  alert("Paso"+ValidaFD + " "+ ValidaFH);
-   
- var parametros = {
-            "fechaDesde": fechaDesde,
-            "fechaHasta": fechaHasta,
+  DetalleRecaudacionesHoy(fechaDesde,fechaHasta);
+
+    
+}
+
+
+$('#datepicker').datetimepicker({   format:'d-m-Y' }); 
+$('#datepicker2').datetimepicker({   format:'d-m-Y' }); 
+
+
+function DetalleRecaudacionesHoy(fechaInicial,fechaFinal){
+    var TablaCompras="<table id='example1' class='table table-striped table-bordered dt-responsive nowrap table-hover' cellspacing='0' width='100%'>  <thead><tr bgcolor='#FBF5EF'><th>N° Comprob.</th> <th>Tipo Pago</th><th>Cliente</th><th>Nombre Deudor</th><th>Valor Total</th><th>Fecha Pago </th><th>Acción </th> </tr> </thead> <tbody></tbody> <tfoot></tfoot></table>";
+    document.getElementById("consultaRecaudaciones").innerHTML  =""; 
+    document.getElementById("consultaRecaudaciones").innerHTML  =TablaCompras;
+    $(document).ready(function() {	
+     $('#example1').DataTable( {
+        "ajax": {
+           "data": {"accion": "ConsultaRecaudaciones","fechaInicial": fechaInicial,"fechaFinal": fechaFinal},
+           // "data": {"accion": "ConsultaRecaudaciones"},
+            "url": "recaudacion",
+            "type": "GET"
+            },
+            "columns": [
+                { "data": "IdRecaudacion" },
+                { "data": "TipoPago" }, 
+                { "data": "Cliente" },
+                { "data": "NombreDeudor" },
+                { "data": "Valor", "className": "text-right" },
+                { "data": "FechaPago", "className": "text-center" },                
+                { "data": "Accion" }
+                
+            ],
+            "paging": false,
+            "lengthChange": false,
+            "info": false,
+            "searching": false
+    } );        
+  }); 
+  SumaTotal(fechaInicial,fechaFinal);
+  ConsultaTotales(fechaInicial, fechaFinal);
+}
+
+function ConsultaTotales(fechaInicial, fechaFinal){
+    var accion="ConsultaTotales";
+  
+       var parametros = {
+            "fechaInicial": fechaInicial,
+            "fechaFinal": fechaFinal,
             "accion": accion
-        };
+        }; 
+        
+          $.getJSON("recaudacion", {"fechaInicial": fechaInicial,"fechaFinal": fechaFinal,"accion": accion}, function(result){
+                console.log(result);
+                  $.each(result.data, function(key, val){   
+                    document.getElementById("valor_efec").innerHTML  ="";
+                    document.getElementById("valor_ch").innerHTML  ="";
+                    document.getElementById("valor_tar").innerHTML  ="";
+                    if (val.efectivo===0){
+                       document.getElementById("valor_efec").value="0.00"; 
+                    }else{
+                        document.getElementById("valor_efec").value=val.efectivo; 
+                    }
+                    if (val.cheque===0){
+                       document.getElementById("valor_ch").value="0.00"; 
+                    }else{
+                        document.getElementById("valor_ch").value=val.cheque;
+                    }
+                    if (val.tcredito===0){
+                         console.log('totales: '+val.tcredito);   
+                       document.getElementById("valor_tar").value="0.00"; 
+                    }else{
+                        document.getElementById("valor_tar").value=val.tcredito;
+                    }
+                    console.log('totales: '+val.efectivo+' '+val.efectivo+' '+val.tcredito);   
+                  });
+              
+          });
+        
+      /*  $.ajax({
+            data: parametros,
+            url: 'recaudacion',
+            type: 'GET',
+            beforeSend: function () {
+            },
+            success: function (response) {
+                 if(response){
+                     console.log(response.toString());
+                               //document.getElementById("valor_inpt").value="";
+                               //document.getElementById("valor_inpt").value=response.toString(); 
+                             }
+            }
+        });*/
+    
+}
+
+function SumaTotal(fechaInicial, fechaFinal){
+    var accion="ConsultaTotalRecaudaciones"
+  
+       var parametros = {
+            "fechaInicial": fechaInicial,
+            "fechaFinal": fechaFinal,
+            "accion": accion
+        }; 
         $.ajax({
             data: parametros,
             url: 'recaudacion',
@@ -778,14 +888,12 @@ function consultaRecaudaciones(){
             },
             success: function (response) {
                  if(response){
-                               document.getElementById("consultaRecaudaciones").innerHTML="";
-                               document.getElementById("consultaRecaudaciones").innerHTML=response.toString();  
-                                 
+                    // alert(response.toString());
+                               document.getElementById("valor_inpt").value="";
+                               document.getElementById("valor_inpt").value=response.toString(); 
                              }
             }
         });
-    
-    
     
 }
 

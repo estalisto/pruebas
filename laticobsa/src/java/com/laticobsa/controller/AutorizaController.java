@@ -13,7 +13,9 @@ import com.laticobsa.servicios.EmpresaServicios;
 import com.laticobsa.servicios.ParametrosServicios;
 import com.laticobsa.servicios.UsuariosServicios;
 import com.laticobsa.servicios.ValidaUsuario;
+import com.laticobsa.utils.ArchivoLog;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.sql.SQLException;
 
 import java.util.Date;
@@ -45,11 +47,13 @@ public class AutorizaController extends HttpServlet {
             throws ServletException, IOException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession(true);
+        
         UsuariosServicios us = new UsuariosServicios();
         ValidaUsuario vs=new ValidaUsuario();
         EmpresaServicios es =new EmpresaServicios();
         ParametrosServicios param = new ParametrosServicios();
         EmpleadosServicios empl = new EmpleadosServicios();
+        ArchivoLog grb = new ArchivoLog();
         String accion, user, pass;
         int empresas;
         int rol=0;
@@ -61,7 +65,7 @@ public class AutorizaController extends HttpServlet {
         
         if(accion.equals("autorizar"))
         {
-
+            try{
             user= request.getParameter("usuario");
         pass= request.getParameter("password");
         if("0".equals(request.getParameter("empresa"))){
@@ -105,13 +109,28 @@ public class AutorizaController extends HttpServlet {
                 session.setAttribute("NivelAccesoRolID",dato.getLcRoles().getNivel());
                 session.setAttribute("SstrUSER",user);    
                 session.setAttribute("Sstrempresa", empresa);
+                session.setAttribute("UsuarioID",dato.getIdUsuario());
+                session.setAttribute("NombreID",dato.getUsuario());
                 int id_usuario = dato.getLcEmpleados().getIdEmpleado();
+                int IDusuario = dato.getIdUsuario();
                 List<LcEmpleados> consulta = empl.getEmpleadoxconsulta(empresa,id_usuario);
                 LcEmpleados dan = consulta.get(0);
                 session.setAttribute("Sstrsucursal", dan.getLcAgencia().getIdAgencia());
                 session.setAttribute("Sstrempleado", dan.getIdEmpleado());
                 //response.sendRedirect("/laticobsa/home");
                 //response.getWriter().println("Bienvenido a Laticobsa."); 
+                
+                //Guardando en la tabla de Auditoria de sesiones
+                InetAddress addr = InetAddress.getLocalHost();
+                String hostname = addr.getHostName();
+                String Ip = addr.getHostAddress();
+                System.out.println("Host: " + hostname);
+                System.out.println("IP22: " + addr.getAddress());
+                Date fecha_reg = new Date();
+                //int Id_AudSesion = Integer.parseInt(vs.getNext().toString());
+                String descripcion=  "Sesion Iniciada";
+                 vs.GuardarAudSesiones(IDusuario,Ip,hostname,descripcion);
+                
                 }else{
 
                 String encript2=DigestUtils.sha1Hex(pass);
@@ -138,15 +157,27 @@ public class AutorizaController extends HttpServlet {
                 session.setAttribute("Sstrempresa", empresa);
                 session.setAttribute("SstrRolID",dato2.getLcRoles().getIdRol());
                 session.setAttribute("NivelAccesoRolID",dato2.getLcRoles().getNivel());
+                session.setAttribute("UsuarioID",dato2.getIdUsuario());
                 int id_usuario = dato2.getLcEmpleados().getIdEmpleado();
+                int IDusuario = dato2.getIdUsuario();
                 List<LcEmpleados> consulta = empl.getEmpleadoxconsulta(empresa,id_usuario);
                 if(consulta.size()>0){
                     LcEmpleados dan = consulta.get(0);                
                 session.setAttribute("Sstrsucursal", dan.getLcAgencia().getIdAgencia());
                 session.setAttribute("Sstrempleado", dan.getIdEmpleado());
-                
+                InetAddress addr = InetAddress.getLocalHost();
+                String hostname = addr.getHostName();
+                String Ip = addr.getHostAddress();
+                System.out.println("Host: " + hostname);
+                System.out.println("IP: " + addr.getHostAddress());
+                System.out.println("IP22: " + addr.getAddress());
+                Date fecha_reg = new Date();
+               // int Id_AudSesion = Integer.parseInt(vs.getNext().toString());
+                String descripcion=  "Sesion Iniciada.Pero se debe Cambiar Contraseña";
+                 vs.GuardarAudSesiones(IDusuario,Ip,hostname,descripcion);
+               
                 //response.sendRedirect("/laticobsa/home");
-                 response.getWriter().println("Bienvenido a Laticobsa."); 
+                 //response.getWriter().println("Bienvenido a Laticobsa."); 
                 }else{
                        response.getWriter().println("Problemas para acceder al sistema.. comunicarse con Depto. Sistemas");
                        
@@ -159,11 +190,34 @@ public class AutorizaController extends HttpServlet {
                 
                 }
             }
+          } catch (Exception ex) {
+                try{grb.grabaLog("AutorizaController_Autorizar Usuarios  Error Java: "+ex.getMessage());}catch(IOException e){}
+                Logger.getLogger(AutorizaController.class.getName()).log(Level.SEVERE, null, ex);
+            } 
         }
             if (accion.equals("outlogin")){
+               try{
+                HttpSession sesion = request.getSession(true);  
+               String id_usuario = sesion.getAttribute("UsuarioID").toString();
+               int UserID = Integer.parseInt(id_usuario);
               session.invalidate();
+              InetAddress addr = InetAddress.getLocalHost();
+                String hostname = addr.getHostName();
+                String Ip = addr.getHostAddress();
+                System.out.println("Host: " + hostname);
+                System.out.println("IP: " + addr.getHostAddress());
+                System.out.println("IP22: " + addr.isSiteLocalAddress());
+                Date fecha_reg = new Date();
+               // int Id_AudSesion = Integer.parseInt(vs.getNext().toString());
+                String descripcion=  "Sesion Finalizada";
+                vs.GuardarAudSesiones(UserID,Ip,hostname,descripcion);
+               
              response.sendRedirect("/laticobsa/login");
- 
+             
+             } catch (Exception ex) {
+                try{grb.grabaLog("AutorizaController_outlogin Usuarios  Error Java: "+ex.getMessage());}catch(IOException e){}
+                Logger.getLogger(AutorizaController.class.getName()).log(Level.SEVERE, null, ex);
+            } 
         }
         
         if (accion.equals("recarga")){

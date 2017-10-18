@@ -16,8 +16,10 @@
         
            <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <!-- Minified Bootstrap CSS -->
+  <!-- Minified Bootstrap CSS 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css">-->
+
 <link rel="stylesheet" href="dist/css/jquery.datetimepicker.css">
 <!-- Minified JS library 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -33,56 +35,58 @@
         <div class="box-header with-border bg-yellow">
           <h3 class="box-title">Consultas por Cartera</h3>
         </div> 
-          <div class="col-lg-8"> <br>
-            
-                <div class="row">
-                    <div class="col-lg-12">                    
-                        <div class="row">
-                             <div class="col-sm-2">
-                                <label>Cliente Cartera:</label>
-                             </div>
-                            <div class="col-sm-6">
-                                 <select class="form-control" name="cartera" required="required" id="cartera" >
-                               
-                                <c:forEach items="${carteras}" var="carter">
-                                    <option value="<c:out value="${carter.getIdCliente()}" />"><c:out value="${carter.getRazonSocial()}" /> </option>                         
-                                </c:forEach> 
-                                </select>
-                             </div>                                             
-                            <div class="col-sm-2">                        
-                                <button id="btnbuscar" type="submit" class="btn btn-primary btn-sm fa fa-search"> BUSCAR</button>                       
-                            </div>
-                            <div class="col-sm-2">                        
-                                <a href="#det_filtro" onclick="getTiposGestiones();"  data-toggle="modal" class="btn btn-primary  btn-sm fa fa-filter">  FILTRO  </a>
-                            </div>
-                        </div>
-                    </div>                  
-                </div>
-            
-        </div> 
-          <div class="col-lg-4">             
-                <div class="row">
-                    <div class="col-lg-10">               
-                        <div class="row"></div>
-                    </div> 
-                    <div class="col-lg-2"> 
-                     <center><img id="id_loader" src="resources/dist/img/loader.gif" class="img-circle" alt="User Image" width="50" style="display: none"></center>
-                    </div>                   
-                </div>           
-        </div> 
-          <input  type="text" class="form-control input-sm hidden" id="IdDiasMora">
-          <input  type="text" class="form-control input-sm hidden" id="IdTotalVenc">
-          <input  type="text" class="form-control input-sm hidden" id="IdFechaUlt">
-          <input  type="text" class="form-control input-sm hidden" id="IdIdentificacion">
-          <input  type="text" class="form-control input-sm hidden" id="IdNombres">
-          <input  type="text" class="form-control input-sm hidden" id="IdPagos">
-          <input  type="text" class="form-control input-sm hidden" id="IdFecUltPagos">
-          <input  type="text" class="form-control input-sm hidden" id="IdSaldo">
-          <input  type="text" class="form-control input-sm hidden" id="IdValorComp">
-          <input  type="text" class="form-control input-sm hidden" id="IdFechaComp">
-          <input  type="text" class="form-control input-sm hidden" id="IdUltima">
-          <input  type="text" class="form-control input-sm hidden" id="IdResultado">
-            <div class="panel panel-default well-lg">
+          <div class="row">
+                    <div class="col-lg-8"> <br>
+
+                          <div class="row">
+                              <div class="col-lg-12">                    
+                                  <div class="row">
+                                       <div class="col-sm-2">
+                                          <label>Cliente Cartera:</label>
+                                       </div>
+                                      <div class="col-sm-6">
+                                           <select class="form-control" name="cartera" onchange="alert('ok');" required="required" id="cartera" >
+
+                                          <c:forEach items="${carteras}" var="carter">
+                                              <option value="<c:out value="${carter.getIdCliente()}" />"><c:out value="${carter.getRazonSocial()}" /> </option>                         
+                                          </c:forEach> 
+                                          </select>
+                                       </div>                                             
+                                      <div class="col-sm-2">                        
+                                          <button id="btnbuscar" type="submit" class="btn btn-primary btn-sm fa fa-search"> BUSCAR</button>                       
+                                      </div>
+                                      <div class="col-sm-2">                        
+                                          <a href="#det_filtro" onclick="getTiposGestiones();"  data-toggle="modal" class="btn btn-primary  btn-sm fa fa-filter">  FILTRO  </a>
+                                      </div>
+                                  </div>
+                              </div>                  
+                          </div>
+
+                  </div> 
+                  <div class="col-lg-4">             
+                          <div class="row">
+                              <div class="col-lg-10">               
+                                  <div class="row"></div>
+                              </div> 
+                              <div class="col-lg-2"> 
+                               <center><img id="id_loader" src="resources/dist/img/loader.gif" class="img-circle" alt="User Image" width="50" style="display: none"></center>
+                              </div>                   
+                          </div>           
+                  </div> 
+          </div>
+                    <input  type="text" class="form-control input-sm hidden" id="IdDiasMora">
+                    <input  type="text" class="form-control input-sm hidden" id="IdTotalVenc">
+                    <input  type="text" class="form-control input-sm hidden" id="IdFechaUlt">
+                    <input  type="text" class="form-control input-sm hidden" id="IdIdentificacion">
+                    <input  type="text" class="form-control input-sm hidden" id="IdNombres">
+                    <input  type="text" class="form-control input-sm hidden" id="IdPagos">
+                    <input  type="text" class="form-control input-sm hidden" id="IdFecUltPagos">
+                    <input  type="text" class="form-control input-sm hidden" id="IdSaldo">
+                    <input  type="text" class="form-control input-sm hidden" id="IdValorComp">
+                    <input  type="text" class="form-control input-sm hidden" id="IdFechaComp">
+                    <input  type="text" class="form-control input-sm hidden" id="IdUltima">
+                    <input  type="text" class="form-control input-sm hidden" id="IdResultado">
+           
                 <div class="row">
                     <div class="col-lg-12">   
                        <div class="box"> 
@@ -129,7 +133,7 @@
                         </div>                          
                     </div>
                 </div>
-            </div>
+           
       </div> 
   </div> 
 
@@ -302,6 +306,7 @@ $('#saldos').validCampoFranz('0123456789.');
 $('#saldos1').validCampoFranz('0123456789.');
 $('#dia_mora').validCampoFranz('0123456789');
 $('#dia_mora1').validCampoFranz('0123456789');   
+
   });
      
 </script>

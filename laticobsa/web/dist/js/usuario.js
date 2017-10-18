@@ -364,3 +364,34 @@ document.getElementById("mensajeSalida").innerHTML = modal;
  $("#myModal").modal();
 
 }
+
+
+
+function consulta_usuarios(){
+    
+      document.getElementById("tbusuarios").innerHTML = "";
+    var htmlTable="<table id='example1' class='table table-bordered table-hover'><thead><tr bgcolor='#FBF5EF'><th class=''>ID</th><th>Empresa</th><th>Rol</th><th>Identificacion Empleados</th> <th>Usuario </th><th>Fecha Ingreso </th><th>Estado </th><th>Acción </th></tr></thead><tbody></tbody></table>";
+    document.getElementById("tbusuarios").innerHTML = htmlTable;
+    
+    $('#example1').DataTable( {
+        "ajax": {
+            "data": {"accion": "ConsultaALLUsuarios"},
+            "url": "usuarios",
+            "type": "GET"
+            },
+            "columns": [
+                { "data": "idUsuario","title":"ID" },
+                { "data": "empresa" },
+                { "data": "rol" },
+                { "data": "identificacion" },
+                { "data": "usuario" },                
+                { "data": "fecha_ingreso" },
+                { "data": "estado" },
+                { "data": "accion" }
+            ],
+            paging: true,
+            order: [[ 7, 'asc' ]]
+    } );
+   
+
+}

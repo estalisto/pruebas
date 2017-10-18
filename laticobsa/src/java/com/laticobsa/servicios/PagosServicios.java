@@ -12,8 +12,12 @@ import com.laticobsa.modelo.LcEmpleados;
 import com.laticobsa.modelo.LcFormapagoRecaudacion;
 import com.laticobsa.modelo.LcRecaudaciones;
 import com.laticobsa.modelo.LcTiposIdentificacion;
+import com.laticobsa.utils.Conexion;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,13 +29,15 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  *
  * @author CIMA2015
  */
 public class PagosServicios {
-    
+    ClientesServicios cli = new ClientesServicios();
      public List<LcDetRecaudaciones> getLcDatosPagoActual(){
         Date fecha_reg = new Date();
         DateFormat fecha = new SimpleDateFormat("yyyy-MM-dd");
@@ -63,7 +69,9 @@ public class PagosServicios {
         return null;
     }
 
-        public List<LcRecaudaciones> getLcDatosRecaudoActual(int empresa, int empleado){
+    public List<LcRecaudaciones> getLcDatosRecaudoActual(int empresa, int empleado){
+         JSONObject json = new JSONObject();
+        JSONArray itemSelectedJson = new JSONArray();  
         Date fecha_reg = new Date();
         DateFormat fecha = new SimpleDateFormat("yyyy-MM-dd");
         String convertido = fecha.format(fecha_reg);
@@ -86,6 +94,12 @@ public class PagosServicios {
          for(LcRecaudaciones mrol:lista )
         {
              System.out.println("ok: "+mrol.getIdRecaudacion()+", "+mrol.getLcDatosDeudores().getIdDatosDeudor()+mrol.getLcDatosDeudores().getNombresCompleto());
+              json = new JSONObject();
+             json.put("IdRecaudacion",mrol.getIdRecaudacion());
+             json.put("NombreDeudor",mrol.getLcDatosDeudores().getNombresCompleto());
+             json.put("Valor",mrol.getValorRecaudado());
+             json.put("Accion","<a onclick=\"VistaPago("+mrol.getIdRecaudacion() +")\"> <span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"><a onclick=\"elminarPago("+mrol.getIdRecaudacion() +")\"> <span  class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span></a></td>");
+             itemSelectedJson.add(json);
         }
         tx.commit();
         session.close();
@@ -95,6 +109,242 @@ public class PagosServicios {
          }
         return null;
     }
+    
+    public String getLcRecaudacionesActual(int empresa, int idAgencia, String fechaInicio, String fechaHasta){
+         JSONObject json = new JSONObject();
+        JSONArray itemSelectedJson = new JSONArray();  
+        SimpleDateFormat dateFormatter2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormatter3 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String Fechapago=""; 
+        BigDecimal sumando = BigDecimal.ZERO;
+        Date fecha_reg = new Date();
+        DateFormat fecha = new SimpleDateFormat("yyyy-MM-dd");
+        String convertido = fecha.format(fecha_reg);
+        
+                
+        System.out.println(convertido);
+        try {
+             SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+             Date ActualDate = dateFormatter.parse(convertido);
+              
+            SessionFactory sesion = HibernateUtil.getSessionFactory();
+            Session session;
+            session = sesion.openSession();
+            Transaction tx= session.beginTransaction();
+            // hacemos la transaccion
+            if (fechaInicio == null){
+                
+                Query q = session.createQuery("from LcRecaudaciones  E WHERE E.idEmpresa= :idEmpresa AND E.idAgencia= :idAgencia AND E.fechaRegistro>= :fechaRegistro AND estado= :estado");
+                q.setParameter("idEmpresa",empresa);
+                q.setParameter("idAgencia",idAgencia);
+                q.setParameter("estado","A");
+                q.setParameter("fechaRegistro",ActualDate);
+                List<LcRecaudaciones> lista=q.list();
+                 for(LcRecaudaciones mrol:lista )
+                {     Fechapago=dateFormatter2.format(mrol.getFechaRegistro());
+                     //System.out.println("ok: "+mrol.getIdRecaudacion()+", "+mrol.getLcDatosDeudores().getIdDatosDeudor()+mrol.getLcDatosDeudores().getNombresCompleto());
+                     json = new JSONObject();
+                     json.put("IdRecaudacion",mrol.getIdRecaudacion());
+                     json.put("TipoPago",getPagoFormaPago(mrol.getIdRecaudacion()));
+                     json.put("Cliente",cli.getDatosLClienteID(mrol.getIdCliente()).get(0).getRazonSocial());  
+                     
+                     json.put("NombreDeudor",mrol.getLcDatosDeudores().getNombresCompleto());
+                     json.put("Valor",mrol.getValorRecaudado());
+                     json.put("FechaPago",Fechapago);
+                     json.put("Accion","<a onclick=\"VistaPago("+mrol.getIdRecaudacion() +")\"> <span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"><a onclick=\"elminarPago("+mrol.getIdRecaudacion() +")\"> <span  class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span></a></td>");
+                     itemSelectedJson.add(json);
+                    //sumando=sumando.add(mrol.getValorRecaudado());
+                }
+            }else{
+                String beginDate="", endDate="";
+                beginDate = fechaInicio+" 00:00:00";
+                endDate = fechaHasta+" 23:59:59";
+                //beginDate=dateFormatter2.format(beginDate);
+                Date beginDate2 = dateFormatter3.parse(beginDate);
+                Date endDate2 = dateFormatter3.parse(endDate);
+                //endDate=dateFormatter2.format(endDate);
+                
+                Query q = session.createQuery("from LcRecaudaciones  E WHERE E.idEmpresa= :idEmpresa AND E.idAgencia= :idAgencia AND E.fechaRegistro>= :beginDate AND E.fechaRegistro<= :endDate AND estado= :estado");
+                q.setParameter("idEmpresa",empresa);
+                q.setParameter("idAgencia",idAgencia);
+                q.setParameter("estado","A");
+                q.setParameter("beginDate",beginDate2);             
+                q.setParameter("endDate",endDate2);
+                List<LcRecaudaciones> lista=q.list();
+                 for(LcRecaudaciones mrol:lista )
+                {     Fechapago=dateFormatter2.format(mrol.getFechaRegistro());
+                     //System.out.println("ok: "+mrol.getIdRecaudacion()+", "+mrol.getLcDatosDeudores().getIdDatosDeudor()+mrol.getLcDatosDeudores().getNombresCompleto());
+                     json = new JSONObject();
+                     json.put("IdRecaudacion",mrol.getIdRecaudacion());
+                     json.put("TipoPago",getPagoFormaPago(mrol.getIdRecaudacion()));
+                     json.put("Cliente",cli.getDatosLClienteID(mrol.getIdCliente()).get(0).getRazonSocial());   
+                     json.put("NombreDeudor",mrol.getLcDatosDeudores().getNombresCompleto());
+                     json.put("Valor",mrol.getValorRecaudado());
+                     json.put("FechaPago",Fechapago);
+                     json.put("Accion","<a onclick=\"VistaPago("+mrol.getIdRecaudacion() +")\"> <span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"><a onclick=\"elminarPago("+mrol.getIdRecaudacion() +")\"> <span  class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span></a></td>");
+                     itemSelectedJson.add(json);
+                    //sumando=sumando.add(mrol.getValorRecaudado());
+                }
+            }
+            tx.commit();
+            session.close();
+            
+            return  itemSelectedJson.toString();
+         } catch (ParseException ex) {
+             Logger.getLogger(PagosServicios.class.getName()).log(Level.SEVERE, null, ex);
+             System.out.println("Error al Consultar los Datos Recaudaciones");
+
+         }
+        return null;
+    }
+    
+     public String getConsultaTotales(int empresa, String Fecha_desde, String Fecha_Hasta)
+        {
+            
+            String valor = "", query="";
+            
+                
+            
+         try{   
+             SimpleDateFormat dateFormatter2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+             SimpleDateFormat dateFormatter3 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+             String beginDate=null, endDate=null;
+            Conexion conexion=new Conexion();
+            PreparedStatement pst;
+            ResultSet rs;
+              if (Fecha_desde != null){
+                  
+                beginDate =  Fecha_desde+" 00:00:00";
+                endDate = Fecha_Hasta+" 23:59:59";
+                Date beginDate2 = dateFormatter3.parse(beginDate);
+                Date endDate2 = dateFormatter3.parse(endDate);
+                beginDate2 = dateFormatter2.parse(beginDate);
+                endDate2 = dateFormatter2.parse(endDate);
+                
+                SimpleDateFormat originalFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss" );
+                Date date,date2;
+                try {
+                  date = originalFormat.parse(Fecha_desde+" 00:00:00");
+                  System.out.println("Old Format :   " + originalFormat.format(date));
+                  System.out.println("New Format :   " + targetFormat.format(date));
+                  
+                  date2 = originalFormat.parse(Fecha_Hasta+" 23:59:59");
+                  System.out.println("Old Format :   " + originalFormat.format(date2));
+                  System.out.println("New Format :   " + targetFormat.format(date2));
+
+               
+                query="SELECT  '{\"data\":['||row_to_json((SELECT d FROM (SELECT (select (select  case when sum(r.valor_recaudado) is null then 0.00 else sum(r.valor_recaudado) end   from lc_formapago_recaudacion f, lc_recaudaciones r\n" +
+"where r.id_recaudacion=f.id_recaudacion and r.id_empresa="+empresa+" and r.fecha_registro >= '"+targetFormat.format(date)+"' and r.fecha_registro <= '"+targetFormat.format(date2)+"' and f.tipo_forma_pago=1 and r.estado='A' ) ) AS efectivo,  \n" +
+"(select  case when sum(r.valor_recaudado) is null then 0.00 else sum(r.valor_recaudado) end   from lc_formapago_recaudacion f, lc_recaudaciones r\n" +
+"where r.id_recaudacion=f.id_recaudacion and r.id_empresa="+empresa+" and r.fecha_registro >= '"+targetFormat.format(date)+"' and r.fecha_registro <= '"+targetFormat.format(date2)+"' and f.tipo_forma_pago=2 and r.estado='A' ) as cheque,\n" +
+"(select case when sum(r.valor_recaudado) is null then 0.00 else sum(r.valor_recaudado) end    from lc_formapago_recaudacion f, lc_recaudaciones r\n" +
+"where r.id_recaudacion=f.id_recaudacion and r.id_empresa="+empresa+" and r.fecha_registro >= '"+targetFormat.format(date)+"' and r.fecha_registro <= '"+targetFormat.format(date2)+"' and f.tipo_forma_pago=3 and r.estado='A' ) as tcredito) d))\n" +
+"||']}' datos";
+                  } catch (ParseException ex) {
+                   // Handle Exception.
+                 }
+   
+                
+                  pst = conexion.getconexion().prepareStatement(query);
+                //pst = conexion.getconexion().prepareStatement("select  fnc_consulta_sumatorias("+empresa+",to_date('"+beginDate2+"','dd-mm-yyyy hh24:mi:ss'),to_date('"+endDate2+"','dd-mm-yyyy hh24:mi:ss'));");
+              }else{
+                //pst = conexion.getconexion().prepareStatement("select  fnc_consulta_sumatorias("+empresa+",to_date('"+Fecha_desde+"','dd-mm-yyyy hh24:mi:ss'),to_date('"+Fecha_Hasta+"','dd-mm-yyyy hh24:mi:ss'));");
+                 pst = conexion.getconexion().prepareStatement("select  fnc_consulta_sumatorias("+empresa+","+Fecha_desde+","+Fecha_Hasta+");");
+              }
+             
+             
+            
+            //query="select  fnc_consulta_sumatorias("+empresa+","+Fecha_desde+","+Fecha_Hasta+");";
+          
+            rs = pst.executeQuery();
+            while(rs.next())    //Mientras haya una sig. tupla
+            {
+                valor=rs.getString(1);
+            }
+            rs.close();
+            pst.close();
+            conexion.cierraConexion();
+            
+            }catch (SQLException ex) {
+                System.err.println( ex.getMessage() );
+             } catch (ParseException ex) { 
+            Logger.getLogger(PagosServicios.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+            return valor;
+        }
+    
+    
+    public BigDecimal getSumLcRecaudaciones(int empresa, int empleado, String fechaInicio, String fechaHasta){
+   
+        String Fechapago=""; 
+        BigDecimal sumando = BigDecimal.ZERO, sumando2 = BigDecimal.ZERO;
+        sumando=sumando.add(BigDecimal.ZERO);
+
+               
+        
+        Date fecha_reg = new Date();
+        DateFormat fecha = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormatter2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");        
+        SimpleDateFormat dateFormatter3 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String convertido = fecha.format(fecha_reg);
+        System.out.println(convertido);
+        try {
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date ActualDate = dateFormatter.parse(convertido);              
+            SessionFactory sesion = HibernateUtil.getSessionFactory();
+            Session session;
+            session = sesion.openSession();
+            Transaction tx= session.beginTransaction();
+            if (fechaInicio == null){
+                Query q = session.createQuery("select sum(valorRecaudado) from LcRecaudaciones  E WHERE E.idEmpresa= :idEmpresa AND E.idEmpleado= :idEmpleado AND E.fechaRegistro>= :fechaRegistro AND estado= :estado");
+                q.setParameter("idEmpresa",empresa);
+                q.setParameter("idEmpleado",empleado);
+                q.setParameter("estado","A");
+                q.setParameter("fechaRegistro",ActualDate);
+                sumando = ((BigDecimal)  q.uniqueResult());  
+                   System.out.println("Suman sumando: " +sumando);
+                
+                
+                
+                
+                
+            }else{
+                String beginDate="", endDate="";
+                beginDate = fechaInicio+" 00:00:00";
+                endDate = fechaHasta+" 23:59:59";
+                Date beginDate2 = dateFormatter3.parse(beginDate);
+                Date endDate2 = dateFormatter3.parse(endDate);
+                Query q = session.createQuery("select sum(valorRecaudado) from LcRecaudaciones  E WHERE E.idEmpresa= :idEmpresa AND E.idEmpleado= :idEmpleado AND E.fechaRegistro>= :beginDate AND E.fechaRegistro<= :endDate AND estado= :estado");
+                q.setParameter("idEmpresa",empresa);
+                q.setParameter("idEmpleado",empleado);
+                q.setParameter("estado","A");
+                q.setParameter("beginDate",beginDate2);             
+                q.setParameter("endDate",endDate2);
+                 sumando = ((BigDecimal)  q.uniqueResult());   
+                
+            }            
+            if(sumando != null){
+              sumando2=sumando;  
+            }else{
+            sumando2=sumando2.add(BigDecimal.ZERO);
+            }
+            tx.commit();
+            session.close();
+            
+            return  sumando2;
+         } catch (ParseException ex) {
+             Logger.getLogger(PagosServicios.class.getName()).log(Level.SEVERE, null, ex);
+             System.out.println("Error al Consultar la sumatoria los Datos Recaudaciones");
+
+         }
+        return null;
+    }
+    
+    
+    
+    
+    
     public List<LcRecaudaciones> getConsultaLcDatosRecaudaciones(int empresa, int empleado, String fechaInicio, String fechaFin){
 
         try {
@@ -130,7 +380,29 @@ public class PagosServicios {
          }
         return null;
     } 
+    
+    public String getPagoFormaPago( int idRecaudacion){
+         
+        SessionFactory sesion = HibernateUtil.getSessionFactory();
+        Session session;
+        session = sesion.openSession();
+        String forma_pago="";
+        Transaction tx= session.beginTransaction();
+        // hacemos la transaccion
+        Query q = session.createQuery("from LcFormapagoRecaudacion  E WHERE  E.lcRecaudaciones.idRecaudacion= :idRecaudacion and E.estado= :estado");
+        q.setParameter("idRecaudacion",idRecaudacion);
         
+        q.setParameter("estado","A");
+        List<LcFormapagoRecaudacion> lista=q.list();
+         for(LcFormapagoRecaudacion mrol:lista )
+        {
+             forma_pago=mrol.getLcTipoFormaPago().getDescripcion();
+        }
+        tx.commit();
+        session.close();
+         return forma_pago;
+    } 
+    
     public List<LcDatosDeudores> getLcDatosDeudoIDE(int  ide){
          
         SessionFactory sesion = HibernateUtil.getSessionFactory();
@@ -463,6 +735,27 @@ public class PagosServicios {
     tx.commit();
     session.close();
     }
-    
+    public String getConsultaRecaudadores(int emppresa, int agencia, int empleado){
+         String valor = "";
+         try{      
+            Conexion conexion=new Conexion();
+            PreparedStatement pst;
+            ResultSet rs;
+            pst = conexion.getconexion().prepareStatement("select fnc_consulta_recadudadores("+emppresa+","+agencia+","+empleado+");");
+            rs = pst.executeQuery();
+            while(rs.next())    //Mientras haya una sig. tupla
+            {
+                valor=rs.getString(1);
+            }
+            rs.close();
+            pst.close();
+            conexion.cierraConexion();
+            
+            }catch (SQLException ex) {
+                System.err.println( ex.getMessage() );
+             } 
+            return valor; 
+      
+    }
     
 }
